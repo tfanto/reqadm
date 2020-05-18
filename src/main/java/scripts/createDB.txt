@@ -1,0 +1,148 @@
+
+CREATE DATABASE reqadm; 
+CREATE EXTENSION postgis; 
+	 CREATE EXTENSION postgis_topology;
+	 
+--  DATABASEN USER LOGO ETC 	 
+	  
+CREATE USER reqadm WITH PASSWORD 'reqadm'; 
+CREATE SCHEMA AUTHORIZATION reqadm; 
+ALTER USER reqadm SET search_path = reqadm, public;
+GRANT CONNECT ON DATABASE reqadm TO reqadm;
+
+
+
+--- Table: reqadm.product
+
+-- DROP TABLE reqadm.product;
+
+CREATE TABLE reqadm.product
+(
+    tenant integer NOT NULL,
+    version integer NOT NULL,
+    productname character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    description character varying(995) COLLATE pg_catalog."default",
+    shortdescr character varying(100) COLLATE pg_catalog."default",
+    crtdat timestamp with time zone NOT NULL,
+    crtusr character varying(100) COLLATE pg_catalog."default",
+    chgdat timestamp with time zone,
+    chgusr character varying(100) COLLATE pg_catalog."default",
+    chgnbr integer,
+    crtver integer NOT NULL,    
+    dltusr character varying(100) COLLATE pg_catalog."default",
+    dltdat timestamp with time zone,
+    status character varying(50) COLLATE pg_catalog."default",
+    CONSTRAINT product_pkey PRIMARY KEY (tenant, version, productname)
+
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE reqadm.product
+    OWNER to reqadm;
+
+
+-- Table: reqadm.topic
+
+-- DROP TABLE reqadm.topic;
+
+CREATE TABLE reqadm.topic
+(
+    tenant integer NOT NULL,
+    version integer NOT NULL,
+    productname character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    topicname character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    description character varying(995) COLLATE pg_catalog."default",
+    shortdescr character varying(100) COLLATE pg_catalog."default",
+    crtdat timestamp with time zone NOT NULL,
+    crtusr character varying(100) COLLATE pg_catalog."default",
+    chgdat timestamp with time zone,
+    chgusr character varying(100) COLLATE pg_catalog."default",
+    chgnbr integer,
+    crtver integer NOT NULL,    
+    dltusr character varying(100) COLLATE pg_catalog."default",
+    dltdat timestamp with time zone,
+    CONSTRAINT topic_pkey PRIMARY KEY (tenant, version, productname, topicname),
+    CONSTRAINT topic_productname_fkey FOREIGN KEY (tenant,version, productname)
+        REFERENCES reqadm.product (tenant,version, productname) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE RESTRICT
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE reqadm.topic
+    OWNER to reqadm;
+	
+
+
+-- Table: reqadm.process
+
+-- DROP TABLE reqadm.process;
+
+CREATE TABLE reqadm.process
+(
+    tenant integer NOT NULL,
+    version integer NOT NULL,
+    productname character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    topicname character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    processname character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    processseq integer NOT NULL,
+    description character varying(995) COLLATE pg_catalog."default",
+    shortdescr character varying(100) COLLATE pg_catalog."default",
+    crtdat timestamp with time zone NOT NULL,
+    crtusr character varying(100) COLLATE pg_catalog."default",
+    chgdat timestamp with time zone,
+    chgusr character varying(100) COLLATE pg_catalog."default",
+    chgnbr integer,
+    crtver integer NOT NULL,    
+    dltusr character varying(100) COLLATE pg_catalog."default",
+    dltdat timestamp with time zone,
+    CONSTRAINT process_pkey PRIMARY KEY (tenant, version, productname, topicname, processname, processseq),
+    CONSTRAINT process_productname_topicname_fkey FOREIGN KEY (tenant, version, productname, topicname)
+        REFERENCES reqadm.topic (tenant, version, productname, topicname) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE RESTRICT
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE reqadm.process
+    OWNER to reqadm;
+
+
+-- Table: reqadm.oper
+
+-- DROP TABLE reqadm.oper;
+
+CREATE TABLE reqadm.oper
+(
+    tenant integer NOT NULL,
+    version integer NOT NULL,
+    productname character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    topicname character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    processname character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    processseq integer NOT NULL,
+    operationname character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    operationseq integer NOT NULL,
+    description character varying(995) COLLATE pg_catalog."default",
+    shortdescr character varying(100) COLLATE pg_catalog."default",
+    crtdat timestamp with time zone NOT NULL,
+    crtusr character varying(100) COLLATE pg_catalog."default",
+    chgdat timestamp with time zone,
+    chgusr character varying(100) COLLATE pg_catalog."default",
+    chgnbr integer,
+    crtver integer NOT NULL,    
+    dltusr character varying(100) COLLATE pg_catalog."default",
+    dltdat timestamp with time zone,
+    CONSTRAINT oper_pkey PRIMARY KEY (tenant,version, productname, topicname,  processname, processseq, operationname, operationseq),
+    CONSTRAINT process_productname_topicname_operationfkey1 FOREIGN KEY (tenant,version, productname, topicname, processname, processseq)
+        REFERENCES reqadm.process (tenant,version, productname, topicname, processname, processseq) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE RESTRICT
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE reqadm.oper
+    OWNER to reqadm;
