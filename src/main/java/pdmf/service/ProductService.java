@@ -1,5 +1,9 @@
 package pdmf.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,17 +27,10 @@ public class ProductService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
 
-	private String selectSQL = "select distinct productname from product where tenant=? order by productname";
-
-	private String productExistsSQL = "select count(*) from  product where productname=? and version=? and tenant=?";
-	private String productSelectSingleRecSQL = "select productname,description,crtdat,chgnbr,shortdescr,crtusr,chgdat,chgusr,crtver,dltdat,dltusr,status,tenant  from product where productname=? and version=? and tenant=?";
-	private String productInsertSQL = "insert into product (tenant,version, productname, description,crtdat,chgnbr,crtver,crtusr,shortdescr,status) values(?,?,?,?,?,?,?,?,?,?)";
-	private String productsSelectSQL = "select version,productname,description,crtdat,chgnbr,shortdescr,crtusr,chgdat,chgusr,crtver,dltdat,dltusr,status,tenant  from product where version=? and tenant=? order by productname";
-	private String productsSelectSQL_ALL_VERSIONS = "select version,productname,description,crtdat,chgnbr,shortdescr,crtusr,chgdat,chgusr,crtver,dltdat,dltusr,status,tenant  from product where productname=? and tenant=? order by version";
-	private String productsSelectSQL_ONE_PRODUCT_ONE_VERSION = "select version,productname,description,crtdat,chgnbr,shortdescr,crtusr,chgdat,chgusr,crtver,dltdat,dltusr,status,tenant  from product where productname=? and version=? and tenant=?";
-
 	public List<String> list(Integer tenant) {
 		ServiceHelper.validate("Tenant", tenant);
+
+		String theSQL = ServiceHelper.getSQL("productSelectSQL");
 
 		List<String> ret = new ArrayList<>();
 		Connection connection = null;
@@ -42,7 +39,8 @@ public class ProductService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				stmt = connection.prepareStatement(selectSQL);
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setInt(1, tenant);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
 					String productName = rs.getString(1);
@@ -65,14 +63,17 @@ public class ProductService {
 		ServiceHelper.validate("ProductName", productName);
 		List<ProductRec> ret = new ArrayList<>();
 
+		String theSQL = ServiceHelper.getSQL("productsSelectSQL_ALL_VERSIONS");
+
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				stmt = connection.prepareStatement(productsSelectSQL_ALL_VERSIONS);
+				stmt = connection.prepareStatement(theSQL);
 				stmt.setString(1, productName);
+				stmt.setInt(2, tenant);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
 					Integer ver = rs.getInt(1);
@@ -90,7 +91,7 @@ public class ProductService {
 					String dltusr = rs.getString(12);
 					String status = rs.getString(13);
 
-					ProductKey key = new ProductKey(ver, name);
+					ProductKey key = new ProductKey(tenant, ver, name);
 					ProductRec rec = new ProductRec(key, descr, crtdat, chgnbr);
 					rec.shortdescr = shortdescr;
 					rec.crtusr = crtusr;
@@ -114,21 +115,24 @@ public class ProductService {
 		return ret;
 	}
 
-	public List<ProductRec> list(Integer tenant,String productName, Integer version) {
+	public List<ProductRec> list(Integer tenant, String productName, Integer version) {
 		ServiceHelper.validate("Tenant", tenant);
 		ServiceHelper.validate("ProductName", productName);
 		ServiceHelper.validate("Version", version);
 		List<ProductRec> ret = new ArrayList<>();
 
+		String theSQL = ServiceHelper.getSQL("productsSelectSQL_ONE_PRODUCT_ONE_VERSION");
+
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				stmt = connection.prepareStatement(productsSelectSQL_ONE_PRODUCT_ONE_VERSION);
-				stmt.setString(1, productName);
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setInt(1, tenant);
 				stmt.setInt(2, version);
+				stmt.setString(3, productName);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
 					Integer ver = rs.getInt(1);
@@ -146,7 +150,7 @@ public class ProductService {
 					String dltusr = rs.getString(12);
 					String status = rs.getString(13);
 
-					ProductKey key = new ProductKey(ver, name);
+					ProductKey key = new ProductKey(tenant, ver, name);
 					ProductRec rec = new ProductRec(key, descr, crtdat, chgnbr);
 					rec.shortdescr = shortdescr;
 					rec.crtusr = crtusr;
@@ -170,19 +174,22 @@ public class ProductService {
 		return ret;
 	}
 
-	public List<ProductRec> list(Integer tenant,Integer version) {
+	public List<ProductRec> list(Integer tenant, Integer version) {
 		ServiceHelper.validate("Tenant", tenant);
 		ServiceHelper.validate("Version", version);
 		List<ProductRec> ret = new ArrayList<>();
 
+		String theSQL = ServiceHelper.getSQL("productsSelectSQL");
+
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				stmt = connection.prepareStatement(productsSelectSQL);
+				stmt = connection.prepareStatement(theSQL);
 				stmt.setInt(1, version);
+				stmt.setInt(2, tenant);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
 					Integer ver = rs.getInt(1);
@@ -200,7 +207,7 @@ public class ProductService {
 					String dltusr = rs.getString(12);
 					String status = rs.getString(13);
 
-					ProductKey key = new ProductKey(ver, name);
+					ProductKey key = new ProductKey(tenant, ver, name);
 					ProductRec rec = new ProductRec(key, descr, crtdat, chgnbr);
 					rec.shortdescr = shortdescr;
 					rec.crtusr = crtusr;
@@ -224,7 +231,7 @@ public class ProductService {
 		return ret;
 	}
 
-	public boolean exists(Integer tenant,Integer version, String productName) {
+	public boolean exists(Integer tenant, Integer version, String productName) {
 		ServiceHelper.validate("Tenant", tenant);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
@@ -234,7 +241,7 @@ public class ProductService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				return exists(connection, tenant,version, productName);
+				return exists(connection, tenant, version, productName);
 			}
 		} catch (SQLException e) {
 			LOGGER.error(e.toString(), e);
@@ -246,16 +253,18 @@ public class ProductService {
 		return false;
 	}
 
-	public boolean exists(Connection connection, Integer tenant,Integer version, String productName) {
+	public boolean exists(Connection connection, Integer tenant, Integer version, String productName) {
 		ServiceHelper.validate("Tenant", tenant);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
+		String theSQL = ServiceHelper.getSQL("productExistsSQL");
 		try {
-			stmt = connection.prepareStatement(productExistsSQL);
-			stmt.setString(1, productName);
+			stmt = connection.prepareStatement(theSQL);
+			stmt.setInt(1, tenant);
 			stmt.setInt(2, version);
+			stmt.setString(3, productName);
 			rs = stmt.executeQuery();
 			rs.next();
 			Integer n = rs.getInt(1);
@@ -269,7 +278,7 @@ public class ProductService {
 		return false;
 	}
 
-	public ProductRec get(Integer tenant,Integer version, String productName) {
+	public ProductRec get(Integer tenant, Integer version, String productName) {
 		ServiceHelper.validate("Tenant", tenant);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
@@ -292,16 +301,18 @@ public class ProductService {
 
 	}
 
-	public ProductRec get(Connection connection, Integer tenant,Integer version, String productName) {
+	public ProductRec get(Connection connection, Integer tenant, Integer version, String productName) {
 		ServiceHelper.validate("Tenant", tenant);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt = connection.prepareStatement(productSelectSingleRecSQL);
-			stmt.setString(1, productName);
+			String theSQL = ServiceHelper.getSQL("productSelectSingleRecSQL");
+			stmt = connection.prepareStatement(theSQL);
+			stmt.setInt(1, tenant);
 			stmt.setInt(2, version);
+			stmt.setString(3, productName);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				String pName = rs.getString(1);
@@ -318,7 +329,7 @@ public class ProductService {
 				String dltusr = rs.getString(11);
 				String status = rs.getString(12);
 
-				ProductKey key = new ProductKey(tenant,version, pName);
+				ProductKey key = new ProductKey(tenant, version, pName);
 				ProductRec rec = new ProductRec(key, description, crtdat, chgnbr);
 				rec.shortdescr = shortdescr;
 				rec.crtusr = crtusr;
@@ -352,7 +363,7 @@ public class ProductService {
 			connection = Db.open();
 			if (connection != null) {
 
-				if (!exists(connection, product.key.tenant,product.key.version, product.key.productName)) {
+				if (!exists(connection, product.key.tenant, product.key.version, product.key.productName)) {
 					insert(connection, product, loggedInUserId);
 				} else {
 					update(connection, product, loggedInUserId);
@@ -372,7 +383,7 @@ public class ProductService {
 		product.shortdescr = ServiceHelper.ensureStringLength(product.shortdescr, 100);
 		product.description = ServiceHelper.ensureStringLength(product.description, 995);
 
-		if (!exists(product.key.tenant,product.key.version, product.key.productName)) {
+		if (!exists(product.key.tenant, product.key.version, product.key.productName)) {
 			insert(connection, product, loggedInUserId);
 		} else {
 			update(connection, product, loggedInUserId);
@@ -403,19 +414,22 @@ public class ProductService {
 		product.shortdescr = ServiceHelper.ensureStringLength(product.shortdescr, 100);
 		product.description = ServiceHelper.ensureStringLength(product.description, 995);
 
+		String theSQL = ServiceHelper.getSQL("productInsertSQL");
+
 		PreparedStatement stmt = null;
 		try {
-			Integer firstVersion = getFirstVersionForProduct(connection, product.key.tenant,product.key.productName);
-			stmt = connection.prepareStatement(productInsertSQL);
-			stmt.setInt(1, product.key.version);
-			stmt.setString(2, product.key.productName);
-			stmt.setString(3, product.description);
-			stmt.setTimestamp(4, Db.Instant2TimeStamp(Instant.now()));
-			stmt.setInt(5, 0);
-			stmt.setInt(6, firstVersion == null ? product.key.version : firstVersion);
-			stmt.setString(7, loggedInUserId);
-			stmt.setString(8, product.shortdescr);
-			stmt.setString(9, "wrk");
+			Integer firstVersion = getFirstVersionForProduct(connection, product.key.tenant, product.key.productName);
+			stmt = connection.prepareStatement(theSQL);
+			stmt.setInt(1, product.key.tenant);
+			stmt.setInt(2, product.key.version);
+			stmt.setString(3, product.key.productName);
+			stmt.setString(4, product.description);
+			stmt.setTimestamp(5, Db.Instant2TimeStamp(Instant.now()));
+			stmt.setInt(6, 0);
+			stmt.setInt(7, firstVersion == null ? product.key.version : firstVersion);
+			stmt.setString(8, loggedInUserId);
+			stmt.setString(9, product.shortdescr);
+			stmt.setString(10, "wrk");
 			return stmt.executeUpdate();
 		} finally {
 			Db.close(stmt);
@@ -432,7 +446,7 @@ public class ProductService {
 		}
 
 		try {
-			ProductRec dbRec = get(product.key.tenant,product.key.version, product.key.productName);
+			ProductRec dbRec = get(product.key.tenant, product.key.version, product.key.productName);
 			if (dbRec == null) {
 				return 0;
 			}
@@ -443,6 +457,7 @@ public class ProductService {
 			Map<String, Object> key = new HashMap<>();
 			key.put("version", product.key.version);
 			key.put("productname", product.key.productName);
+			key.put("tenant", product.key.tenant);
 
 			Map<String, Object> value = new HashMap<>();
 			value.put("description", product.description);
@@ -475,10 +490,11 @@ public class ProductService {
 					return;
 				}
 				stmt = connection.prepareStatement(
-						"update product set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=?  and version=?");
+						"update product set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=?  and version=? and tenant=?");
 				stmt.setString(1, userid);
 				stmt.setString(2, productName);
 				stmt.setInt(3, version);
+				stmt.setInt(4, tenant);
 				stmt.executeUpdate();
 				deleteAllDependencies(connection, tenant, version, productName, userid);
 				connection.commit();
@@ -495,8 +511,8 @@ public class ProductService {
 		}
 	}
 
-	private void deleteAllDependencies(Connection connection, Integer tenant, Integer version, String productName, String userId)
-			throws SQLException {
+	private void deleteAllDependencies(Connection connection, Integer tenant, Integer version, String productName,
+			String userId) throws SQLException {
 
 		PreparedStatement stmtTopic = null;
 		PreparedStatement stmtProcess = null;
@@ -504,20 +520,23 @@ public class ProductService {
 
 		try {
 			stmtTopic = connection.prepareStatement(
-					"update topic set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=?  and version=?");
+					"update topic set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=?  and version=? and tenant = ?");
 			stmtTopic.setString(1, userId);
 			stmtTopic.setString(2, productName);
 			stmtTopic.setInt(3, version);
+			stmtTopic.setInt(4, tenant);
 			stmtProcess = connection.prepareStatement(
-					"update process set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=?  and version=?");
+					"update process set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=?  and version=? and tenant = ?");
 			stmtProcess.setString(1, userId);
 			stmtProcess.setString(2, productName);
 			stmtProcess.setInt(3, version);
+			stmtTopic.setInt(4, tenant);
 			stmtOperation = connection.prepareStatement(
-					"update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=?  and version=?");
+					"update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=?  and version=? and tenant = ?");
 			stmtOperation.setString(1, userId);
 			stmtOperation.setString(2, productName);
 			stmtOperation.setInt(3, version);
+			stmtTopic.setInt(4, tenant);
 			stmtTopic.executeUpdate();
 			stmtProcess.executeUpdate();
 			stmtOperation.executeUpdate();
@@ -546,15 +565,18 @@ public class ProductService {
 		return -1;
 	}
 
-	private Integer getFirstVersionForProduct(Connection connection, Integer tenant, String product) throws SQLException {
+	private Integer getFirstVersionForProduct(Connection connection, Integer tenant, String product)
+			throws SQLException {
 
 		ServiceHelper.validate("Product", product);
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt = connection.prepareStatement("select version from product where productname=?  order by version");
+			stmt = connection
+					.prepareStatement("select version from product where productname=? and tenant=? order by version");
 			stmt.setString(1, product);
+			stmt.setInt(2, tenant);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				return rs.getInt(1);
@@ -586,7 +608,8 @@ public class ProductService {
 		return true;
 	}
 
-	public static boolean isLocked(Connection connection, Integer tenant,Integer version, String productName) throws SQLException {
+	public static boolean isLocked(Connection connection, Integer tenant, Integer version, String productName)
+			throws SQLException {
 		ServiceHelper.validate("Tenant", tenant);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
@@ -594,9 +617,11 @@ public class ProductService {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt = connection.prepareStatement("select status from product where version=? and productname=? ");
+			stmt = connection
+					.prepareStatement("select status from product where version=? and productname=? and tenant=? ");
 			stmt.setInt(1, version);
 			stmt.setString(2, productName);
+			stmt.setInt(3, tenant);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				String status = rs.getString(1);
@@ -620,7 +645,8 @@ public class ProductService {
 	 * 
 	 */
 
-	public void createNewVersion(Integer tenant, Integer fromVersion, Integer toVersion, String productName, String loggedInUserId) {
+	public void createNewVersion(Integer tenant, Integer fromVersion, Integer toVersion, String productName,
+			String loggedInUserId) {
 		ServiceHelper.validate("Tenant", tenant);
 		ServiceHelper.validate("FromVersion", fromVersion);
 		ServiceHelper.validate("ToVersion", toVersion);
@@ -657,7 +683,7 @@ public class ProductService {
 
 			createVersion(productRec, loggedInUserId);
 
-			copyData(connection, tenant,productName, fromVersion, toVersion);
+			copyData(connection, tenant, productName, fromVersion, toVersion);
 
 			connection.commit();
 		} catch (RuntimeException | SQLException rte) {
@@ -677,7 +703,7 @@ public class ProductService {
 		ServiceHelper.validate(productRec);
 		ServiceHelper.validate("user", loggedInUserId);
 
-		if (exists(productRec.key.tenant,productRec.key.version, productRec.key.productName)) {
+		if (exists(productRec.key.tenant, productRec.key.version, productRec.key.productName)) {
 			LOGGER.error(productRec.key.version + " " + productRec.key.productName + " already exists");
 			throw new RuntimeException();
 		}
@@ -692,14 +718,16 @@ public class ProductService {
 				throw new RuntimeException();
 			}
 
-			Integer firstVersion = getFirstVersionForProduct(connection, productRec.key.tenant, productRec.key.productName);
+			Integer firstVersion = getFirstVersionForProduct(connection, productRec.key.tenant,
+					productRec.key.productName);
 
-			stmt2 = connection.prepareStatement("update product set status='locked' where productname=? ");
+			stmt2 = connection.prepareStatement("update product set status='locked' where productname=? and tenant=?");
 			stmt2.setString(1, productRec.key.productName);
+			stmt2.setInt(2, productRec.key.tenant);
 			stmt2.executeUpdate();
 
 			stmt = connection.prepareStatement(
-					"insert into product (version,productname,crtdat,chgnbr,description,status,crtver,crtusr,shortdescr) values (?,?,?,?,?,?,?,?,?)");
+					"insert into product (version,productname,crtdat,chgnbr,description,status,crtver,crtusr,shortdescr,tenant) values (?,?,?,?,?,?,?,?,?,?)");
 			stmt.setInt(1, productRec.key.version);
 			stmt.setString(2, productRec.key.productName);
 			stmt.setTimestamp(3, Db.Instant2TimeStamp(Instant.now()));
@@ -709,6 +737,7 @@ public class ProductService {
 			stmt.setInt(7, firstVersion == null ? productRec.key.version : firstVersion);
 			stmt.setString(8, loggedInUserId);
 			stmt.setString(9, productRec.shortdescr);
+			stmt.setInt(10, productRec.key.tenant);
 			return stmt.executeUpdate();
 		} finally {
 			Db.close(stmt2);
@@ -717,23 +746,23 @@ public class ProductService {
 		}
 	}
 
-	private void copyData(Connection connection, Integer tenant, String productName, Integer fromVersion, Integer toVersion)
-			throws SQLException {
+	private void copyData(Connection connection, Integer tenant, String productName, Integer fromVersion,
+			Integer toVersion) throws SQLException {
 
-		copyData(connection, tenant,productName, fromVersion, toVersion, "topic");
-		copyData(connection, tenant,productName, fromVersion, toVersion, "process");
-		copyData(connection, tenant,productName, fromVersion, toVersion, "oper");
+		copyData(connection, tenant, productName, fromVersion, toVersion, "topic");
+		copyData(connection, tenant, productName, fromVersion, toVersion, "process");
+		copyData(connection, tenant, productName, fromVersion, toVersion, "oper");
 	}
 
-	private void copyData(Connection connection, Integer tenant, String productName, Integer fromVersion, Integer toVersion,
-			String sourceTableName) throws SQLException {
+	private void copyData(Connection connection, Integer tenant, String productName, Integer fromVersion,
+			Integer toVersion, String sourceTableName) throws SQLException {
 
 		String tempTableName = "WRK";
 		tempTableName = tempTableName.replace("-", "").toLowerCase();
 
 		String cloneTable = String.format("create table  %s as table %s with no data", tempTableName, sourceTableName);
 //		String copy = String.format("insert into %s (select * from %s where version=? and productname=? and dltusr isnull)", tempTableName, sourceTableName);
-		String copy = String.format("insert into %s (select * from %s where version=? and productname=? )",
+		String copy = String.format("insert into %s (select * from %s where version=? and productname=? and tenant=?)",
 				tempTableName, sourceTableName);
 		String upd1 = String.format("update  %s set version=?, crtdat=now(),chgdat=now()", tempTableName);
 		String copyFromClone = String.format("insert into %s (select * from %s)", sourceTableName, tempTableName);
@@ -750,6 +779,7 @@ public class ProductService {
 			stmt_copy = connection.prepareStatement(copy);
 			stmt_copy.setInt(1, fromVersion);
 			stmt_copy.setString(2, productName);
+			stmt_copy.setInt(3, tenant);
 			stmt_copy.executeUpdate();
 
 			stmt_upd = connection.prepareStatement(upd1);
@@ -783,9 +813,10 @@ public class ProductService {
 			if (connection != null) {
 
 				stmt = connection.prepareStatement(
-						"select count(*) from  product where productname=? and version=? and dltusr notnull");
+						"select count(*) from  product where productname=? and version=? and tenant=? and dltusr notnull");
 				stmt.setString(1, key.productName);
 				stmt.setInt(2, key.version);
+				stmt.setInt(3, key.tenant);
 				rs = stmt.executeQuery();
 				if (rs.next()) {
 					Integer n = rs.getInt(1);

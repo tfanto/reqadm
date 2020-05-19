@@ -1,6 +1,12 @@
 package pdmf.service.support;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pdmf.model.OperationKey;
 import pdmf.model.OperationRec;
@@ -170,4 +176,39 @@ public class ServiceHelper {
 			throw new IllegalArgumentException("List  is null");
 		}
 	}
+
+	private static Map<String, String> cache = new HashMap<>();
+
+	/**
+	 * 
+	 * @param filename NO extension
+	 * @return
+	 */
+
+	public static String getSQL(String filename) {
+
+		ServiceHelper.validate("Filename", filename);
+
+		if (!cache.containsKey(filename)) {
+
+			try (InputStream is = ServiceHelper.class.getClassLoader().getResourceAsStream(filename + ".txt");
+					InputStreamReader isReader = new InputStreamReader(is);
+					BufferedReader reader = new BufferedReader(isReader);) {
+
+				StringBuffer sb = new StringBuffer();
+				String str;
+				while ((str = reader.readLine()) != null) {
+					String tmp = str.trim();
+					tmp = " " + tmp + " ";
+					sb.append(tmp);
+				}
+				String theSQL = sb.toString();
+				cache.put(filename, theSQL);
+			} catch (IOException e) {
+				return null;
+			}
+		}
+		return cache.get(filename);
+	}
+
 }

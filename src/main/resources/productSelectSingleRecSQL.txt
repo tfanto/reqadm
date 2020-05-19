@@ -1,0 +1,17 @@
+select tenant,
+       version,
+       productname,
+       description,
+       shortdescr,
+       crtdat,
+       crtusr,
+       chgdat,
+       chgusr,
+       dltdat,
+       dltusr,
+       status,
+       chgnbr,
+       crtver,
+from product 
+   where tenant=? and version=? and  productname=?
+   

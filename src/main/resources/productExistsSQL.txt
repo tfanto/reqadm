@@ -1,0 +1,4 @@
+select count(*) from  product 
+   where tenant=? and version=? and productname=?
+   
+

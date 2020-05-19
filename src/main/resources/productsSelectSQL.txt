@@ -1,0 +1,5 @@
+select 
+   version, productname, description, crtdat, chgnbr, shortdescr, crtusr, chgdat, chgusr, crtver, dltdat, dltusr, status,tenant  
+from product 
+   where version=? and tenant=? 
+   order by productname
