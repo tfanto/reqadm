@@ -1,0 +1,1 @@
+insert into topic  (tenant, version, productname, topicname,description,crtdat,chgnbr,crtver,crtusr,shortdescr) values(?,?,?,?,?,?,?,?,?,?)

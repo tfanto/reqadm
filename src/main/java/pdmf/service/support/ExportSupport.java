@@ -47,7 +47,7 @@ public class ExportSupport {
 			Document doc = docBuilder.newDocument();
 			doc.setXmlStandalone(true);
 
-			ProductRec productRec = productService.get(key.version, key.productName);
+			ProductRec productRec = productService.get(key.tenant, key.version, key.productName);
 			Element product = buildProduct(doc, productRec);
 			doc.appendChild(product);
 

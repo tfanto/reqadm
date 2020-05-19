@@ -1,0 +1,3 @@
+select topicname,description,crtdat,chgnbr,shortdescr,crtusr,chgdat,chgusr,crtver,dltdat,dltusr 
+from topic 
+where productname=? and version=? and tenant=? order by productname, topicname
