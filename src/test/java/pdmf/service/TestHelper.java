@@ -28,16 +28,16 @@ public class TestHelper {
 		String productDescription = "Order Invoicing Sales";
 		ProductKey productKey = new ProductKey(tenant, version, productName);
 		ProductRec productRec = new ProductRec(productKey, productDescription, null, null);
-		productRec.description = "ois longdescr";
+		productRec.description = "ois longdescription";
 		productRec.shortdescr = "ois shortdescr";
 		productRec.status = "wrk";
 		productService.store(productRec, "test");
 
 		productName = "uvms";
-		productDescription = "Båtar och fiske";
+		productDescription = "Bevakning av fiskebåtar";
 		productKey = new ProductKey(tenant, version, productName);
 		productRec = new ProductRec(productKey, productDescription, null, null);
-		productRec.description = "uvms longdescr";
+		productRec.description = "uvms longdescriptopn";
 		productRec.shortdescr = "uvms shortdescr";
 		productRec.status = "wrk";
 		productService.store(productRec, "test");

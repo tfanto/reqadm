@@ -137,7 +137,7 @@ public class ProductServiceTest extends TestHelper {
 	public void storeExisting() {
 
 		ProductRec fetched = productService.get(tenant, version, productName);
-		Assert.assertEquals("ois longdescr", fetched.description);
+		Assert.assertEquals("ois longdescription", fetched.description);
 		fetched.description = "CHANGED";
 		productService.store(fetched, "test");
 		fetched = productService.get(tenant, version, productName);

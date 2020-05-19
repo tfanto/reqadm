@@ -11,7 +11,7 @@ select tenant,
        dltusr,
        status,
        chgnbr,
-       crtver,
+       crtver
 from product 
    where tenant=? and version=? and  productname=?
    

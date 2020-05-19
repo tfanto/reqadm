@@ -315,30 +315,31 @@ public class ProductService {
 			stmt.setString(3, productName);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
-				String pName = rs.getString(1);
-				String description = rs.getString(2);
-				Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(3));
-				Integer chgnbr = rs.getInt(4);
-
+				Integer rs_tenant = rs.getInt(1);
+				Integer rs_version = rs.getInt(2);
+				String rs_productname = rs.getString(3);
+				String rs_description = rs.getString(4);
 				String shortdescr = rs.getString(5);
-				String crtusr = rs.getString(6);
-				Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(7));
-				String chgusr = rs.getString(8);
-				Integer crtver = rs.getInt(9);
-				Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(10));
-				String dltusr = rs.getString(11);
-				String status = rs.getString(12);
+				Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp(6));
+				String rs_crtusr = rs.getString(7);
+				Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp(8));
+				String rs_chgusr = rs.getString(9);
+				Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp(10));
+				String rs_dltusr = rs.getString(11);
+				String rs_status = rs.getString(12);				
+				Integer rs_chgnbr = rs.getInt(13);
+				Integer rs_crtver = rs.getInt(14);
 
-				ProductKey key = new ProductKey(tenant, version, pName);
-				ProductRec rec = new ProductRec(key, description, crtdat, chgnbr);
+				ProductKey key = new ProductKey(rs_tenant, rs_version, rs_productname);
+				ProductRec rec = new ProductRec(key, rs_description, rs_crtdat, rs_chgnbr);
 				rec.shortdescr = shortdescr;
-				rec.crtusr = crtusr;
-				rec.chgdat = chgdat;
-				rec.chgusr = chgusr;
-				rec.crtver = crtver;
-				rec.dltdat = dltdat;
-				rec.dltusr = dltusr;
-				rec.status = status;
+				rec.crtusr = rs_crtusr;
+				rec.chgdat = rs_chgdat;
+				rec.chgusr = rs_chgusr;
+				rec.crtver = rs_crtver;
+				rec.dltdat = rs_dltdat;
+				rec.dltusr = rs_dltusr;
+				rec.status = rs_status;
 
 				return rec;
 			}
@@ -530,13 +531,13 @@ public class ProductService {
 			stmtProcess.setString(1, userId);
 			stmtProcess.setString(2, productName);
 			stmtProcess.setInt(3, version);
-			stmtTopic.setInt(4, tenant);
+			stmtProcess.setInt(4, tenant);
 			stmtOperation = connection.prepareStatement(
 					"update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=?  and version=? and tenant = ?");
 			stmtOperation.setString(1, userId);
 			stmtOperation.setString(2, productName);
 			stmtOperation.setInt(3, version);
-			stmtTopic.setInt(4, tenant);
+			stmtOperation.setInt(4, tenant);
 			stmtTopic.executeUpdate();
 			stmtProcess.executeUpdate();
 			stmtOperation.executeUpdate();
