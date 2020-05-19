@@ -16,27 +16,27 @@ import pdmf.service.support.ServiceHelper;
 
 public class ServiceHelperTest {
 
-	OperationKey operationKey1 = new OperationKey(1, null, null, null, null, null, null);
-	OperationKey operationKey2 = new OperationKey(1, "product", null, null, null, null, null);
-	OperationKey operationKey3 = new OperationKey(3, "product", "topic", null, null, null, null);
-	OperationKey operationKey4 = new OperationKey(1, "product2", "topic", "process", null, null, null);
-	OperationKey operationKey5 = new OperationKey(1, "product", "topic2", "process", 1, null, null);
-	OperationKey operationKey6 = new OperationKey(1, "product", "topic", "process2", 1, null, 1);
-	OperationKey operationKey7 = new OperationKey(1, "product", "topic", "process2", 1, "oper", null);
-	OperationKey operationKey8 = new OperationKey(1, "product", "topic", "process2", 1, "oper", 1);
+	OperationKey operationKey1 = new OperationKey(1, 1, null, null, null, null, null, null);
+	OperationKey operationKey2 = new OperationKey(1, 1, "product", null, null, null, null, null);
+	OperationKey operationKey3 = new OperationKey(1, 3, "product", "topic", null, null, null, null);
+	OperationKey operationKey4 = new OperationKey(1, 1, "product2", "topic", "process", null, null, null);
+	OperationKey operationKey5 = new OperationKey(1, 1, "product", "topic2", "process", 1, null, null);
+	OperationKey operationKey6 = new OperationKey(1, 1, "product", "topic", "process2", 1, null, 1);
+	OperationKey operationKey7 = new OperationKey(1, 1, "product", "topic", "process2", 1, "oper", null);
+	OperationKey operationKey8 = new OperationKey(1, 1, "product", "topic", "process2", 1, "oper", 1);
 
-	ProcessKey processKey1 = new ProcessKey(1, null, null, null, null);
-	ProcessKey processKey2 = new ProcessKey(1, "product", null, null, null);
-	ProcessKey processKey3 = new ProcessKey(3, "product", "topic", null, null);
-	ProcessKey processKey4 = new ProcessKey(3, "product", "topic", "process", null);
-	ProcessKey processKey5 = new ProcessKey(3, "product", "topic", "process", 1);
+	ProcessKey processKey1 = new ProcessKey(1, 1, null, null, null, null);
+	ProcessKey processKey2 = new ProcessKey(1, 1, "product", null, null, null);
+	ProcessKey processKey3 = new ProcessKey(1, 3, "product", "topic", null, null);
+	ProcessKey processKey4 = new ProcessKey(1, 3, "product", "topic", "process", null);
+	ProcessKey processKey5 = new ProcessKey(1, 3, "product", "topic", "process", 1);
 
-	TopicKey topicKey1 = new TopicKey(1, null, null);
-	TopicKey topicKey2 = new TopicKey(1, "product", null);
-	TopicKey topicKey3 = new TopicKey(3, "product", "topic");
+	TopicKey topicKey1 = new TopicKey(1, 1, null, null);
+	TopicKey topicKey2 = new TopicKey(1, 1, "product", null);
+	TopicKey topicKey3 = new TopicKey(1, 3, "product", "topic");
 
-	ProductKey productKey1 = new ProductKey(1, null);
-	ProductKey productKey2 = new ProductKey(1, "product");
+	ProductKey productKey1 = new ProductKey(1, 1, null);
+	ProductKey productKey2 = new ProductKey(1, 1, "product");
 
 	@Test
 	public void testOperationKey() {

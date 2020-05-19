@@ -18,6 +18,7 @@ import pdmf.sys.Db;
 import pdmf.sys.RecordChangedByAnotherUser;
 
 public class ProductServiceTest extends TestHelper {
+	
 
 	@BeforeClass
 	public static void beforeClass() {
@@ -126,7 +127,7 @@ public class ProductServiceTest extends TestHelper {
 	@Test
 	public void storeNew() {
 
-		ProductKey key = new ProductKey(version, productName+"NEW");
+		ProductKey key = new ProductKey(tenant, version, productName+"NEW");
 		ProductRec rec = new ProductRec(key, "aNewRecord", null, null);
 		rec.shortdescr = "hepp";
 		productService.store(rec, "test");
@@ -149,7 +150,7 @@ public class ProductServiceTest extends TestHelper {
 
 	@Test
 	public void removeExisting() {
-		ProductKey key = new ProductKey(version, productName);
+		ProductKey key = new ProductKey(tenant, version, productName);
 		ProductRec rec = new ProductRec(key, "aNewRecord2", null, null);
 		rec.chgnbr = 0;
 		productService.store(rec, "test");
@@ -190,7 +191,7 @@ public class ProductServiceTest extends TestHelper {
 	@Test
 	public void versionTest() {
 
-		ProductKey key = new ProductKey(version, productName);
+		ProductKey key = new ProductKey(tenant, version, productName);
 
 		ProductRec rec = productService.get(key.version, key.productName);
 		Boolean exists = productService.exists(version, productName);
