@@ -12,30 +12,15 @@ import pdmf.model.TopicKey;
 import pdmf.model.TopicRec;
 
 public class ServiceHelper {
-	
-	public static String ensureStringLength(String str , Integer maxLength) {
-		
-		if(str == null) return str;
+
+	public static String ensureStringLength(String str, Integer maxLength) {
+
+		if (str == null)
+			return str;
 		int n = str.length();
-		if(n <= maxLength) return str;
+		if (n <= maxLength)
+			return str;
 		return str.substring(0, maxLength);
-	}
-
-	public static OperationKey createOperationKey(Integer version, String productName, String topicName, String processName, Integer sequence,
-			String operationName, Integer operationSequence) {
-		return new OperationKey(version, productName, topicName, processName, sequence, operationName, operationSequence);
-	}
-
-	public static ProcessKey createProcessKey(Integer version, String productName, String topicName, String processName, Integer sequence) {
-		return new ProcessKey(version, productName, topicName, processName, sequence);
-	}
-
-	public static TopicKey createTopicKey(Integer version, String productName, String topicName) {
-		return new TopicKey(version, productName, topicName);
-	}
-
-	public static ProductKey createProductKey(Integer version, String productName) {
-		return new ProductKey(version, productName);
 	}
 
 	public static void validate(String field, String data) {
@@ -49,7 +34,7 @@ public class ServiceHelper {
 			throw new IllegalArgumentException(field + " has not a valid value" + data);
 		}
 	}
-	
+
 	public static void validate(String field, Boolean data) {
 		if (data == null) {
 			throw new IllegalArgumentException(field + " is null" + data);
@@ -68,6 +53,9 @@ public class ServiceHelper {
 
 		if (key == null) {
 			throw new IllegalArgumentException("ProductKey  is null");
+		}
+		if (key.tenant == null) {
+			throw new IllegalArgumentException("ProductKey.tenant  is null");
 		}
 		if (key.version == null) {
 			throw new IllegalArgumentException("ProductKey.version  is null");
@@ -89,6 +77,9 @@ public class ServiceHelper {
 
 		if (key == null) {
 			throw new IllegalArgumentException("TopicKey  is null");
+		}
+		if (key.tenant == null) {
+			throw new IllegalArgumentException("TopicKey.tenant  is null");
 		}
 		if (key.version == null) {
 			throw new IllegalArgumentException("TopicKey.version  is null");
@@ -114,6 +105,9 @@ public class ServiceHelper {
 		if (key == null) {
 			throw new IllegalArgumentException("ProcessKey  is null");
 		}
+		if (key.tenant == null) {
+			throw new IllegalArgumentException("ProcessKey.tenant  is null");
+		}
 		if (key.version == null) {
 			throw new IllegalArgumentException("ProcessKey.version  is null");
 		}
@@ -126,7 +120,7 @@ public class ServiceHelper {
 		if (key.processName == null) {
 			throw new IllegalArgumentException("ProcessKey.Processname  is not valid");
 		}
-		if (key.sequence == null) {
+		if (key.processSeq == null) {
 			throw new IllegalArgumentException("ProcessKey.Sequence  is not valid");
 		}
 	}
@@ -143,6 +137,9 @@ public class ServiceHelper {
 
 		if (key == null) {
 			throw new IllegalArgumentException("Operation  is null");
+		}
+		if (key.tenant == null) {
+			throw new IllegalArgumentException("OperationKey.tenant  is null");
 		}
 		if (key.version == null) {
 			throw new IllegalArgumentException("OperationKey.version  is null");
@@ -166,7 +163,7 @@ public class ServiceHelper {
 			throw new IllegalArgumentException("OperationKey.OperationSequence  is not valid");
 		}
 	}
-	
+
 	public static void validate(List<String> key) {
 
 		if (key == null) {
