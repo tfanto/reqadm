@@ -1,0 +1,21 @@
+select 
+	topicname,
+	processname,
+	seq, 
+	description,
+	crtdat,
+	chgnbr,
+	shortdescr,
+	crtusr,
+	chgdat,
+	chgusr,
+	crtver,
+	dltdat,
+	dltusr  
+from process 
+where 
+	productname=?  and 
+	topicname=?  and 
+	version=? and
+	tenant=? 
+order by productname,topicname,processname,seq

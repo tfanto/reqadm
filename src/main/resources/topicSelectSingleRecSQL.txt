@@ -10,5 +10,9 @@ select topicname,
        dltdat,
        dltusr 
 from topic 
-where productname=? and topicname=? and version=? and tenant=?
+where 
+       productname=? and 
+       topicname=? and 
+       version=? and 
+       tenant=?
 

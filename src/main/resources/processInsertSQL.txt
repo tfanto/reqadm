@@ -1,0 +1,4 @@
+insert into process  
+	(tenant, version, productname, topicname,processname,seq,description,crtdat,chgnbr,crtver,crtusr,shortdescr) 
+	values(?,?,?,?,?,?,?,?,?,?,?,?)
+	

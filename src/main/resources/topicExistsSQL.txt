@@ -1,3 +1,9 @@
-select count(*) from  topic  
-   where productname=? and topicname=? and version=? and tenant = ?
+select count(*) 
+from  topic  
+where 
+   productname=? and 
+   topicname=? and 
+   version=? 
+   and tenant=?
+   
 

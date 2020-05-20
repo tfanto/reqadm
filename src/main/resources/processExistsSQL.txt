@@ -1,0 +1,10 @@
+select count(*) from  process  
+where 
+	productname=? and 
+	topicname=? and 
+	processname=? and 
+	seq=? and 
+	version=? and
+	tenant=?
+	
+	
