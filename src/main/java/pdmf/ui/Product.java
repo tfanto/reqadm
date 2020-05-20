@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Text;
 import pdmf.model.Cst;
 import pdmf.model.ProductKey;
 import pdmf.model.ProductRec;
+import pdmf.model.User;
 import pdmf.service.ProductService;
 import pdmf.sys.RecordChangedByAnotherUser;
 
@@ -26,6 +27,8 @@ public class Product extends Dialog {
 
 	private static final String UPDATE_MODE = "";
 	private String mode = null;
+
+	private User currentUser;
 
 	private ProductService productService = new ProductService();
 
@@ -110,6 +113,8 @@ public class Product extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
+				Integer tenantId = currentUser.getCurrentTenant().getId();
+
 				String wrkProductName = (String) product.getText();
 				if (wrkProductName == null || wrkProductName.trim().length() < 1) {
 					lblInfo.setText(Cst.NO_PRODUCT_SELECTED);
@@ -128,8 +133,8 @@ public class Product extends Dialog {
 					return;
 				}
 
-				ProductKey key = new ProductKey(ver, wrkProductName);
-				if (ProductService.isLocked(ver, wrkProductName)) {
+				ProductKey key = new ProductKey(tenantId, ver, wrkProductName);
+				if (ProductService.isLocked(tenantId, ver, wrkProductName)) {
 					lblInfo.setText(Cst.VERSION_LOCKED);
 					return;
 				}
@@ -141,16 +146,15 @@ public class Product extends Dialog {
 				String wrkDescription = description.getText() == null ? "" : description.getText();
 				String wrkShortDescription = shortDescription.getText() == null ? "" : shortDescription.getText();
 
-				
-				ProductRec rec = productService.get(ver, wrkProductName);
+				ProductRec rec = productService.get(tenantId, ver, wrkProductName);
 
 				if (rec == null) {
-					//rec = new ProductRec(key, null, null, null);
-					//rec.shortdescr = wrkShortDescription;
-					//rec.description = wrkDescription;
-					//productService.insert(rec, userId);
-					//chgnbr = null;
-					//result = 1;
+					// rec = new ProductRec(key, null, null, null);
+					// rec.shortdescr = wrkShortDescription;
+					// rec.description = wrkDescription;
+					// productService.insert(rec, userId);
+					// chgnbr = null;
+					// result = 1;
 					shell.dispose();
 					return;
 				} else {
@@ -181,6 +185,8 @@ public class Product extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
+				Integer tenantId = currentUser.getCurrentTenant().getId();
+
 				String wrkProductName = (String) product.getText();
 				if (wrkProductName == null || wrkProductName.trim().length() < 1) {
 					lblInfo.setText(Cst.NO_PRODUCT_SELECTED);
@@ -200,22 +206,21 @@ public class Product extends Dialog {
 					return;
 				}
 
-				ProductKey key = new ProductKey(ver, wrkProductName);
+				ProductKey key = new ProductKey(tenantId, ver, wrkProductName);
 				if (productService.isDeleteMarked(key)) {
 					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
 					return;
 				}
-				
-				if (ProductService.isLocked(ver, wrkProductName)) {
+
+				if (ProductService.isLocked(tenantId, ver, wrkProductName)) {
 					lblInfo.setText(Cst.VERSION_LOCKED);
 					return;
 				}
 
-
 				btnRemove.setEnabled(true);
 				lblInfo.setText("");
 				try {
-					productService.remove(ver, wrkProductName, userId);
+					productService.remove(tenantId, ver, wrkProductName, userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {
@@ -237,7 +242,7 @@ public class Product extends Dialog {
 		chgDat.setText("chg");
 		chgDat.setBounds(10, 453, 325, 25);
 
-		shortDescription = new StyledText(shell,SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
+		shortDescription = new StyledText(shell, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		shortDescription.setTextLimit(100);
 		shortDescription.setBounds(10, 86, 239, 73);
 
@@ -257,10 +262,12 @@ public class Product extends Dialog {
 		product.setText(p);
 		version.setText(v.toString());
 
+		Integer tenantId = currentUser.getCurrentTenant().getId();
+
 		lblInfo.setText("");
 		crtDat.setText("");
 		chgDat.setText("");
-		ProductRec rec = productService.get(v, p);
+		ProductRec rec = productService.get(tenantId, v, p);
 		if (rec != null) {
 			shortDescription.setText(rec.shortdescr == null ? "" : rec.shortdescr);
 			description.setText(rec.description == null ? "" : rec.description);
@@ -271,7 +278,8 @@ public class Product extends Dialog {
 		btnRemove.setVisible(true);
 	}
 
-	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr, Instant deleteDate, String deleteUser, Integer createdInVersion) {
+	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr,
+			Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
 		LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
 		crtDat.setText("Skapad: " + created.toString() + " av " + createUser + " i version: " + createdInVersion);
@@ -293,6 +301,10 @@ public class Product extends Dialog {
 		this.userId = userId;
 		this.v = rec.version;
 		this.p = rec.productName;
+	}
+
+	public void setCurrentUser(User user) {
+		currentUser = user;
 	}
 
 }

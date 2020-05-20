@@ -20,6 +20,7 @@ import pdmf.model.Cst;
 import pdmf.model.ProcessKey;
 import pdmf.model.ProcessRec;
 import pdmf.model.TopicKey;
+import pdmf.model.User;
 import pdmf.service.ProcessService;
 import pdmf.service.ProductService;
 import pdmf.sys.RecordChangedByAnotherUser;
@@ -29,6 +30,8 @@ public class Process extends Dialog {
 	private static final String NEW_REG_MODE = "ny post";
 	private static final String UPDATE_MODE = "ändra post";
 	private String mode = null;
+
+	private User currentUser;
 
 	private ProcessService processService = new ProcessService();
 
@@ -93,8 +96,8 @@ public class Process extends Dialog {
 	 * Create contents of the dialog.
 	 */
 	private void createContents() {
-		//shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		shell = new Shell(getParent(), getStyle());		
+		// shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		shell = new Shell(getParent(), getStyle());
 		shell.setSize(518, 560);
 		shell.setText(getText() + " " + mode);
 		shell.setLayout(null);
@@ -133,6 +136,8 @@ public class Process extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
+				Integer tenantId = currentUser.getCurrentTenant().getId();
+
 				String wrkProductName = (String) product.getData();
 
 				String wrkTopicName = topic.getText();
@@ -160,19 +165,21 @@ public class Process extends Dialog {
 					return;
 
 				}
-				
-				if (ProductService.isLocked(version, wrkProductName)) {
+
+				if (ProductService.isLocked(tenantId, version, wrkProductName)) {
 					lblInfo.setText(Cst.VERSION_LOCKED);
 					return;
 				}
 
-				ProcessKey key = new ProcessKey(version, wrkProductName, wrkTopicName, wrkProcessName, wrkProcessStep);
+				ProcessKey key = new ProcessKey(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName,
+						wrkProcessStep);
 				if (processService.isDeleteMarked(key)) {
 					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
 					return;
 				}
 
-				ProcessRec rec = processService.get(version, wrkProductName, wrkTopicName, wrkProcessName, wrkProcessStep);
+				ProcessRec rec = processService.get(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName,
+						wrkProcessStep);
 
 				if (mode.equals(NEW_REG_MODE)) {
 					if (rec != null) {
@@ -214,6 +221,8 @@ public class Process extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
+				Integer tenantId = currentUser.getCurrentTenant().getId();
+
 				String productName = (String) product.getData();
 				String topicName = topic.getText();
 				if (topicName.trim().length() < 1) {
@@ -241,12 +250,13 @@ public class Process extends Dialog {
 
 				}
 
-				if (ProductService.isLocked(version, productName)) {
+				if (ProductService.isLocked(tenantId, version, productName)) {
 					lblInfo.setText(Cst.VERSION_LOCKED);
 					return;
 				}
 
-				ProcessKey key = new ProcessKey(version, productName, topicName, processName, wrProcesskSequence);
+				ProcessKey key = new ProcessKey(tenantId, version, productName, topicName, processName,
+						wrProcesskSequence);
 				if (processService.isDeleteMarked(key)) {
 					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
 					return;
@@ -255,7 +265,8 @@ public class Process extends Dialog {
 				btnRemove.setEnabled(true);
 				lblInfo.setText("");
 				try {
-					processService.remove(version, productName, topicName, processName, wrProcesskSequence, userId);
+					processService.remove(tenantId, version, productName, topicName, processName, wrProcesskSequence,
+							userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {
@@ -277,13 +288,15 @@ public class Process extends Dialog {
 		chgDat.setText("chg");
 		chgDat.setBounds(10, 453, 482, 25);
 
-		shortDescription = new StyledText(shell,SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
+		shortDescription = new StyledText(shell, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		shortDescription.setTextLimit(100);
 		shortDescription.setBounds(167, 83, 239, 73);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
 		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(167, 60, 151, 15);
+
+		Integer tenantId = currentUser.getCurrentTenant().getId();
 
 		if (mode != null && mode.equals(UPDATE_MODE)) {
 
@@ -298,7 +311,7 @@ public class Process extends Dialog {
 			lblInfo.setText("");
 			crtDat.setText("");
 			chgDat.setText("");
-			ProcessRec rec = processService.get(version, productStr, topicStr, processStr, processStepInt);
+			ProcessRec rec = processService.get(tenantId, version, productStr, topicStr, processStr, processStepInt);
 			if (rec != null) {
 				shortDescription.setText(rec.shortdescr == null ? "" : rec.shortdescr);
 				description.setText(rec.description == null ? "" : rec.description);
@@ -327,7 +340,8 @@ public class Process extends Dialog {
 
 	}
 
-	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr, Instant deleteDate, String deleteUser, Integer createdInVersion) {
+	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr,
+			Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
 		LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
 		crtDat.setText("Skapad: " + created.toString() + " av " + createUser + " i version: " + createdInVersion);
@@ -351,7 +365,7 @@ public class Process extends Dialog {
 		productStr = rec.productName;
 		topicStr = rec.topicName;
 		processStr = rec.processName;
-		processStepInt = rec.sequence;
+		processStepInt = rec.processSeq;
 	}
 
 	// create child to process
@@ -364,4 +378,9 @@ public class Process extends Dialog {
 		processStr = null;
 		processStepInt = null;
 	}
+
+	public void setCurrentUser(User user) {
+		currentUser = user;
+	}
+
 }

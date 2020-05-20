@@ -24,6 +24,7 @@ import pdmf.model.OperationKey;
 import pdmf.model.ProcessKey;
 import pdmf.model.ProductKey;
 import pdmf.model.TopicKey;
+import pdmf.model.User;
 import pdmf.service.SearchService;
 
 public class Search extends Dialog {
@@ -43,6 +44,8 @@ public class Search extends Dialog {
 	private Button btnLaneTopic;
 	private Button btnLaneProcess;
 	private Button btnLaneOperation;
+
+	private User currentUser;
 
 	public Search(Shell parent, int style) {
 		super(parent, style);
@@ -105,12 +108,15 @@ public class Search extends Dialog {
 					return;
 				}
 
+				Integer tenantId = currentUser.getCurrentTenant().getId();
+
 				Boolean searchInProduct = btnLaneProduct.getSelection();
 				Boolean searchInTopic = btnLaneTopic.getSelection();
 				Boolean searchInProcess = btnLaneProcess.getSelection();
 				Boolean searchInOperation = btnLaneOperation.getSelection();
 
-				List<Map<Object, List<String>>> resultSet = searchService.search(criteriaList, searchInProduct,searchInTopic,searchInProcess,searchInOperation);
+				List<Map<Object, List<String>>> resultSet = searchService.search(criteriaList, searchInProduct,
+						searchInTopic, searchInProcess, searchInOperation, tenantId);
 				searchResult.removeAll();
 				lblInfo.setText("");
 				for (Map<Object, List<String>> record : resultSet) {
@@ -147,7 +153,8 @@ public class Search extends Dialog {
 
 						if (object instanceof ProductKey) {
 							ProductKey key = (ProductKey) object;
-							pdmf.ui.Product dialog = new pdmf.ui.Product(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+							pdmf.ui.Product dialog = new pdmf.ui.Product(shell,
+									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 							String userId = getUser();
 							dialog.setKey(key, userId);
 							dialog.open();
@@ -159,13 +166,15 @@ public class Search extends Dialog {
 							dialog.open();
 						} else if (object instanceof ProcessKey) {
 							ProcessKey key = (ProcessKey) object;
-							pdmf.ui.Process dialog = new pdmf.ui.Process(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+							pdmf.ui.Process dialog = new pdmf.ui.Process(shell,
+									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 							String userId = getUser();
 							dialog.setKey(key, userId, key.version);
 							dialog.open();
 						} else if (object instanceof OperationKey) {
 							OperationKey key = (OperationKey) object;
-							pdmf.ui.Operation dialog = new pdmf.ui.Operation(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+							pdmf.ui.Operation dialog = new pdmf.ui.Operation(shell,
+									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 							String userId = getUser();
 							dialog.setKey(key, userId, key.version);
 							dialog.open();
@@ -253,4 +262,9 @@ public class Search extends Dialog {
 	private String getUser() {
 		return Main.getUser().getUserId();
 	}
+
+	public void setCurrentUser(User user) {
+		currentUser = user;
+	}
+
 }
