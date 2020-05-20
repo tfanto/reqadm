@@ -51,17 +51,20 @@ public class ExportSupport {
 			Element product = buildProduct(doc, productRec);
 			doc.appendChild(product);
 
-			List<TopicRec> topics = topicService.list(productRec.key.tenant,productRec.key.version, productRec.key.productName);
+			List<TopicRec> topics = topicService.list(productRec.key.tenant, productRec.key.version,
+					productRec.key.productName);
 			for (TopicRec topicRec : topics) {
 				Element topic = buildTopic(doc, topicRec);
 				product.appendChild(topic);
 
-				List<ProcessRec> processes = processService.list(topicRec.key.version, topicRec.key.productName, topicRec.key.topicName);
+				List<ProcessRec> processes = processService.list(topicRec.key.tenant, topicRec.key.version,
+						topicRec.key.productName, topicRec.key.topicName);
 				for (ProcessRec processRec : processes) {
 					Element process = buildProcess(doc, processRec);
 					topic.appendChild(process);
 
-					List<OperationRec> operations = operationService.list(processRec.key.version, processRec.key.productName, processRec.key.topicName, processRec.key.processName);
+					List<OperationRec> operations = operationService.list(processRec.key.tenant, processRec.key.version,
+							processRec.key.productName, processRec.key.topicName, processRec.key.processName);
 					for (OperationRec operationRec : operations) {
 						Element operation = buildOperation(doc, operationRec);
 						process.appendChild(operation);
@@ -140,7 +143,6 @@ public class ExportSupport {
 		description.setAttribute("shortinfo", rec.shortdescr);
 		topic.appendChild(description);
 
-
 		return topic;
 	}
 
@@ -163,7 +165,6 @@ public class ExportSupport {
 		description.setAttribute("shortinfo", rec.shortdescr);
 		process.appendChild(description);
 
-
 		return process;
 	}
 
@@ -185,7 +186,6 @@ public class ExportSupport {
 		description.setAttribute("info", rec.description);
 		description.setAttribute("shortinfo", rec.shortdescr);
 		operation.appendChild(description);
-
 
 		return operation;
 	}
