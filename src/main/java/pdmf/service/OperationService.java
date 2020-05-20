@@ -42,36 +42,44 @@ public class OperationService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, productName);
-				stmt.setString(2, topicName);
-				stmt.setString(3, processName);
-				stmt.setInt(4, version);
-				stmt.setInt(5, tenant);
+				stmt.setInt(1, tenant);
+				stmt.setInt(2, version);
+				stmt.setString(3, productName);
+				stmt.setString(4, topicName);
+				stmt.setString(5, processName);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
-					Integer seq = rs.getInt(3);
-					String operationName = rs.getString(4);
-					Integer operationSeq = rs.getInt(5);
-					String description = rs.getString(6);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(7));
-					Integer chgnbr = rs.getInt(8);
-					String shortdescr = rs.getString(9);
-					String crtusr = rs.getString(10);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(11));
-					String chgusr = rs.getString(12);
-					Integer crtver = rs.getInt(13);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(14));
-					String dltusr = rs.getString(15);
-					OperationKey key = new OperationKey(tenant, version, productName, topicName, processName, seq,
-							operationName, operationSeq);
-					OperationRec rec = new OperationRec(key, description, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltdat = dltdat;
-					rec.dltusr = dltusr;
+
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
+
+					Integer rs_tenant = rs.getInt("tenant");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
+					String rs_topicname = rs.getString("topicname");
+					String rs_processname = rs.getString("processname");
+					Integer rs_processseq = rs.getInt("processseq");
+					String rs_operationname = rs.getString("operationname");
+					Integer rs_operationseq = rs.getInt("operationseq");
+
+					OperationKey key = new OperationKey(rs_tenant, rs_version, rs_productname, rs_topicname,
+							rs_processname, rs_processseq, rs_operationname, rs_operationseq);
+					OperationRec rec = new OperationRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltdat = rs_dltdat;
+					rec.dltusr = rs_dltusr;
 					ret.add(rec);
 				}
 				return ret;
@@ -87,14 +95,14 @@ public class OperationService {
 	}
 
 	public List<OperationRec> list(Integer tenant, Integer version, String productName, String topicName,
-			String processName, Integer seq) {
+			String processName, Integer processeq) {
 
 		ServiceHelper.validate("Tenant", tenant);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
 		ServiceHelper.validate("Topic", topicName);
 		ServiceHelper.validate("Process", processName);
-		ServiceHelper.validate("ProcessSeq", seq);
+		ServiceHelper.validate("ProcessSeq", processeq);
 
 		String theSQL = ServiceHelper.getSQL("operationSelectSQL");
 
@@ -106,36 +114,44 @@ public class OperationService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, productName);
-				stmt.setString(2, topicName);
-				stmt.setString(3, processName);
-				stmt.setInt(4, seq);
-				stmt.setInt(5, version);
-				stmt.setInt(6, tenant);
+				stmt.setInt(1, tenant);
+				stmt.setInt(2, version);
+				stmt.setString(3, productName);
+				stmt.setString(4, topicName);
+				stmt.setString(5, processName);
+				stmt.setInt(6, processeq);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
-					String operationName = rs.getString(4);
-					Integer operationSeq = rs.getInt(5);
-					String description = rs.getString(6);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(7));
-					Integer chgnbr = rs.getInt(8);
-					String shortdescr = rs.getString(9);
-					String crtusr = rs.getString(10);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(11));
-					String chgusr = rs.getString(12);
-					Integer crtver = rs.getInt(13);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(14));
-					String dltusr = rs.getString(15);
-					OperationKey key = new OperationKey(tenant, version, productName, topicName, processName, seq,
-							operationName, operationSeq);
-					OperationRec rec = new OperationRec(key, description, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltdat = dltdat;
-					rec.dltusr = dltusr;
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
+
+					Integer rs_tenant = rs.getInt("tenant");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
+					String rs_topicname = rs.getString("topicname");
+					String rs_processname = rs.getString("processname");
+					Integer rs_processseq = rs.getInt("processseq");
+					String rs_operationname = rs.getString("operationname");
+					Integer rs_operationseq = rs.getInt("operationseq");
+
+					OperationKey key = new OperationKey(rs_tenant, rs_version, rs_productname, topicName,
+							rs_processname, rs_processseq, rs_operationname, rs_operationseq);
+					OperationRec rec = new OperationRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltdat = rs_dltdat;
+					rec.dltusr = rs_dltusr;
 					ret.add(rec);
 				}
 				return ret;

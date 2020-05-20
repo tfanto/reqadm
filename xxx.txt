@@ -1,0 +1,31 @@
+commonpart
+
+	crtdat,
+	crtusr,
+	chgdat,
+	chgusr,
+	dltdat,
+	dltusr,
+	chgnbr,
+	crtver,
+	description,
+	shortdescr, 
+	
+	
+	tenant,
+	version,
+	productname,
+	topicname,
+	processname
+	
+keypart
+
+	tenant,
+	version,
+	productname,
+	topicname,
+	processname
+
+	
+	
+

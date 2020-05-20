@@ -1,26 +1,29 @@
-select 
+select
+	crtdat,
+	crtusr,
+	chgdat,
+	chgusr,
+	dltdat,
+	dltusr,
+	chgnbr,
+	crtver,
+	description,
+	shortdescr,
+	tenant,
+	version,
+	productname,
 	topicname,
 	processname,
 	processseq, 
 	operationname,
-	operationseq, 
-	description,
-	crtdat,
-	chgnbr,
-	shortdescr,
-	crtusr,
-	chgdat,
-	chgusr,
-	crtver,
-	dltdat,
-	dltusr 
+	operationseq 	
 from oper 
 	where 
+		tenant=?  and 
+		version=? and 
 		productname=?  and 
-		topicname=? and 
-		processname=?  and 
-		version=?  and 
-		tenant=? 
+		topicname=?  and 
+		processname=? 
 order by 
 	productname,
 	topicname,
