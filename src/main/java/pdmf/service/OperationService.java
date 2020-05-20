@@ -142,7 +142,7 @@ public class OperationService {
 					String rs_operationname = rs.getString("operationname");
 					Integer rs_operationseq = rs.getInt("operationseq");
 
-					OperationKey key = new OperationKey(rs_tenant, rs_version, rs_productname, topicName,
+					OperationKey key = new OperationKey(rs_tenant, rs_version, rs_productname, rs_topicname,
 							rs_processname, rs_processseq, rs_operationname, rs_operationseq);
 					OperationRec rec = new OperationRec(key, rs_description, rs_crtdat, rs_chgnbr);
 					rec.shortdescr = rs_shortdescr;
@@ -178,14 +178,14 @@ public class OperationService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, rec.key.productName);
-				stmt.setString(2, rec.key.topicName);
-				stmt.setString(3, rec.key.processName);
-				stmt.setInt(4, rec.key.sequence);
-				stmt.setString(5, rec.key.operationName);
-				stmt.setInt(6, rec.key.operationSequence);
-				stmt.setInt(7, rec.key.version);
-				stmt.setInt(8, rec.key.tenant);
+				stmt.setInt(1, rec.key.tenant);
+				stmt.setInt(2, rec.key.version);
+				stmt.setString(3, rec.key.productName);
+				stmt.setString(4, rec.key.topicName);
+				stmt.setString(5, rec.key.processName);
+				stmt.setInt(6, rec.key.sequence);
+				stmt.setString(7, rec.key.operationName);
+				stmt.setInt(8, rec.key.operationSequence);
 				rs = stmt.executeQuery();
 				rs.next();
 				Integer n = rs.getInt(1);
@@ -212,14 +212,14 @@ public class OperationService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, key.productName);
-				stmt.setString(2, key.topicName);
-				stmt.setString(3, key.processName);
-				stmt.setInt(4, key.sequence);
-				stmt.setString(5, key.operationName);
-				stmt.setInt(6, key.operationSequence);
-				stmt.setInt(7, key.version);
-				stmt.setInt(8, key.tenant);
+				stmt.setInt(1, key.tenant);
+				stmt.setInt(2, key.version);
+				stmt.setString(3, key.productName);
+				stmt.setString(4, key.topicName);
+				stmt.setString(5, key.processName);
+				stmt.setInt(6, key.sequence);
+				stmt.setString(7, key.operationName);
+				stmt.setInt(8, key.operationSequence);
 				rs = stmt.executeQuery();
 				rs.next();
 				Integer n = rs.getInt(1);
@@ -255,37 +255,46 @@ public class OperationService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, productName);
-				stmt.setString(2, topicName);
-				stmt.setString(3, processName);
-				stmt.setInt(4, sequence);
-				stmt.setString(5, operationName);
-				stmt.setInt(6, operationSeq);
-				stmt.setInt(7, version);
-				stmt.setInt(8, tenant);
+				stmt.setInt(1, tenant);
+				stmt.setInt(2, version);
+				stmt.setString(3, productName);
+				stmt.setString(4, topicName);
+				stmt.setString(5, processName);
+				stmt.setInt(6, sequence);
+				stmt.setString(7, operationName);
+				stmt.setInt(8, operationSeq);
 				rs = stmt.executeQuery();
 				if (rs.next()) {
-					String descr = rs.getString(3);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(4));
-					Integer chgnbr = rs.getInt(5);
-					String shortdescr = rs.getString(6);
-					String crtusr = rs.getString(7);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(8));
-					String chgusr = rs.getString(9);
-					Integer crtver = rs.getInt(10);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(11));
-					String dltusr = rs.getString(12);
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
 
-					OperationKey key = new OperationKey(tenant, version, productName, topicName, processName, sequence,
-							operationName, operationSeq);
-					rec = new OperationRec(key, descr, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltdat = dltdat;
-					rec.dltusr = dltusr;
+					Integer rs_tenant = rs.getInt("tenant");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
+					String rs_topicname = rs.getString("topicname");
+					String rs_processname = rs.getString("processname");
+					Integer rs_processseq = rs.getInt("processseq");
+					String rs_operationname = rs.getString("operationname");
+					Integer rs_operationseq = rs.getInt("operationseq");
+
+					OperationKey key = new OperationKey(rs_tenant, rs_version, rs_productname, rs_topicname,
+							rs_processname, rs_processseq, rs_operationname, rs_operationseq);
+					rec = new OperationRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltdat = rs_dltdat;
+					rec.dltusr = rs_dltusr;
 				}
 			}
 		} catch (SQLException e) {
@@ -351,7 +360,6 @@ public class OperationService {
 				stmt.setInt(11, 0);
 				stmt.setString(12, loggedInUserId);
 				stmt.setInt(13, firstVersion == null ? rec.key.version : firstVersion);
-
 				stmt.setString(14, rec.shortdescr);
 				return stmt.executeUpdate();
 			}

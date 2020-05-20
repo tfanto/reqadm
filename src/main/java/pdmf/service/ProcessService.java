@@ -123,12 +123,12 @@ public class ProcessService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, key.productName);
-				stmt.setString(2, key.topicName);
-				stmt.setString(3, key.processName);
-				stmt.setInt(4, key.processSeq);
-				stmt.setInt(5, key.version);
-				stmt.setInt(6, key.tenant);
+				stmt.setInt(1, key.tenant);
+				stmt.setInt(2, key.version);
+				stmt.setString(3, key.productName);
+				stmt.setString(4, key.topicName);
+				stmt.setString(5, key.processName);
+				stmt.setInt(6, key.processSeq);
 				rs = stmt.executeQuery();
 				rs.next();
 				Integer n = rs.getInt(1);
