@@ -1,5 +1,5 @@
 select processname,
-		seq, 
+		processseq, 
 		description,
 		crtdat,
 		chgnbr,
@@ -15,7 +15,7 @@ where
 	productname=? and 
 	topicname=? and 
 	processname=? and 
-	seq=? and 
+	processseq=? and 
 	version=? and 
 	tenant = ?
 	

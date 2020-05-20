@@ -336,7 +336,7 @@ public class OperationService {
 				stmt.setString(12, loggedInUserId);
 				stmt.setInt(13, firstVersion == null ? rec.key.version : firstVersion);
 
-				stmt.setString(13, rec.shortdescr);
+				stmt.setString(14, rec.shortdescr);
 				return stmt.executeUpdate();
 			}
 		} catch (SQLException e) {
@@ -367,7 +367,7 @@ public class OperationService {
 				key.put("productname", rec.key.productName);
 				key.put("topicname", rec.key.topicName);
 				key.put("processname", rec.key.processName);
-				key.put("seq", rec.key.sequence);
+				key.put("processseq", rec.key.sequence);
 				key.put("operationname", rec.key.operationName);
 				key.put("operationseq", rec.key.operationSequence);
 				key.put("version", rec.key.version);
@@ -424,7 +424,7 @@ public class OperationService {
 				}
 
 				stmt = connection.prepareStatement(
-						"update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and processname=? and seq=? and operationname=? and operationseq=?  and version=? and tenant=?");
+						"update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and processname=? and processseq=? and operationname=? and operationseq=?  and version=? and tenant=?");
 				stmt.setString(1, userid);
 				stmt.setString(2, productName);
 				stmt.setString(3, topicName);
@@ -458,7 +458,7 @@ public class OperationService {
 		ResultSet rs = null;
 		try {
 			stmt = connection.prepareStatement(
-					"select version from oper where productname=? and topicname=? and processname=? and seq=?  and operationname=? and operationseq=? and tenant=? order by version");
+					"select version from oper where productname=? and topicname=? and processname=? and processseq=?  and operationname=? and operationseq=? and tenant=? order by version");
 			stmt.setString(1, product);
 			stmt.setString(2, topic);
 			stmt.setString(3, process);

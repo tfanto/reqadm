@@ -1,7 +1,7 @@
 select 
 	topicname,
 	processname,
-	seq, 
+	processseq, 
 	operationname,
 	operationseq, 
 	description,
@@ -18,13 +18,13 @@ from oper
 	where productname=?  and 
 	topicname=? and 
 	processname=? and 
-	seq=?  and 
+	processseq=?  and 
 	version=? and
 	tenant=? 
 order by 
 	productname,
 	topicname,
 	processname,
-	seq,
+	processseq,
 	operationname,
 	operationseq

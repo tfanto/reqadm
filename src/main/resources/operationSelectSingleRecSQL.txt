@@ -16,7 +16,7 @@ from oper
 		productname=? and 
 		topicname=? and 
 		processname=? and 
-		seq=?  and 
+		processseq=?  and 
 		operationname=? and 
 		operationseq=? and 
 		version=? and 

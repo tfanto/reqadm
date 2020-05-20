@@ -1,7 +1,7 @@
 select 
 	topicname,
 	processname,
-	seq, 
+	processseq, 
 	description,
 	crtdat,
 	chgnbr,
@@ -18,4 +18,4 @@ where
 	topicname=?  and 
 	version=? and
 	tenant=? 
-order by productname,topicname,processname,seq
+order by productname,topicname,processname,processseq
