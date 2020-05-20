@@ -1,0 +1,12 @@
+select count(*) from  oper  
+   where 
+      productname=? and 
+      topicname=? and 
+      processname=? and 
+      seq=? and 
+      operationname=? and 
+      operationseq=? and 
+      version=? and 
+      dltusr notnull and
+      tenant=?
+      

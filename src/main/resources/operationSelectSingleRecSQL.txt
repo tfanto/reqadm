@@ -1,0 +1,25 @@
+select 
+	operationname, 
+	operationseq, 
+	description,
+	crtdat,
+	chgnbr,
+	shortdescr,
+	crtusr,
+	chgdat,
+	chgusr,
+	crtver,
+	dltdat,
+	dltusr 
+from oper 
+	where 
+		productname=? and 
+		topicname=? and 
+		processname=? and 
+		seq=?  and 
+		operationname=? and 
+		operationseq=? and 
+		version=? and 
+		tenant=?
+		
+		

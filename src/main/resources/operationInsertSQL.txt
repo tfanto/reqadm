@@ -1,0 +1,5 @@
+insert into oper  
+	(tenant,version, productname, topicname,processname,seq,operationname,operationseq, description,crtdat,chgnbr,crtusr,crtver,shortdescr) 
+	values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+	
+	

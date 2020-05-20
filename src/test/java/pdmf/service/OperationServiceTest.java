@@ -44,49 +44,55 @@ public class OperationServiceTest extends TestHelper {
 
 	@Test
 	public void getList() {
-		List<OperationRec> operations = operationService.list(version, productName, topicName, processName, seq);
+		List<OperationRec> operations = operationService.list(tenant, version, productName, topicName, processName,
+				seq);
 		Assert.assertTrue(operations.size() > 0);
 	}
 
 	@Test
 	public void getList_Fail() {
-		List<OperationRec> operations = operationService.list(version, productName, topicName, processName, 33);
+		List<OperationRec> operations = operationService.list(tenant, version, productName, topicName, processName, 33);
 		Assert.assertEquals(0, operations.size());
 	}
 
 	@Test
 	public void getList_Fail2() {
-		List<OperationRec> operations = operationService.list(version, productName + "NO", topicName, processName, seq);
+		List<OperationRec> operations = operationService.list(tenant, version, productName + "NO", topicName,
+				processName, seq);
 		Assert.assertEquals(0, operations.size());
 	}
-	
+
 	@Test
 	public void getList2() {
-		List<OperationRec> operations = operationService.list(version, productName , topicName, processName);
+		List<OperationRec> operations = operationService.list(tenant, version, productName, topicName, processName);
 		Assert.assertEquals(3, operations.size());
 	}
-	
+
 	@Test
 	public void getList2_FAIL() {
-		List<OperationRec> operations = operationService.list(version, productName + "NOWAY" , topicName, processName);
+		List<OperationRec> operations = operationService.list(tenant, version, productName + "NOWAY", topicName,
+				processName);
 		Assert.assertEquals(0, operations.size());
 	}
 
 	@Test
 	public void get() {
-		OperationRec operation = operationService.get(version, productName, topicName, processName, seq, "YADAYDYA", operationSeq);
+		OperationRec operation = operationService.get(tenant, version, productName, topicName, processName, seq,
+				"YADAYDYA", operationSeq);
 		Assert.assertEquals(null, operation);
 	}
 
 	@Test
 	public void getFail() {
-		OperationRec operation = operationService.get(version, productName, topicName, processName, seq, operationNameADD, operationSeq);
+		OperationRec operation = operationService.get(tenant, version, productName, topicName, processName, seq,
+				operationNameADD, operationSeq);
 		Assert.assertEquals("customer", operation.key.topicName);
 	}
 
 	@Test
 	public void exist() {
-		OperationKey key = new OperationKey(version, productName, topicName, processName, seq, operationNameADD, operationSeq);
+		OperationKey key = new OperationKey(tenant, version, productName, topicName, processName, seq, operationNameADD,
+				operationSeq);
 		OperationRec rec = new OperationRec(key, null, null, null);
 		Boolean exists = operationService.exists(rec);
 		Assert.assertTrue(exists);
@@ -94,36 +100,42 @@ public class OperationServiceTest extends TestHelper {
 
 	@Test
 	public void existFail() {
-		OperationKey key = new OperationKey(version, productName, topicName, processName, seq, "yadayada", operationSeq);
+		OperationKey key = new OperationKey(tenant, version, productName, topicName, processName, seq, "yadayada",
+				operationSeq);
 		OperationRec rec = new OperationRec(key, null, null, null);
 		Boolean exists = operationService.exists(rec);
 		Assert.assertFalse(exists);
 	}
 
-
 	@Test
 	public void storeNew() {
-		OperationKey key = new OperationKey(version, productName, topicName, processName, seq, "yadayada", operationSeq);
+		OperationKey key = new OperationKey(tenant, version, productName, topicName, processName, seq, "yadayada",
+				operationSeq);
 		OperationRec rec = new OperationRec(key, "aNewRecord", null, null);
 		rec.shortdescr = "ya";
 		operationService.store(rec, "test");
-		OperationRec fetched = operationService.get(version, productName, topicName, processName, seq, "yadayada", operationSeq);
+		OperationRec fetched = operationService.get(tenant, version, productName, topicName, processName, seq,
+				"yadayada", operationSeq);
 		Assert.assertNotNull(fetched);
 
 	}
 
 	@Test
 	public void storeExisting() {
-		operationService.remove(version, productName, topicName, processName, seq, "newRecord2", operationSeq, "test");
-		OperationKey key = new OperationKey(version, productName, topicName, processName, seq, "newRecord2", operationSeq);
+		operationService.remove(tenant, version, productName, topicName, processName, seq, "newRecord2", operationSeq,
+				"test");
+		OperationKey key = new OperationKey(tenant, version, productName, topicName, processName, seq, "newRecord2",
+				operationSeq);
 		OperationRec rec = new OperationRec(key, "aNewRecord2", null, null);
 		rec.shortdescr = "kort rackare";
 		operationService.store(rec, "test");
-		OperationRec fetched = operationService.get(version, productName, topicName, processName, seq, "newRecord2", operationSeq);
+		OperationRec fetched = operationService.get(tenant, version, productName, topicName, processName, seq,
+				"newRecord2", operationSeq);
 		Assert.assertEquals("aNewRecord2", fetched.description);
 		fetched.description = "CHANGED";
 		operationService.store(fetched, "test");
-		fetched = operationService.get(version, productName, topicName, processName, seq, "newRecord2", operationSeq);
+		fetched = operationService.get(tenant, version, productName, topicName, processName, seq, "newRecord2",
+				operationSeq);
 
 		Assert.assertNotNull(fetched);
 		Assert.assertEquals("CHANGED", fetched.description);
@@ -132,14 +144,18 @@ public class OperationServiceTest extends TestHelper {
 
 	@Test
 	public void removeExisting() {
-		OperationKey key = new OperationKey(version, productName, topicName, processName, seq, "newRecord42", operationSeq);
+		OperationKey key = new OperationKey(tenant, version, productName, topicName, processName, seq, "newRecord42",
+				operationSeq);
 		OperationRec rec = new OperationRec(key, "aNewRecord2", null, null);
 		operationService.store(rec, "test");
-		OperationRec fetched = operationService.get(version, productName, topicName, processName, seq, "newRecord42", operationSeq);
+		OperationRec fetched = operationService.get(tenant, version, productName, topicName, processName, seq,
+				"newRecord42", operationSeq);
 		Assert.assertEquals("aNewRecord2", fetched.description);
-		operationService.remove(version, productName, topicName, processName, seq, "newRecord42", operationSeq, "test");
+		operationService.remove(tenant, version, productName, topicName, processName, seq, "newRecord42", operationSeq,
+				"test");
 
-		OperationKey key2 = new OperationKey(version, productName, topicName, processName, seq, "newRecord42", operationSeq);
+		OperationKey key2 = new OperationKey(tenant, version, productName, topicName, processName, seq, "newRecord42",
+				operationSeq);
 
 		OperationRec lookup = new OperationRec(key2, null, null, null);
 		Assert.assertFalse(lookup.dltusr != null);
@@ -147,8 +163,10 @@ public class OperationServiceTest extends TestHelper {
 
 	@Test
 	public void removeNonExisting() {
-		operationService.remove(version, productName, topicName, processName, seq, "newRecord424", operationSeq, "test");
-		OperationKey key = new OperationKey(version, productName, topicName, processName, seq, "newRecord424", operationSeq);
+		operationService.remove(tenant, version, productName, topicName, processName, seq, "newRecord424", operationSeq,
+				"test");
+		OperationKey key = new OperationKey(tenant, version, productName, topicName, processName, seq, "newRecord424",
+				operationSeq);
 		OperationRec lookup = new OperationRec(key, null, null, null);
 		Boolean exists = operationService.exists(lookup);
 		Assert.assertFalse(exists);
@@ -157,15 +175,19 @@ public class OperationServiceTest extends TestHelper {
 	@Test(expected = RecordChangedByAnotherUser.class)
 	public void updatedByAnotherUser() {
 
-		operationService.remove(version, productName, topicName, processName, seq, "newRecord2", operationSeq, "test");
-		OperationKey key = new OperationKey(version, productName, topicName, processName, seq, "newRecord2", operationSeq);
+		operationService.remove(tenant, version, productName, topicName, processName, seq, "newRecord2", operationSeq,
+				"test");
+		OperationKey key = new OperationKey(tenant, version, productName, topicName, processName, seq, "newRecord2",
+				operationSeq);
 		OperationRec rec = new OperationRec(key, "aNewRecord2", null, null);
 		operationService.store(rec, "test");
-		OperationRec fetched1 = operationService.get(version, productName, topicName, processName, seq, "newRecord2", operationSeq);
+		OperationRec fetched1 = operationService.get(tenant, version, productName, topicName, processName, seq,
+				"newRecord2", operationSeq);
 		Assert.assertEquals("aNewRecord2", fetched1.description);
 		fetched1.description = "CHANGED1";
 
-		OperationRec fetched2 = operationService.get(version, productName, topicName, processName, seq, "newRecord2", operationSeq);
+		OperationRec fetched2 = operationService.get(tenant, version, productName, topicName, processName, seq,
+				"newRecord2", operationSeq);
 		Assert.assertEquals("aNewRecord2", fetched2.description);
 		fetched2.description = "CHANGED BY THE FAST ONE";
 		operationService.store(fetched2, "test");

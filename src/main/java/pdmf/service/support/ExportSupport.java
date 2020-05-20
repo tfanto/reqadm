@@ -51,7 +51,7 @@ public class ExportSupport {
 			Element product = buildProduct(doc, productRec);
 			doc.appendChild(product);
 
-			List<TopicRec> topics = topicService.list(productRec.key.version, productRec.key.productName);
+			List<TopicRec> topics = topicService.list(productRec.key.tenant,productRec.key.version, productRec.key.productName);
 			for (TopicRec topicRec : topics) {
 				Element topic = buildTopic(doc, topicRec);
 				product.appendChild(topic);
