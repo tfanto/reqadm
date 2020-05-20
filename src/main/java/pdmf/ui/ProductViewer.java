@@ -497,6 +497,7 @@ public class ProductViewer extends Dialog {
 											SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 									String userId = getUser();
 									dialog.setKey(rec, userId);
+									dialog.setCurrentUser(currentUser);
 									dialog.open();
 									refreshProductTree(tree, rec.productName, rec.version, rec.tenant);
 								}

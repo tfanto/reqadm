@@ -157,12 +157,14 @@ public class Search extends Dialog {
 									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 							String userId = getUser();
 							dialog.setKey(key, userId);
+							dialog.setCurrentUser(currentUser);
 							dialog.open();
 						} else if (object instanceof TopicKey) {
 							TopicKey key = (TopicKey) object;
 							pdmf.ui.Topic dialog = new pdmf.ui.Topic(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 							String userId = getUser();
 							dialog.setKey(key, userId, key.version);
+							dialog.setCurrentUser(currentUser);
 							dialog.open();
 						} else if (object instanceof ProcessKey) {
 							ProcessKey key = (ProcessKey) object;
@@ -170,6 +172,7 @@ public class Search extends Dialog {
 									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 							String userId = getUser();
 							dialog.setKey(key, userId, key.version);
+							dialog.setCurrentUser(currentUser);
 							dialog.open();
 						} else if (object instanceof OperationKey) {
 							OperationKey key = (OperationKey) object;
@@ -177,6 +180,7 @@ public class Search extends Dialog {
 									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 							String userId = getUser();
 							dialog.setKey(key, userId, key.version);
+							dialog.setCurrentUser(currentUser);
 							dialog.open();
 						}
 					}

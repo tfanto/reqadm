@@ -23,8 +23,8 @@ public class SearchService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchService.class);
 
-	private String selectSQL_OPERATION = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname, topicname, processname, seq, operationname, operationseq from oper where tenant=?";
-	private String selectSQL_PROCESS = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname, topicname, processname, seq from process where tenant=?";
+	private String selectSQL_OPERATION = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname, topicname, processname, processseq, operationname, operationseq from oper where tenant=?";
+	private String selectSQL_PROCESS = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname, topicname, processname, processseq from process where tenant=?";
 	private String selectSQL_TOPIC = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname, topicname from topic where tenant=?";
 	private String selectSQL_PRODUCT = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname from product where tenant=?";
 

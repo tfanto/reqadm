@@ -27,6 +27,8 @@ public class Main {
 
 	protected Shell shell;
 	Display display;
+	
+	private static User currentUser;
 
 	/**
 	 * Launch the application.
@@ -35,6 +37,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
+			currentUser = getUser();
 			Db.setupDatabasePool();
 			Main window = new Main();
 			window.open();
@@ -91,6 +94,7 @@ public class Main {
 			public void widgetSelected(SelectionEvent e) {
 				pdmf.ui.ProductViewer dialog = new pdmf.ui.ProductViewer(shell,  SWT.DIALOG_TRIM | SWT.MODELESS);
 				dialog.setText(Cst.WRK_WITH_PRODUCTS);
+				dialog.setCurrentUser(currentUser);
 				dialog.open();
 			}
 		});
@@ -102,6 +106,7 @@ public class Main {
 			public void widgetSelected(SelectionEvent e) {
 				ProductVersion dialog = new ProductVersion(shell,  SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 				dialog.setText("Ny produkt/Version");
+				dialog.setCurrentUser(currentUser);
 				dialog.open();
 			}
 		});
@@ -113,6 +118,7 @@ public class Main {
 			public void widgetSelected(SelectionEvent e) {
 				Search dialog = new Search(shell,  SWT.DIALOG_TRIM | SWT.MODELESS);
 				dialog.setText("Leta");
+				dialog.setCurrentUser(currentUser);
 				dialog.open();
 			}
 		});
