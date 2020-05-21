@@ -1,21 +1,28 @@
 select processname,
-		processseq, 
-		description,
-		crtdat,
-		chgnbr,
-		shortdescr,
-		crtusr,
-		chgdat,
-		chgusr,
-		crtver,
-		dltdat,
-		dltusr
+    crtdat,
+	crtusr,
+	chgdat,
+	chgusr,
+	dltdat,
+	dltusr,
+	chgnbr,
+	crtver,
+	description,
+	shortdescr, 
+	tenant,
+	version,
+	productname,
+	topicname,
+	processname,	
+	processseq
 from process 
 where 
+	tenant = ? and
+	version=? and 
 	productname=? and 
 	topicname=? and 
 	processname=? and 
-	processseq=? and 
-	version=? and 
-	tenant = ?
+	processseq=?
+	
+	 
 	

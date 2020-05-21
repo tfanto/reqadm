@@ -38,34 +38,39 @@ public class ProcessService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, productName);
-				stmt.setString(2, topicName);
-				stmt.setInt(3, version);
-				stmt.setInt(4, tenant);
+				stmt.setInt(1, tenant);
+				stmt.setInt(2, version);
+				stmt.setString(3, productName);
+				stmt.setString(4, topicName);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
-					String processName = rs.getString(2);
-					Integer sequence = rs.getInt(3);
-					String description = rs.getString(4);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(5));
-					Integer chgnbr = rs.getInt(6);
-					String shortdescr = rs.getString(7);
-					String crtusr = rs.getString(8);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(9));
-					String chgusr = rs.getString(10);
-					Integer crtver = rs.getInt(11);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(12));
-					String dltusr = rs.getString(13);
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
 
-					ProcessKey key = new ProcessKey(tenant, version, productName, topicName, processName, sequence);
-					ProcessRec rec = new ProcessRec(key, description, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltdat = dltdat;
-					rec.dltusr = dltusr;
+					Integer rs_tenant = rs.getInt("tenant");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
+					String rs_topicname = rs.getString("topicname");
+					String rs_processname = rs.getString("processname");
+					Integer rs_processseq = rs.getInt("processseq");
+
+					ProcessKey key = new ProcessKey(rs_tenant, rs_version, rs_productname, rs_topicname, rs_processname, rs_processseq);
+					ProcessRec rec = new ProcessRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltdat = rs_dltdat;
+					rec.dltusr = rs_dltusr;
 					ret.add(rec);
 				}
 				return ret;
@@ -91,12 +96,12 @@ public class ProcessService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, process.key.productName);
-				stmt.setString(2, process.key.topicName);
-				stmt.setString(3, process.key.processName);
-				stmt.setInt(4, process.key.processSeq);
-				stmt.setInt(5, process.key.version);
-				stmt.setInt(6, process.key.tenant);
+				stmt.setInt(1, process.key.tenant);
+				stmt.setInt(2, process.key.version);
+				stmt.setString(3, process.key.productName);
+				stmt.setString(4, process.key.topicName);
+				stmt.setString(5, process.key.processName);
+				stmt.setInt(6, process.key.processSeq);
 				rs = stmt.executeQuery();
 				rs.next();
 				Integer n = rs.getInt(1);
@@ -162,34 +167,41 @@ public class ProcessService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, productName);
-				stmt.setString(2, topicName);
-				stmt.setString(3, processName);
-				stmt.setInt(4, sequence);
-				stmt.setInt(5, version);
-				stmt.setInt(6, tenant);
+				stmt.setInt(1, tenant);
+				stmt.setInt(2, version);
+				stmt.setString(3, productName);
+				stmt.setString(4, topicName);
+				stmt.setString(5, processName);
+				stmt.setInt(6, sequence);
 				rs = stmt.executeQuery();
 				if (rs.next()) {
-					String descr = rs.getString(3);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(4));
-					Integer chgnbr = rs.getInt(5);
-					String shortdescr = rs.getString(6);
-					String crtusr = rs.getString(7);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(8));
-					String chgusr = rs.getString(9);
-					Integer crtver = rs.getInt(10);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(11));
-					String dltusr = rs.getString(12);
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
 
-					ProcessKey key = new ProcessKey(tenant, version, productName, topicName, processName, sequence);
-					rec = new ProcessRec(key, descr, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltdat = dltdat;
-					rec.dltusr = dltusr;
+					Integer rs_tenant = rs.getInt("tenant");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
+					String rs_topicname = rs.getString("topicname");
+					String rs_processname = rs.getString("processname");
+					Integer rs_processseq = rs.getInt("processseq");
+
+					ProcessKey key = new ProcessKey(rs_tenant, rs_version, rs_productname, rs_topicname, rs_processname, rs_processseq);
+					rec = new ProcessRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltdat = rs_dltdat;
+					rec.dltusr = rs_dltusr;
 				}
 			}
 		} catch (SQLException e) {
