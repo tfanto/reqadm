@@ -68,35 +68,37 @@ public class ProductService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, productName);
-				stmt.setInt(2, tenant);
+				stmt.setInt(1, tenant);
+				stmt.setString(2, productName);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
-					Integer ver = rs.getInt(1);
-					String name = rs.getString(2);
-					String descr = rs.getString(3);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(4));
-					Integer chgnbr = rs.getInt(5);
 
-					String shortdescr = rs.getString(6);
-					String crtusr = rs.getString(7);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(8));
-					String chgusr = rs.getString(9);
-					Integer crtver = rs.getInt(10);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(11));
-					String dltusr = rs.getString(12);
-					String status = rs.getString(13);
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
+					String rs_status = rs.getString("status");
 
-					ProductKey key = new ProductKey(tenant, ver, name);
-					ProductRec rec = new ProductRec(key, descr, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltusr = dltusr;
-					rec.dltdat = dltdat;
-					rec.status = status;
+					Integer rs_tenant = rs.getInt("tenant");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
+
+					ProductKey key = new ProductKey(rs_tenant, rs_version, rs_productname);
+					ProductRec rec = new ProductRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltusr = rs_dltusr;
+					rec.dltdat = rs_dltdat;
+					rec.status = rs_status;
 					ret.add(rec);
 				}
 				return ret;
@@ -131,31 +133,32 @@ public class ProductService {
 				stmt.setString(3, productName);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
-					Integer ver = rs.getInt(1);
-					String name = rs.getString(2);
-					String descr = rs.getString(3);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(4));
-					Integer chgnbr = rs.getInt(5);
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
+					String rs_status = rs.getString("status");
 
-					String shortdescr = rs.getString(6);
-					String crtusr = rs.getString(7);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(8));
-					String chgusr = rs.getString(9);
-					Integer crtver = rs.getInt(10);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(11));
-					String dltusr = rs.getString(12);
-					String status = rs.getString(13);
+					Integer rs_tenant = rs.getInt("tenant");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
 
-					ProductKey key = new ProductKey(tenant, ver, name);
-					ProductRec rec = new ProductRec(key, descr, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltusr = dltusr;
-					rec.dltdat = dltdat;
-					rec.status = status;
+					ProductKey key = new ProductKey(rs_tenant, rs_version, rs_productname);
+					ProductRec rec = new ProductRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltusr = rs_dltusr;
+					rec.dltdat = rs_dltdat;
+					rec.status = rs_status;
 					ret.add(rec);
 				}
 				return ret;
@@ -188,31 +191,32 @@ public class ProductService {
 				stmt.setInt(2, tenant);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
-					Integer ver = rs.getInt(1);
-					String name = rs.getString(2);
-					String descr = rs.getString(3);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(4));
-					Integer chgnbr = rs.getInt(5);
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
+					String rs_status = rs.getString("status");
 
-					String shortdescr = rs.getString(6);
-					String crtusr = rs.getString(7);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(8));
-					String chgusr = rs.getString(9);
-					Integer crtver = rs.getInt(10);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(11));
-					String dltusr = rs.getString(12);
-					String status = rs.getString(13);
+					Integer rs_tenant = rs.getInt("tenant");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
 
-					ProductKey key = new ProductKey(tenant, ver, name);
-					ProductRec rec = new ProductRec(key, descr, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltusr = dltusr;
-					rec.dltdat = dltdat;
-					rec.status = status;
+					ProductKey key = new ProductKey(rs_tenant, rs_version, rs_productname);
+					ProductRec rec = new ProductRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltusr = rs_dltusr;
+					rec.dltdat = rs_dltdat;
+					rec.status = rs_status;
 					ret.add(rec);
 				}
 				return ret;
@@ -311,24 +315,25 @@ public class ProductService {
 			stmt.setString(3, productName);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
-				Integer rs_tenant = rs.getInt(1);
-				Integer rs_version = rs.getInt(2);
-				String rs_productname = rs.getString(3);
-				String rs_description = rs.getString(4);
-				String shortdescr = rs.getString(5);
-				Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp(6));
-				String rs_crtusr = rs.getString(7);
-				Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp(8));
-				String rs_chgusr = rs.getString(9);
-				Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp(10));
-				String rs_dltusr = rs.getString(11);
-				String rs_status = rs.getString(12);				
-				Integer rs_chgnbr = rs.getInt(13);
-				Integer rs_crtver = rs.getInt(14);
+				Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+				String rs_crtusr = rs.getString("crtusr");
+				Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+				String rs_chgusr = rs.getString("chgusr");
+				Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+				String rs_dltusr = rs.getString("dltusr");
+				Integer rs_chgnbr = rs.getInt("chgnbr");
+				Integer rs_crtver = rs.getInt("crtver");
+				String rs_description = rs.getString("description");
+				String rs_shortdescr = rs.getString("shortdescr");
+				String rs_status = rs.getString("status");
+
+				Integer rs_tenant = rs.getInt("tenant");
+				Integer rs_version = rs.getInt("version");
+				String rs_productname = rs.getString("productname");
 
 				ProductKey key = new ProductKey(rs_tenant, rs_version, rs_productname);
 				ProductRec rec = new ProductRec(key, rs_description, rs_crtdat, rs_chgnbr);
-				rec.shortdescr = shortdescr;
+				rec.shortdescr = rs_shortdescr;
 				rec.crtusr = rs_crtusr;
 				rec.chgdat = rs_chgdat;
 				rec.chgusr = rs_chgusr;

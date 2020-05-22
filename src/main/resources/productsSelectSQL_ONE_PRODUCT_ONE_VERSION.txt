@@ -1,18 +1,18 @@
 select 
-   version,
-   productname,
-   description,
-   crtdat,
-   chgnbr,
-   shortdescr,
-   crtusr,
-   chgdat,
-   chgusr,
-   crtver,
-   dltdat,
-   dltusr,
-   status,
-   tenant  
+	crtdat,
+	crtusr,
+	chgdat,
+	chgusr,
+	dltdat,
+	dltusr,
+	chgnbr,
+	crtver,
+	description,
+	shortdescr,
+	status,  		
+	tenant,
+	version,
+	productname
 from product 
 where 
    tenant=? and 
