@@ -340,6 +340,19 @@ public class Process extends Dialog {
 			btnRemove.setEnabled(false);
 			btnRemove.setVisible(false);
 		}
+		
+		System.out.println("sökord strl " + searchWords.size());
+
+		if(searchWords.size() > 0) {
+			
+			System.out.println("DET FINNS SÖKORD");
+			
+		}else {
+
+			System.out.println("DET FINNS INGA EJ INTE SÖKORD");
+
+			
+		}
 
 	}
 
@@ -368,6 +381,7 @@ public class Process extends Dialog {
 		topicStr = rec.topicName;
 		processStr = rec.processName;
 		processStepInt = rec.processSeq;
+		searchWords.clear();		
 	}
 
 	// create child to process
@@ -378,6 +392,7 @@ public class Process extends Dialog {
 		topicStr = rec.topicName;
 		processStr = null;
 		processStepInt = null;
+		searchWords.clear();
 	}
 
 	public void setCurrentUser(User user) {

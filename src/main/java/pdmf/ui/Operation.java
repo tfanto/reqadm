@@ -327,6 +327,9 @@ public class Operation extends Dialog {
 
 				}
 			}
+			
+			
+			
 		});
 		btnRemove.setText(Cst.REMOVE);
 
@@ -398,6 +401,21 @@ public class Operation extends Dialog {
 			btnRemove.setEnabled(false);
 			btnRemove.setVisible(false);
 		}
+		
+
+		System.out.println("sökord strl " + searchWords.size());
+
+		if(searchWords.size() > 0) {
+			
+			System.out.println("DET FINNS SÖKORD");
+			
+		}else {
+
+			System.out.println("DET FINNS INGA EJ INTE SÖKORD");
+
+			
+		}
+
 
 	}
 
@@ -428,6 +446,7 @@ public class Operation extends Dialog {
 		processStepInt = rec.sequence;
 		operationStr = rec.operationName;
 		operationStepInt = rec.operationSequence;
+		searchWords.clear();
 	}
 
 	// create child to process
@@ -440,6 +459,7 @@ public class Operation extends Dialog {
 		processStepInt = rec.processSeq;
 		operationStr = null;
 		operationStepInt = null;
+		searchWords.clear();
 	}
 
 	public void setCurrentUser(User user) {
