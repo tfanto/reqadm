@@ -39,33 +39,37 @@ public class TopicService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, productName);
+				stmt.setInt(1, tenant);
 				stmt.setInt(2, version);
-				stmt.setInt(3, tenant);
+				stmt.setString(3, productName);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
-					String topicName = rs.getString(1);
-					String descr = rs.getString(2);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(3));
-					Integer chgnbr = rs.getInt(4);
 
-					String shortdescr = rs.getString(5);
-					String crtusr = rs.getString(6);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(7));
-					String chgusr = rs.getString(8);
-					Integer crtver = rs.getInt(9);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(10));
-					String dltusr = rs.getString(11);
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
 
-					TopicKey key = new TopicKey(tenant, version, productName, topicName);
-					TopicRec rec = new TopicRec(key, descr, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltusr = dltusr;
-					rec.dltdat = dltdat;
+					Integer rs_tenant = rs.getInt("tenant");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
+					String rs_topicname = rs.getString("topicname");
+
+					TopicKey key = new TopicKey(rs_tenant, rs_version, rs_productname, rs_topicname);
+					TopicRec rec = new TopicRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltusr = rs_dltusr;
+					rec.dltdat = rs_dltdat;
 					ret.add(rec);
 				}
 				return ret;
@@ -93,10 +97,10 @@ public class TopicService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, topic.key.productName);
-				stmt.setString(2, topic.key.topicName);
-				stmt.setInt(3, topic.key.version);
-				stmt.setInt(4, topic.key.tenant);
+				stmt.setInt(1, topic.key.tenant);
+				stmt.setInt(2, topic.key.version);
+				stmt.setString(3, topic.key.productName);
+				stmt.setString(4, topic.key.topicName);
 				rs = stmt.executeQuery();
 				rs.next();
 				Integer n = rs.getInt(1);
@@ -125,10 +129,10 @@ public class TopicService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, key.productName);
-				stmt.setString(2, key.topicName);
-				stmt.setInt(3, key.version);
-				stmt.setInt(4, key.tenant);
+				stmt.setInt(1, key.tenant);
+				stmt.setInt(2, key.version);
+				stmt.setString(3, key.productName);
+				stmt.setString(4, key.topicName);
 				rs = stmt.executeQuery();
 				rs.next();
 				Integer n = rs.getInt(1);
@@ -161,33 +165,38 @@ public class TopicService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, productName);
-				stmt.setString(2, topicName);
-				stmt.setInt(3, version);
-				stmt.setInt(4, tenant);
+				stmt.setInt(1, tenant);
+				stmt.setInt(2, version);
+				stmt.setString(3, productName);
+				stmt.setString(4, topicName);
 				rs = stmt.executeQuery();
 				if (rs.next()) {
-					String tName = rs.getString(1);
-					String descr = rs.getString(2);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(3));
-					Integer chgnbr = rs.getInt(4);
-					String shortdescr = rs.getString(5);
-					String crtusr = rs.getString(6);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(7));
-					String chgusr = rs.getString(8);
-					Integer crtver = rs.getInt(9);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(10));
-					String dltusr = rs.getString(11);
 
-					TopicKey key = new TopicKey(tenant, version, productName, tName);
-					rec = new TopicRec(key, descr, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltdat = dltdat;
-					rec.dltusr = dltusr;
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
+
+					Integer rs_tenant = rs.getInt("tenant");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
+					String rs_topicname = rs.getString("topicname");
+
+					TopicKey key = new TopicKey(rs_tenant, rs_version, rs_productname, rs_topicname);
+					rec = new TopicRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltdat = rs_dltdat;
+					rec.dltusr = rs_dltusr;
 				}
 			}
 		} catch (SQLException e) {

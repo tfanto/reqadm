@@ -1,18 +1,24 @@
-select topicname,
-       description,
-       crtdat,
-       chgnbr,
-       shortdescr,
-       crtusr,
-       chgdat,
-       chgusr,
-       crtver,
-       dltdat,
-       dltusr 
+select 
+	crtdat, 
+	crtusr,
+	chgdat,
+	chgusr,
+	dltdat,
+	dltusr,
+	chgnbr,
+	crtver,
+	description,
+	shortdescr, 
+	tenant,
+	version,
+	productname,
+	topicname
 from topic 
 where 
-       productname=? and 
-       topicname=? and 
+       tenant=? and
        version=? and 
-       tenant=?
+       productname=? and 
+       topicname=? 
+       
+        
 

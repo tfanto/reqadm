@@ -1,9 +1,9 @@
 select count(*) 
 from  topic  
 where 
+   tenant=? and 
+   version=? and 
    productname=? and 
    topicname=? and 
-   version=? and 
-   tenant=? and 
    dltusr notnull
    
