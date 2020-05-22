@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -49,9 +51,11 @@ public class Product extends Dialog {
 	private Label crtDat;
 	private Label chgDat;
 
-	private String userId = null;
 	private String p = null;
 	private Integer v = null;
+	
+	private List<String> searchWords = new ArrayList<String>();
+
 
 	/**
 	 * Create the dialog.
@@ -166,7 +170,7 @@ public class Product extends Dialog {
 				try {
 					rec.shortdescr = wrkShortDescription;
 					rec.description = wrkDescription;
-					productService.store(rec, userId);
+					productService.store(rec, currentUser.userId);
 					chgnbr = null;
 					result = 1;
 					shell.dispose();
@@ -220,7 +224,7 @@ public class Product extends Dialog {
 				btnRemove.setEnabled(true);
 				lblInfo.setText("");
 				try {
-					productService.remove(tenantId, ver, wrkProductName, userId);
+					productService.remove(tenantId, ver, wrkProductName, currentUser.userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {
@@ -296,15 +300,18 @@ public class Product extends Dialog {
 
 	}
 
-	public void setKey(ProductKey rec, String userId) {
+	public void setKey(ProductKey rec) {
 		mode = UPDATE_MODE;
-		this.userId = userId;
 		this.v = rec.version;
 		this.p = rec.productName;
 	}
 
 	public void setCurrentUser(User user) {
 		currentUser = user;
+	}
+
+	public void setSearchWords(List<String> searchWords) {
+		this.searchWords.addAll(searchWords);
 	}
 
 }

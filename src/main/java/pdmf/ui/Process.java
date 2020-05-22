@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -55,13 +57,14 @@ public class Process extends Dialog {
 	private Label crtDat;
 	private Label chgDat;
 
-	private String userId = null;
 	private Integer version = null;
 
 	String productStr;
 	String topicStr;
 	String processStr;
 	Integer processStepInt;
+
+	private List<String> searchWords = new ArrayList<String>();
 
 	/**
 	 * Create the dialog.
@@ -202,7 +205,7 @@ public class Process extends Dialog {
 				rec.description = wrkDescription;
 
 				try {
-					processService.store(rec, userId);
+					processService.store(rec, currentUser.userId);
 					chgnbr = null;
 					result = 1;
 					shell.dispose();
@@ -266,7 +269,7 @@ public class Process extends Dialog {
 				lblInfo.setText("");
 				try {
 					processService.remove(tenantId, version, productName, topicName, processName, wrProcesskSequence,
-							userId);
+							currentUser.userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {
@@ -358,9 +361,8 @@ public class Process extends Dialog {
 
 	}
 
-	public void setKey(ProcessKey rec, String userId, Integer version) {
+	public void setKey(ProcessKey rec, Integer version) {
 		mode = UPDATE_MODE;
-		this.userId = userId;
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = rec.topicName;
@@ -369,9 +371,8 @@ public class Process extends Dialog {
 	}
 
 	// create child to process
-	public void setKey(TopicKey rec, String userId, Integer version) {
+	public void setKey(TopicKey rec, Integer version) {
 		mode = NEW_REG_MODE;
-		this.userId = userId;
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = rec.topicName;
@@ -381,6 +382,10 @@ public class Process extends Dialog {
 
 	public void setCurrentUser(User user) {
 		currentUser = user;
+	}
+
+	public void setSearchWords(List<String> searchWords) {
+		this.searchWords.addAll(searchWords);
 	}
 
 }

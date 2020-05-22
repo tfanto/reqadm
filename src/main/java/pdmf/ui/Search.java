@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-import pdmf.Main;
 import pdmf.model.Cst;
 import pdmf.model.OperationKey;
 import pdmf.model.ProcessKey;
@@ -146,6 +145,9 @@ public class Search extends Dialog {
 				if (e.getSource() instanceof Table) {
 					Table table = (Table) e.getSource();
 					Object tableItemObject = table.getItem(idx);
+					
+					List<String> searchWords = getSearhwords();
+					
 					if (tableItemObject instanceof TableItem) {
 						TableItem tableItem = (TableItem) tableItemObject;
 
@@ -155,32 +157,32 @@ public class Search extends Dialog {
 							ProductKey key = (ProductKey) object;
 							pdmf.ui.Product dialog = new pdmf.ui.Product(shell,
 									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-							String userId = getUser();
-							dialog.setKey(key, userId);
+							dialog.setKey(key);
 							dialog.setCurrentUser(currentUser);
+							dialog.setSearchWords(searchWords);
 							dialog.open();
 						} else if (object instanceof TopicKey) {
 							TopicKey key = (TopicKey) object;
 							pdmf.ui.Topic dialog = new pdmf.ui.Topic(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-							String userId = getUser();
-							dialog.setKey(key, userId, key.version);
+							dialog.setKey(key, key.version);
 							dialog.setCurrentUser(currentUser);
+							dialog.setSearchWords(searchWords);
 							dialog.open();
 						} else if (object instanceof ProcessKey) {
 							ProcessKey key = (ProcessKey) object;
 							pdmf.ui.Process dialog = new pdmf.ui.Process(shell,
 									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-							String userId = getUser();
-							dialog.setKey(key, userId, key.version);
+							dialog.setKey(key, key.version);
 							dialog.setCurrentUser(currentUser);
+							dialog.setSearchWords(searchWords);
 							dialog.open();
 						} else if (object instanceof OperationKey) {
 							OperationKey key = (OperationKey) object;
 							pdmf.ui.Operation dialog = new pdmf.ui.Operation(shell,
 									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-							String userId = getUser();
-							dialog.setKey(key, userId, key.version);
+							dialog.setKey(key, key.version);
 							dialog.setCurrentUser(currentUser);
+							dialog.setSearchWords(searchWords);
 							dialog.open();
 						}
 					}
@@ -263,12 +265,31 @@ public class Search extends Dialog {
 		return str;
 	}
 
-	private String getUser() {
-		return Main.getUser().getUserId();
-	}
-
 	public void setCurrentUser(User user) {
 		currentUser = user;
+	}
+
+	private List<String> getSearhwords() {
+
+		List<String> list = new ArrayList<>();
+		list = lineToWords(list, ord01.getText());
+		list = lineToWords(list, ord02.getText());
+		list = lineToWords(list, ord03.getText());
+		return list;
+	}
+
+	private List<String> lineToWords(List<String> wordList, String line) {
+		if (line == null || line.trim().length() < 1)
+			return wordList;
+
+		String str[] = line.split(" ");
+		if (str.length < 1) {
+			return wordList;
+		}
+		for (int i = 0; i < str.length; i++) {
+			wordList.add(str[i].trim());
+		}
+		return wordList;
 	}
 
 }

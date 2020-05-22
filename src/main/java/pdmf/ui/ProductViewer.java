@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
-import pdmf.Main;
 import pdmf.model.Cst;
 import pdmf.model.OperationKey;
 import pdmf.model.OperationRec;
@@ -495,8 +494,7 @@ public class ProductViewer extends Dialog {
 									ProductKey rec = (ProductKey) treeItemData;
 									pdmf.ui.Product dialog = new pdmf.ui.Product(shell,
 											SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-									String userId = getUser();
-									dialog.setKey(rec, userId);
+									dialog.setKey(rec);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
 									refreshProductTree(tree, rec.productName, rec.version, rec.tenant);
@@ -554,8 +552,7 @@ public class ProductViewer extends Dialog {
 									ProductKey rec = (ProductKey) treeItemData;
 									pdmf.ui.Topic dialog = new pdmf.ui.Topic(shell,
 											SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-									String userId = getUser();
-									dialog.setKey(rec, userId, rec.version);
+									dialog.setKey(rec, rec.version);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
 									refreshProductTree(tree, rec.productName, rec.version, rec.tenant);
@@ -575,8 +572,7 @@ public class ProductViewer extends Dialog {
 									TopicKey rec = (TopicKey) treeItemData;
 									pdmf.ui.Topic dialog = new pdmf.ui.Topic(shell,
 											SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-									String userId = getUser();
-									dialog.setKey(rec, userId, rec.version);
+									dialog.setKey(rec, rec.version);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
 									refreshProductTree(tree, rec.productName, rec.version, rec.tenant);
@@ -591,8 +587,7 @@ public class ProductViewer extends Dialog {
 									TopicKey rec = (TopicKey) treeItemData;
 									pdmf.ui.Process dialog = new pdmf.ui.Process(shell,
 											SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-									String userId = getUser();
-									dialog.setKey(rec, userId, rec.version);
+									dialog.setKey(rec, rec.version);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
 									refreshProductTree(tree, rec.productName, rec.version, rec.tenant);
@@ -612,8 +607,7 @@ public class ProductViewer extends Dialog {
 									ProcessKey rec = (ProcessKey) treeItemData;
 									pdmf.ui.Process dialog = new pdmf.ui.Process(shell,
 											SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-									String userId = getUser();
-									dialog.setKey(rec, userId, rec.version);
+									dialog.setKey(rec, rec.version);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
 									refreshProductTree(tree, rec.productName, rec.version, rec.tenant);
@@ -628,8 +622,7 @@ public class ProductViewer extends Dialog {
 									ProcessKey key = (ProcessKey) treeItemData;
 									pdmf.ui.Operation dialog = new pdmf.ui.Operation(shell,
 											SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-									String userId = getUser();
-									dialog.setKey(key, userId, key.version);
+									dialog.setKey(key, key.version);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
 									refreshProductTree(tree, key.productName, key.version, key.tenant);
@@ -649,8 +642,7 @@ public class ProductViewer extends Dialog {
 									OperationKey key = (OperationKey) treeItemData;
 									pdmf.ui.Operation dialog = new pdmf.ui.Operation(shell,
 											SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-									String userId = getUser();
-									dialog.setKey(key, userId, key.version);
+									dialog.setKey(key, key.version);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
 									refreshProductTree(tree, key.productName, key.version, key.tenant);
@@ -662,10 +654,6 @@ public class ProductViewer extends Dialog {
 				}
 			}
 		}
-	}
-
-	private String getUser() {
-		return Main.getUser().getUserId();
 	}
 
 	public void setCurrentUser(User user) {

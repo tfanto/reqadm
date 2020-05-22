@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-import pdmf.Main;
 import pdmf.model.Cst;
 import pdmf.model.ProductKey;
 import pdmf.model.ProductRec;
@@ -157,8 +156,8 @@ public class ProductVersion extends Dialog {
 						lblInfo.setText(wrkProductName + " " + toVersion + " already exists");
 						return;
 					}
-					String user = getUser();
-					productService.createNewVersion(tenantId, fromVersion, toVersion, wrkProductName, user);
+					productService.createNewVersion(tenantId, fromVersion, toVersion, wrkProductName,
+							currentUser.userId);
 					newVersion.setText("");
 				}
 				refreshProductTree();
@@ -240,13 +239,12 @@ public class ProductVersion extends Dialog {
 					lblInfo.setText(wrkProductName + " " + toVersion + " already exist");
 					return;
 				} else {
-					String user = getUser();
 					String wrkDescription = description.getText();
 					ProductKey key = new ProductKey(tenantId, toVersion, wrkProductName);
 					rec = new ProductRec(key, null, null, null);
 					rec.description = wrkDescription;
 					rec.status = "wrk";
-					productService.insert(rec, user);
+					productService.insert(rec, currentUser.userId);
 				}
 				newVersion.setText("");
 				refreshProductTree();
@@ -296,10 +294,6 @@ public class ProductVersion extends Dialog {
 		description.setText("");
 		product.setText("");
 		product.setData(null);
-	}
-
-	private String getUser() {
-		return Main.getUser().getUserId();
 	}
 
 	public void setKey(ProductKey rec) {

@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -52,11 +54,12 @@ public class Topic extends Dialog {
 	private Label crtDat;
 	private Label chgDat;
 
-	private String userId = null;
 	private Integer version = null;
 
 	String productStr;
 	String topicStr;
+
+	private List<String> searchWords = new ArrayList<String>();
 
 	/**
 	 * Create the dialog.
@@ -165,7 +168,7 @@ public class Topic extends Dialog {
 				rec.description = wrkDescription;
 
 				try {
-					processService.store(rec, userId);
+					processService.store(rec, currentUser.userId);
 					chgnbr = null;
 					result = 1;
 					shell.dispose();
@@ -206,7 +209,7 @@ public class Topic extends Dialog {
 				btnRemove.setEnabled(true);
 				lblInfo.setText("");
 				try {
-					processService.remove(tenantId, version, productName, topicName, userId);
+					processService.remove(tenantId, version, productName, topicName, currentUser.userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {
@@ -293,18 +296,16 @@ public class Topic extends Dialog {
 
 	}
 
-	public void setKey(TopicKey rec, String userId, Integer version) {
+	public void setKey(TopicKey rec, Integer version) {
 		mode = UPDATE_MODE;
-		this.userId = userId;
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = rec.topicName;
 	}
 
 	// create child to product
-	public void setKey(ProductKey rec, String userId, Integer version) {
+	public void setKey(ProductKey rec, Integer version) {
 		mode = NEW_REG_MODE;
-		this.userId = userId;
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = null;
@@ -312,5 +313,10 @@ public class Topic extends Dialog {
 
 	public void setCurrentUser(User user) {
 		currentUser = user;
+	}
+
+	public void setSearchWords(List<String> searchWords) {
+		this.searchWords.addAll(searchWords);
+
 	}
 }

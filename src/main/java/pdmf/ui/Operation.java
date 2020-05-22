@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -57,7 +59,6 @@ public class Operation extends Dialog {
 	private Label crtDat;
 	private Label chgDat;
 
-	private String userId = null;
 	private Integer version = null;
 
 	String productStr;
@@ -66,6 +67,8 @@ public class Operation extends Dialog {
 	Integer processStepInt;
 	String operationStr;
 	Integer operationStepInt;
+
+	private List<String> searchWords = new ArrayList<String>();
 
 	/**
 	 * Create the dialog.
@@ -233,7 +236,7 @@ public class Operation extends Dialog {
 				rec.description = wrkDescription;
 
 				try {
-					operationService.store(rec, userId);
+					operationService.store(rec, currentUser.userId);
 					chgnbr = null;
 					result = 1;
 					shell.dispose();
@@ -317,7 +320,7 @@ public class Operation extends Dialog {
 				lblInfo.setText("");
 				try {
 					operationService.remove(tenantId, version, productName, topicName, processName, wrProcesskSequence,
-							operationName, operationSequence, userId);
+							operationName, operationSequence, currentUser.userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {
@@ -416,9 +419,8 @@ public class Operation extends Dialog {
 
 	}
 
-	public void setKey(OperationKey rec, String userId, Integer version) {
+	public void setKey(OperationKey rec, Integer version) {
 		mode = UPDATE_MODE;
-		this.userId = userId;
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = rec.topicName;
@@ -429,9 +431,8 @@ public class Operation extends Dialog {
 	}
 
 	// create child to process
-	public void setKey(ProcessKey rec, String userId, Integer version) {
+	public void setKey(ProcessKey rec, Integer version) {
 		mode = NEW_REG_MODE;
-		this.userId = userId;
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = rec.topicName;
@@ -443,6 +444,10 @@ public class Operation extends Dialog {
 
 	public void setCurrentUser(User user) {
 		currentUser = user;
+	}
+
+	public void setSearchWords(List<String> searchWords) {
+		this.searchWords.addAll(searchWords);
 	}
 
 }
