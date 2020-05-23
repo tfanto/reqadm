@@ -3,18 +3,23 @@ package pdmf.model;
 public class User {
 
 	public String userId;
-	public Tenant currentTenant;
+	public TenantRec currentTenant;
 
 	public User() {
 		userId = System.getProperty("user.name");
-		currentTenant = new Tenant(1, "Forshaga Golv AB");
+		TenantKey key = new TenantKey("forshaga");
+		currentTenant = new TenantRec(key, "Forshaga Golv AB");
 	}
 
 	public String getUserId() {
 		return userId;
 	}
 
-	public Tenant getCurrentTenant() {
+	public void setCurrentTenant(TenantRec currentTenant) {
+		this.currentTenant = currentTenant;
+	}
+
+	public TenantRec getCurrentTenant() {
 		return currentTenant;
 	}
 

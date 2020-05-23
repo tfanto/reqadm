@@ -14,6 +14,8 @@ import pdmf.model.ProcessKey;
 import pdmf.model.ProcessRec;
 import pdmf.model.ProductKey;
 import pdmf.model.ProductRec;
+import pdmf.model.TenantKey;
+import pdmf.model.TenantRec;
 import pdmf.model.TopicKey;
 import pdmf.model.TopicRec;
 
@@ -44,6 +46,27 @@ public class ServiceHelper {
 	public static void validate(String field, Boolean data) {
 		if (data == null) {
 			throw new IllegalArgumentException(field + " is null" + data);
+		}
+	}
+
+	public static void validate(TenantRec rec) {
+
+		if (rec == null) {
+			throw new IllegalArgumentException("Tenant  is null");
+		}
+		if (rec.description == null) {
+			throw new IllegalArgumentException("Tenant description  is null");
+		}
+		ServiceHelper.validate(rec.key);
+	}
+
+	public static void validate(TenantKey key) {
+
+		if (key == null) {
+			throw new IllegalArgumentException("TenantKey  is null");
+		}
+		if (key.tenantid == null) {
+			throw new IllegalArgumentException("TenantKey.name  is null");
 		}
 	}
 

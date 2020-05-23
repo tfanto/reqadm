@@ -43,6 +43,7 @@ public class Cst {
 	public static final String TARGET_VERSION_MUST_BE_AN_INTEGER = "Målversion måste vara en siffra , inga decimaler";
 	public static final String TARGET_VERSION_MUST_BE_BIGGER = "Målversion måste vara högre än frånversionen";
 	public static final String PRODUCTNAME_MUST_HAVE_A_VALUE = "Produktnamn måste ha ett värde";
+	public static final String TENANTNAME_MUST_HAVE_A_VALUE = "Tenantnamnn måste ha ett värde";
 	public static final String SELECT_A_VERSION = "Version ej vald ";
 	public static final String ALREADY_DELETE_NO_ACTION = "Post bortagsmarkerad. Kan ej ändras";
 	public static final String VERSION_LOCKED = "Versionen är låst ingen ändring tillåten";
