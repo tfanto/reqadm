@@ -23,17 +23,19 @@ public class UISupport {
 		for (String searchWord : searchWords) {
 
 			int pos = theText.indexOf(searchWord);
-			if (pos < 0) {
-				continue;
+			while (pos >= 0) {
+				int wordLen = searchWord.length();
+				StyleRange sr = new StyleRange();
+				sr.start = pos;
+				sr.length = wordLen;
+				sr.foreground = shell.getDisplay().getSystemColor(SWT.COLOR_BLUE);
+				sr.background = shell.getDisplay().getSystemColor(SWT.COLOR_YELLOW);
+				sr.fontStyle = SWT.BOLD;
+				styleRanges.add(sr);
+				int next = pos + 1;
+				if(next >= theText.length())  break;
+				pos = theText.indexOf(searchWord, next);
 			}
-			int wordLen = searchWord.length();
-			StyleRange sr = new StyleRange();
-			sr.start = pos;
-			sr.length = wordLen;
-			sr.foreground = shell.getDisplay().getSystemColor(SWT.COLOR_BLUE);
-			sr.background = shell.getDisplay().getSystemColor(SWT.COLOR_YELLOW);
-			sr.fontStyle = SWT.BOLD;
-			styleRanges.add(sr);
 		}
 
 		styleRanges.sort(new Comparator<StyleRange>() {
@@ -54,5 +56,4 @@ public class UISupport {
 		styledText.setStyleRanges(array);
 
 	}
-
 }
