@@ -5,9 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +30,6 @@ public class TenantService {
 	public List<TenantRec> list() {
 		List<TenantRec> ret = new ArrayList<>();
 
-//		String theSQL = ServiceHelper.getSQL("select name,description from tenant order by name");
 		String theSQL = "select tenantid,description from tenant order by tenantid";
 
 		Connection connection = null;
@@ -168,25 +165,28 @@ public class TenantService {
 
 		PreparedStatement stmt = null;
 
+		String theSQL = "update tenant set description=? where tenantid=?";
+
 		try {
 			TenantRec rec = get(tenant.key.tenantid);
 			if (rec == null) {
 				return 0;
 			}
 
-			Map<String, Object> key = new HashMap<>();
-			key.put("tenantid", tenant.key.tenantid);
-
-			Map<String, Object> value = new HashMap<>();
-			value.put("description", tenant.description);
-
-			stmt = Db.prepareUpdateStatement(connection, "tenant", key, value);
-			stmt = Db.addDataToPreparedUpdateStatement(stmt, key, value);
-
-			return stmt.executeUpdate();
+			try {
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setString(1, tenant.description);
+				stmt.setString(2, tenant.key.tenantid);
+				return stmt.executeUpdate();
+			} catch (SQLException e) {
+				LOGGER.error(e.toString(), e);
+			} finally {
+				Db.close(stmt);
+			}
 		} finally {
 			Db.close(stmt);
 		}
+		return 0;
 	}
 
 }

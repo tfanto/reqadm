@@ -14,8 +14,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import pdmf.model.Cst;
-import pdmf.model.ProductKey;
-import pdmf.model.ProductRec;
 import pdmf.model.TenantKey;
 import pdmf.model.TenantRec;
 import pdmf.model.User;
@@ -30,7 +28,6 @@ public class Tenant extends Dialog {
 	private Text tenant;
 	private Label lblInfo = null;
 	private StyledText description;
-	private ProductRec selectedVersion = null;
 	private Tree tenantTree;
 
 	private User currentUser;
@@ -97,35 +94,33 @@ public class Tenant extends Dialog {
 		tenantTree.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				Integer tenantId = currentUser.getCurrentTenant().getId();
-				ProductRec versionRec = (ProductRec) e.item.getData();
-				if (versionRec != null) {
-					selectedVersion = versionRec;
-				} else {
-					String prod = "";
-					if (e.item instanceof TreeItem) {
-						TreeItem ti = (TreeItem) e.item;
-						prod = ti.getText();
-					}
-					selectedVersion = null;
-					tenant.setText(prod);
-					description.setText("");
-					lblInfo.setText("");
-					shell.setText("Version");
+				
+				Object source = e.getSource();
+				Tree theTree = null;
+				if(source instanceof Tree) {
+					theTree = (Tree) source;
+				}
+				TreeItem treeItems[] = theTree.getSelection();
+				if(treeItems == null || treeItems.length < 1) {
 					return;
 				}
+				
+				TreeItem selectedTreeItem = treeItems[0];
+				String tenantId = selectedTreeItem.getText();
+				
 
-				ProductRec dbRec = tenantService.get(tenantId, selectedVersion.key.version,
-						selectedVersion.key.productName);
-				if (dbRec != null) {
-					tenant.setText(selectedVersion.key.productName);
-					tenant.setData(dbRec.chgnbr);
-					description.setText(dbRec.description == null ? "" : dbRec.description);
-					shell.setText("Version: " + selectedVersion.key.productName + " " + selectedVersion.description
-							+ " ver. " + selectedVersion.key.version);
+
+				tenant.setText("");
+				description.setText("");
+				lblInfo.setText("");
+				shell.setText("Tenant");
+
+				TenantRec rec = tenantService.get(tenantId);
+				if (rec != null) {
+					tenant.setText(rec.key.tenantid);
+					description.setText(rec.description == null ? "" : rec.description);
+					shell.setText("Tenant : " + rec.key.tenantid + " " + rec.description);
 				} else {
-					tenant.setData(null);
 					refreshTenantTree();
 				}
 			}
@@ -137,25 +132,21 @@ public class Tenant extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				Integer tenantId = currentUser.getCurrentTenant().getId();
-				String wrkTenantName = tenant.getText();
-				if (wrkTenantName == null || wrkTenantName.trim().length() < 1) {
-					lblInfo.setText(Cst.TENANTNAME_MUST_HAVE_A_VALUE);
+				String tenantId = tenant.getText();
+				if (tenantId == null || tenantId.trim().length() < 1) {
+					lblInfo.setText(Cst.TENANTID_MUST_HAVE_A_VALUE);
+					return;
+				}
+				String descr = description.getText();
+				if (tenantId == null || tenantId.trim().length() < 1) {
+					lblInfo.setText(Cst.TENANT_DESCRIPTION_HAVE_A_VALUE);
 					return;
 				}
 
-				TenantRec rec = tenantService.get(wrkTenantName);
-				if (rec != null) {
-					tenant.setData(null);
-					lblInfo.setText(wrkTenantName + " " + " already exist");
-					return;
-				} else {
-					String wrkDescription = description.getText();
-					TenantKey key = new TenantKey(tenantId);
-					rec = new TenantRec(key);
-					rec.description = wrkDescription;
-					tenantService.insert(rec, currentUser.userId);
-				}
+				TenantRec rec = tenantService.get(tenantId);
+				TenantKey key = new TenantKey(tenantId);
+				rec = new TenantRec(key, descr);
+				tenantService.store(rec, currentUser.userId);
 				refreshTenantTree();
 				clearForm();
 				lblInfo.setText("");
@@ -169,41 +160,19 @@ public class Tenant extends Dialog {
 	}
 
 	private void refreshTenantTree() {
-		selectedVersion = null;
 		tenantTree.removeAll();
-
-		Integer tenantId = currentUser.getCurrentTenant().getId();
-
-		java.util.List<String> products = tenantService.list(tenantId);
+		java.util.List<TenantRec> tenants = tenantService.list();
 		int idx = 0;
-		for (String productName : products) {
+		for (TenantRec tenant : tenants) {
 			TreeItem treeItem = new TreeItem(tenantTree, SWT.NONE, idx);
-			treeItem.setText(productName);
-			java.util.List<ProductRec> versions = tenantService.list(tenantId, productName);
-			int idx2 = 0;
-			for (ProductRec versionRec : versions) {
-				TreeItem versionItem = new TreeItem(treeItem, SWT.NONE, idx2);
-				versionItem.setText(String.valueOf(versionRec.key.version) + "," + versionRec.status);
-				versionItem.setData(versionRec);
-				idx2++;
-			}
+			treeItem.setText(tenant.key.tenantid);
 			idx++;
 		}
-	}
-
-	ProductRec getSelectedVersion() {
-		return selectedVersion;
 	}
 
 	private void clearForm() {
 		description.setText("");
 		tenant.setText("");
-		tenant.setData(null);
-	}
-
-	public void setKey(ProductKey rec) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void setCurrentUser(User user) {

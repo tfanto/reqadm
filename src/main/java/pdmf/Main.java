@@ -15,6 +15,7 @@ import pdmf.sys.Db;
 import pdmf.ui.Info;
 import pdmf.ui.ProductVersion;
 import pdmf.ui.Search;
+import pdmf.ui.Tenant;
 
 /**
  * https://github.com/maven-eclipse/maven-eclipse.github.io
@@ -27,7 +28,7 @@ public class Main {
 
 	protected Shell shell;
 	Display display;
-	
+
 	private static User currentUser;
 
 	/**
@@ -92,7 +93,7 @@ public class Main {
 		mntmProductViewer.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				pdmf.ui.ProductViewer dialog = new pdmf.ui.ProductViewer(shell,  SWT.DIALOG_TRIM | SWT.MODELESS);
+				pdmf.ui.ProductViewer dialog = new pdmf.ui.ProductViewer(shell, SWT.DIALOG_TRIM | SWT.MODELESS);
 				dialog.setText(Cst.WRK_WITH_PRODUCTS);
 				dialog.setCurrentUser(currentUser);
 				dialog.open();
@@ -104,19 +105,19 @@ public class Main {
 		mntmNewProductVersion.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ProductVersion dialog = new ProductVersion(shell,  SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-				dialog.setText("Ny produkt/Version");
+				ProductVersion dialog = new ProductVersion(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+				dialog.setText(Cst.WRK_WITH_NEWPRODUCT);
 				dialog.setCurrentUser(currentUser);
 				dialog.open();
 			}
 		});
-		mntmNewProductVersion.setText("Ny produkt/Version");
+		mntmNewProductVersion.setText(Cst.WRK_WITH_NEWPRODUCT);
 
 		MenuItem mntmQuery = new MenuItem(menu_1, SWT.NONE);
 		mntmQuery.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Search dialog = new Search(shell,  SWT.DIALOG_TRIM | SWT.MODELESS);
+				Search dialog = new Search(shell, SWT.DIALOG_TRIM | SWT.MODELESS);
 				dialog.setText("Leta");
 				dialog.setCurrentUser(currentUser);
 				dialog.open();
@@ -124,11 +125,23 @@ public class Main {
 		});
 		mntmQuery.setText("Leta");
 
+		MenuItem mntmTenant = new MenuItem(menu_2, SWT.NONE);
+		mntmTenant.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Tenant dialog = new Tenant(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+				dialog.setText(Cst.WRK_WITH_TENANT);
+				dialog.setCurrentUser(currentUser);
+				dialog.open();
+			}
+		});
+		mntmTenant.setText(Cst.WRK_WITH_TENANT);
+
 		MenuItem mntmNewItem_1 = new MenuItem(menu_1, SWT.NONE);
 		mntmNewItem_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Info dialog = new Info(shell,  SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+				Info dialog = new Info(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 				dialog.setText("Välkommen");
 				dialog.open();
 			}
