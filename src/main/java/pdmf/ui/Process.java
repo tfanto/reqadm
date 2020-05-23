@@ -4,8 +4,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -64,7 +64,7 @@ public class Process extends Dialog {
 	String processStr;
 	Integer processStepInt;
 
-	private List<String> searchWords = new ArrayList<String>();
+	private Set<String> searchWords = new HashSet<String>();
 
 	/**
 	 * Create the dialog.
@@ -319,6 +319,8 @@ public class Process extends Dialog {
 				shortDescription.setText(rec.shortdescr == null ? "" : rec.shortdescr);
 				description.setText(rec.description == null ? "" : rec.description);
 				handleInfo(rec.crtdat, rec.crtusr, rec.chgdat, rec.chgusr, rec.dltdat, rec.dltusr, rec.crtver);
+				UISupport.handleSearchWords(shell, description, searchWords);
+				UISupport.handleSearchWords(shell, shortDescription, searchWords);
 			}
 			btnRemove.setEnabled(true);
 			btnRemove.setVisible(true);
@@ -340,20 +342,6 @@ public class Process extends Dialog {
 			btnRemove.setEnabled(false);
 			btnRemove.setVisible(false);
 		}
-		
-		System.out.println("sökord strl " + searchWords.size());
-
-		if(searchWords.size() > 0) {
-			
-			System.out.println("DET FINNS SÖKORD");
-			
-		}else {
-
-			System.out.println("DET FINNS INGA EJ INTE SÖKORD");
-
-			
-		}
-
 	}
 
 	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr,
@@ -381,7 +369,7 @@ public class Process extends Dialog {
 		topicStr = rec.topicName;
 		processStr = rec.processName;
 		processStepInt = rec.processSeq;
-		searchWords.clear();		
+		searchWords.clear();
 	}
 
 	// create child to process
@@ -399,7 +387,7 @@ public class Process extends Dialog {
 		currentUser = user;
 	}
 
-	public void setSearchWords(List<String> searchWords) {
+	public void setSearchWords(Set<String> searchWords) {
 		this.searchWords.addAll(searchWords);
 	}
 

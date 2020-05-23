@@ -4,8 +4,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -59,7 +59,7 @@ public class Topic extends Dialog {
 	String productStr;
 	String topicStr;
 
-	private List<String> searchWords = new ArrayList<String>();
+	private Set<String> searchWords = new HashSet<String>();
 
 	/**
 	 * Create the dialog.
@@ -256,6 +256,8 @@ public class Topic extends Dialog {
 				shortDescription.setText(rec.shortdescr == null ? "" : rec.shortdescr);
 				description.setText(rec.description == null ? "" : rec.description);
 				handleInfo(rec.crtdat, rec.crtusr, rec.chgdat, rec.chgusr, rec.dltdat, rec.dltusr, rec.crtver);
+				UISupport.handleSearchWords(shell, description, searchWords);
+				UISupport.handleSearchWords(shell, shortDescription, searchWords);				
 			}
 			btnRemove.setEnabled(true);
 			btnRemove.setVisible(true);
@@ -301,6 +303,7 @@ public class Topic extends Dialog {
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = rec.topicName;
+		searchWords.clear();
 	}
 
 	// create child to product
@@ -309,14 +312,15 @@ public class Topic extends Dialog {
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = null;
+		searchWords.clear();
 	}
 
 	public void setCurrentUser(User user) {
 		currentUser = user;
 	}
 
-	public void setSearchWords(List<String> searchWords) {
+	public void setSearchWords(Set<String> searchWords) {
 		this.searchWords.addAll(searchWords);
-
 	}
+
 }

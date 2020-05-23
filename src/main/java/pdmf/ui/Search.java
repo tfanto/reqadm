@@ -1,6 +1,7 @@
 package pdmf.ui;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -145,9 +146,9 @@ public class Search extends Dialog {
 				if (e.getSource() instanceof Table) {
 					Table table = (Table) e.getSource();
 					Object tableItemObject = table.getItem(idx);
-					
-					List<String> searchWords = getSearhwords();
-					
+
+					Set<String> searchWords = getSearhwords();
+
 					if (tableItemObject instanceof TableItem) {
 						TableItem tableItem = (TableItem) tableItemObject;
 
@@ -269,16 +270,16 @@ public class Search extends Dialog {
 		currentUser = user;
 	}
 
-	private List<String> getSearhwords() {
+	private Set<String> getSearhwords() {
 
-		List<String> list = new ArrayList<>();
+		Set<String> list = new HashSet<>();
 		list = lineToWords(list, ord01.getText());
 		list = lineToWords(list, ord02.getText());
 		list = lineToWords(list, ord03.getText());
 		return list;
 	}
 
-	private List<String> lineToWords(List<String> wordList, String line) {
+	private Set<String> lineToWords(Set<String> wordList, String line) {
 		if (line == null || line.trim().length() < 1)
 			return wordList;
 
