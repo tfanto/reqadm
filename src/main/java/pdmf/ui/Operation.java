@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -20,6 +22,7 @@ import pdmf.model.Cst;
 import pdmf.model.OperationKey;
 import pdmf.model.OperationRec;
 import pdmf.model.ProcessKey;
+import pdmf.model.User;
 import pdmf.service.OperationService;
 import pdmf.service.ProductService;
 import pdmf.sys.RecordChangedByAnotherUser;
@@ -29,6 +32,8 @@ public class Operation extends Dialog {
 	private static final String NEW_REG_MODE = "ny post";
 	private static final String UPDATE_MODE = "ändra post";
 	private String mode = null;
+
+	private User currentUser;
 
 	private OperationService operationService = new OperationService();
 
@@ -54,7 +59,6 @@ public class Operation extends Dialog {
 	private Label crtDat;
 	private Label chgDat;
 
-	private String userId = null;
 	private Integer version = null;
 
 	String productStr;
@@ -63,6 +67,8 @@ public class Operation extends Dialog {
 	Integer processStepInt;
 	String operationStr;
 	Integer operationStepInt;
+
+	private Set<String> searchWords = new HashSet<String>();
 
 	/**
 	 * Create the dialog.
@@ -99,7 +105,7 @@ public class Operation extends Dialog {
 	private void createContents() {
 //		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell = new Shell(getParent(), getStyle());
-		
+
 		shell.setSize(518, 560);
 		shell.setText(getText() + " " + mode);
 		shell.setLayout(null);
@@ -143,6 +149,8 @@ public class Operation extends Dialog {
 		btnStore.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 				String wrkProductName = (String) product.getData();
 
@@ -191,20 +199,21 @@ public class Operation extends Dialog {
 					return;
 
 				}
-				
-				if (ProductService.isLocked(version, wrkProductName)) {
+
+				if (ProductService.isLocked(tenantId, version, wrkProductName)) {
 					lblInfo.setText(Cst.VERSION_LOCKED);
 					return;
 				}
 
-
-				OperationKey key = new OperationKey(version, wrkProductName, wrkTopicName, wrkProcessName, wrkProcessStep, operationName, operationSequence);
+				OperationKey key = new OperationKey(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName,
+						wrkProcessStep, operationName, operationSequence);
 				if (operationService.isDeleteMarked(key)) {
 					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
 					return;
 				}
 
-				OperationRec rec = operationService.get(version, wrkProductName, wrkTopicName, wrkProcessName, wrkProcessStep, operationName, operationSequence);
+				OperationRec rec = operationService.get(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName,
+						wrkProcessStep, operationName, operationSequence);
 
 				if (mode.equals(NEW_REG_MODE)) {
 					if (rec != null) {
@@ -227,7 +236,7 @@ public class Operation extends Dialog {
 				rec.description = wrkDescription;
 
 				try {
-					operationService.store(rec, userId);
+					operationService.store(rec, currentUser.userId);
 					chgnbr = null;
 					result = 1;
 					shell.dispose();
@@ -245,6 +254,8 @@ public class Operation extends Dialog {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 				String productName = (String) product.getData();
 				String topicName = topic.getText();
@@ -293,12 +304,13 @@ public class Operation extends Dialog {
 
 				}
 
-				if (ProductService.isLocked(version, productName)) {
+				if (ProductService.isLocked(tenantId, version, productName)) {
 					lblInfo.setText(Cst.VERSION_LOCKED);
 					return;
 				}
 
-				OperationKey key = new OperationKey(version, productName, topicName, processName, wrProcesskSequence, operationName, operationSequence);
+				OperationKey key = new OperationKey(tenantId, version, productName, topicName, processName,
+						wrProcesskSequence, operationName, operationSequence);
 				if (operationService.isDeleteMarked(key)) {
 					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
 					return;
@@ -307,13 +319,15 @@ public class Operation extends Dialog {
 				btnRemove.setEnabled(true);
 				lblInfo.setText("");
 				try {
-					operationService.remove(version, productName, topicName, processName, wrProcesskSequence, operationName, operationSequence, userId);
+					operationService.remove(tenantId, version, productName, topicName, processName, wrProcesskSequence,
+							operationName, operationSequence, currentUser.userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {
 
 				}
 			}
+
 		});
 		btnRemove.setText(Cst.REMOVE);
 
@@ -329,13 +343,15 @@ public class Operation extends Dialog {
 		chgDat.setText("chg");
 		chgDat.setBounds(10, 453, 482, 25);
 
-		shortDescription = new StyledText(shell,SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
+		shortDescription = new StyledText(shell, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		shortDescription.setTextLimit(100);
 		shortDescription.setBounds(167, 83, 239, 73);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
 		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(167, 60, 151, 15);
+
+		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 		if (mode != null && mode.equals(UPDATE_MODE)) {
 
@@ -352,11 +368,14 @@ public class Operation extends Dialog {
 			lblInfo.setText("");
 			crtDat.setText("");
 			chgDat.setText("");
-			OperationRec rec = operationService.get(version, productStr, topicStr, processStr, processStepInt, operationStr, operationStepInt);
+			OperationRec rec = operationService.get(tenantId, version, productStr, topicStr, processStr, processStepInt,
+					operationStr, operationStepInt);
 			if (rec != null) {
 				shortDescription.setText(rec.shortdescr == null ? "" : rec.shortdescr);
 				description.setText(rec.description == null ? "" : rec.description);
 				handleInfo(rec.crtdat, rec.crtusr, rec.chgdat, rec.chgusr, rec.dltdat, rec.dltusr, rec.crtver);
+				UISupport.handleSearchWords(shell, description, searchWords);
+				UISupport.handleSearchWords(shell, shortDescription, searchWords);
 			}
 			btnRemove.setEnabled(true);
 			btnRemove.setVisible(true);
@@ -382,10 +401,10 @@ public class Operation extends Dialog {
 			btnRemove.setEnabled(false);
 			btnRemove.setVisible(false);
 		}
-
 	}
 
-	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr, Instant deleteDate, String deleteUser, Integer createdInVersion) {
+	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr,
+			Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
 		LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
 		crtDat.setText("Skapad: " + created.toString() + " av " + createUser + " i version: " + createdInVersion);
@@ -402,9 +421,8 @@ public class Operation extends Dialog {
 
 	}
 
-	public void setKey(OperationKey rec, String userId, Integer version) {
+	public void setKey(OperationKey rec, Integer version) {
 		mode = UPDATE_MODE;
-		this.userId = userId;
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = rec.topicName;
@@ -412,18 +430,28 @@ public class Operation extends Dialog {
 		processStepInt = rec.sequence;
 		operationStr = rec.operationName;
 		operationStepInt = rec.operationSequence;
+		searchWords.clear();
 	}
 
 	// create child to process
-	public void setKey(ProcessKey rec, String userId, Integer version) {
+	public void setKey(ProcessKey rec, Integer version) {
 		mode = NEW_REG_MODE;
-		this.userId = userId;
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = rec.topicName;
 		processStr = rec.processName;
-		processStepInt = rec.sequence;
+		processStepInt = rec.processSeq;
 		operationStr = null;
 		operationStepInt = null;
+		searchWords.clear();
 	}
+
+	public void setCurrentUser(User user) {
+		currentUser = user;
+	}
+
+	public void setSearchWords(Set<String> searchWords) {
+		this.searchWords.addAll(searchWords);
+	}
+
 }

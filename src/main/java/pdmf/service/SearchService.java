@@ -23,13 +23,10 @@ public class SearchService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchService.class);
 
-	// select description::tsvector @@ 'change'::tsquery as found1,description,
-	// shortdescr::tsvector @@ 'change'::tsquery as found2,shortdescr from
-	// reqadm.oper
-	private String selectSQL_OPERATION = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname, topicname, processname, seq, operationname, operationseq from oper";
-	private String selectSQL_PROCESS = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname, topicname, processname, seq from process";
-	private String selectSQL_TOPIC = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname, topicname from topic";
-	private String selectSQL_PRODUCT = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname from product";
+	private String selectSQL_OPERATION = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname, topicname, processname, processseq, operationname, operationseq from oper where tenantid=?";
+	private String selectSQL_PROCESS = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname, topicname, processname, processseq from process where tenantid=?";
+	private String selectSQL_TOPIC = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname, topicname from topic where tenantid=?";
+	private String selectSQL_PRODUCT = "select description::tsvector @@ '%s'::tsquery as found1, description, shortdescr::tsvector @@ '%s'::tsquery as found2, shortdescr, version, productname from product where tenantid=?";
 
 	private String interpretWordsPerLine(String line) {
 		String ret = "";
@@ -68,8 +65,10 @@ public class SearchService {
 		return resultCriteria;
 	}
 
-	public List<Map<Object, List<String>>> search(List<String> criteriaList, Boolean searchInProduct, Boolean searchInTopic, Boolean searchInProcess, Boolean searchInOperation) {
+	public List<Map<Object, List<String>>> search(List<String> criteriaList, Boolean searchInProduct,
+			Boolean searchInTopic, Boolean searchInProcess, Boolean searchInOperation, String tenantid) {
 		ServiceHelper.validate(criteriaList);
+		ServiceHelper.validate("tenant", tenantid);
 		ServiceHelper.validate("searchInProduct", searchInProduct);
 		ServiceHelper.validate("searchInTopic", searchInTopic);
 		ServiceHelper.validate("searchInProcess", searchInProcess);
@@ -93,16 +92,16 @@ public class SearchService {
 			connection = Db.open();
 			if (connection != null) {
 				if (searchInOperation) {
-					resultSet = searchInOperation(connection, criteria, resultSet);
+					resultSet = searchInOperation(connection, tenantid, criteria, resultSet);
 				}
 				if (searchInProcess) {
-					resultSet = searchInProcess(connection, criteria, resultSet);
+					resultSet = searchInProcess(connection, tenantid, criteria, resultSet);
 				}
 				if (searchInTopic) {
-					resultSet = searchInTopic(connection, criteria, resultSet);
+					resultSet = searchInTopic(connection, tenantid, criteria, resultSet);
 				}
 				if (searchInProduct) {
-					resultSet = searchInProduct(connection, criteria, resultSet);
+					resultSet = searchInProduct(connection, tenantid, criteria, resultSet);
 				}
 			}
 		} catch (SQLException e) {
@@ -115,13 +114,15 @@ public class SearchService {
 		return resultSet;
 	}
 
-	private List<Map<Object, List<String>>> searchInOperation(Connection connection, String criteria, List<Map<Object, List<String>>> resultSet) throws SQLException {
+	private List<Map<Object, List<String>>> searchInOperation(Connection connection, String tenantid, String criteria,
+			List<Map<Object, List<String>>> resultSet) throws SQLException {
 
 		String sql = String.format(selectSQL_OPERATION, criteria, criteria);
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			stmt = connection.prepareStatement(sql);
+			stmt.setString(1, tenantid);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				Boolean found1 = rs.getBoolean(1);
@@ -144,7 +145,8 @@ public class SearchService {
 				Integer operationSeq = rs.getInt(11);
 
 				// create a key
-				OperationKey key = new OperationKey(version, productName, topicName, processName, seq, operationName, operationSeq);
+				OperationKey key = new OperationKey(tenantid, version, productName, topicName, processName, seq,
+						operationName, operationSeq);
 				// create data
 				List<String> data = new ArrayList<>();
 				data.add(descr);
@@ -164,13 +166,15 @@ public class SearchService {
 		}
 	}
 
-	private List<Map<Object, List<String>>> searchInProcess(Connection connection, String criteria, List<Map<Object, List<String>>> resultSet) throws SQLException {
+	private List<Map<Object, List<String>>> searchInProcess(Connection connection, String tenantid, String criteria,
+			List<Map<Object, List<String>>> resultSet) throws SQLException {
 
 		String sql = String.format(selectSQL_PROCESS, criteria, criteria);
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			stmt = connection.prepareStatement(sql);
+			stmt.setString(1, tenantid);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				Boolean found1 = rs.getBoolean(1);
@@ -189,7 +193,7 @@ public class SearchService {
 				Integer seq = rs.getInt(9);
 
 				// create a key
-				ProcessKey key = new ProcessKey(version, productName, topicName, processName, seq);
+				ProcessKey key = new ProcessKey(tenantid, version, productName, topicName, processName, seq);
 				// create data
 				List<String> data = new ArrayList<>();
 				data.add(descr);
@@ -209,13 +213,15 @@ public class SearchService {
 		}
 	}
 
-	private List<Map<Object, List<String>>> searchInTopic(Connection connection, String criteria, List<Map<Object, List<String>>> resultSet) throws SQLException {
+	private List<Map<Object, List<String>>> searchInTopic(Connection connection, String tenantid, String criteria,
+			List<Map<Object, List<String>>> resultSet) throws SQLException {
 
 		String sql = String.format(selectSQL_TOPIC, criteria, criteria);
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			stmt = connection.prepareStatement(sql);
+			stmt.setString(1, tenantid);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				Boolean found1 = rs.getBoolean(1);
@@ -232,7 +238,7 @@ public class SearchService {
 				String topicName = rs.getString(7);
 
 				// create a key
-				TopicKey key = new TopicKey(version, productName, topicName);
+				TopicKey key = new TopicKey(tenantid, version, productName, topicName);
 				// create data
 				List<String> data = new ArrayList<>();
 				data.add(descr);
@@ -252,13 +258,15 @@ public class SearchService {
 		}
 	}
 
-	private List<Map<Object, List<String>>> searchInProduct(Connection connection, String criteria, List<Map<Object, List<String>>> resultSet) throws SQLException {
+	private List<Map<Object, List<String>>> searchInProduct(Connection connection, String tenantid, String criteria,
+			List<Map<Object, List<String>>> resultSet) throws SQLException {
 
 		String sql = String.format(selectSQL_PRODUCT, criteria, criteria);
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			stmt = connection.prepareStatement(sql);
+			stmt.setString(1, tenantid);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				Boolean found1 = rs.getBoolean(1);
@@ -274,7 +282,7 @@ public class SearchService {
 				String productName = rs.getString(6);
 
 				// create a key
-				ProductKey key = new ProductKey(version, productName);
+				ProductKey key = new ProductKey(tenantid, version, productName);
 				// create data
 				List<String> data = new ArrayList<>();
 				data.add(descr);

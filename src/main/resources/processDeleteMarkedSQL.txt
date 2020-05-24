@@ -1,0 +1,11 @@
+select count(*) from  process  
+where 
+	tenantid=? and
+	version=? and 
+	productname=? and 
+	topicname=? and 
+	processname=? and 
+	processseq=? and 
+	dltusr notnull
+	
+	

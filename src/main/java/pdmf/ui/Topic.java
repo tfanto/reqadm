@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -20,6 +22,7 @@ import pdmf.model.Cst;
 import pdmf.model.ProductKey;
 import pdmf.model.TopicKey;
 import pdmf.model.TopicRec;
+import pdmf.model.User;
 import pdmf.service.ProductService;
 import pdmf.service.TopicService;
 import pdmf.sys.RecordChangedByAnotherUser;
@@ -29,6 +32,8 @@ public class Topic extends Dialog {
 	private static final String NEW_REG_MODE = "ny post";
 	private static final String UPDATE_MODE = "ändra post";
 	private String mode = null;
+
+	private User currentUser;
 
 	private TopicService processService = new TopicService();
 
@@ -49,11 +54,12 @@ public class Topic extends Dialog {
 	private Label crtDat;
 	private Label chgDat;
 
-	private String userId = null;
 	private Integer version = null;
 
 	String productStr;
 	String topicStr;
+
+	private Set<String> searchWords = new HashSet<String>();
 
 	/**
 	 * Create the dialog.
@@ -90,7 +96,7 @@ public class Topic extends Dialog {
 	private void createContents() {
 //		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell = new Shell(getParent(), getStyle());
-		
+
 		shell.setSize(518, 560);
 		shell.setText(getText() + " " + mode);
 		shell.setLayout(null);
@@ -119,6 +125,7 @@ public class Topic extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				String wrkProductName = (String) product.getData();
 
 				String wrkTopicName = topic.getText();
@@ -127,19 +134,18 @@ public class Topic extends Dialog {
 					return;
 				}
 
-				TopicKey key = new TopicKey(version, wrkProductName, wrkTopicName);
+				TopicKey key = new TopicKey(tenantId, version, wrkProductName, wrkTopicName);
 				if (processService.isDeleteMarked(key)) {
 					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
 					return;
 				}
-				
-				if (ProductService.isLocked(version, wrkProductName)) {
+
+				if (ProductService.isLocked(tenantId, version, wrkProductName)) {
 					lblInfo.setText(Cst.VERSION_LOCKED);
 					return;
 				}
 
-
-				TopicRec rec = processService.get(version, wrkProductName, wrkTopicName);
+				TopicRec rec = processService.get(tenantId, version, wrkProductName, wrkTopicName);
 
 				if (mode.equals(NEW_REG_MODE)) {
 					if (rec != null) {
@@ -162,7 +168,7 @@ public class Topic extends Dialog {
 				rec.description = wrkDescription;
 
 				try {
-					processService.store(rec, userId);
+					processService.store(rec, currentUser.userId);
 					chgnbr = null;
 					result = 1;
 					shell.dispose();
@@ -181,6 +187,7 @@ public class Topic extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				String productName = (String) product.getData();
 				String topicName = topic.getText();
 				if (topicName.trim().length() < 1) {
@@ -188,22 +195,21 @@ public class Topic extends Dialog {
 					return;
 				}
 
-				TopicKey key = new TopicKey(version, productName, topicName);
+				TopicKey key = new TopicKey(tenantId, version, productName, topicName);
 				if (processService.isDeleteMarked(key)) {
 					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
 					return;
 				}
-				
-				if (ProductService.isLocked(version, productName)) {
+
+				if (ProductService.isLocked(tenantId, version, productName)) {
 					lblInfo.setText(Cst.VERSION_LOCKED);
 					return;
 				}
 
-
 				btnRemove.setEnabled(true);
 				lblInfo.setText("");
 				try {
-					processService.remove(version, productName, topicName, userId);
+					processService.remove(tenantId, version, productName, topicName, currentUser.userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {
@@ -233,6 +239,8 @@ public class Topic extends Dialog {
 		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(167, 60, 151, 15);
 
+		String tenantId = currentUser.getCurrentTenant().key.tenantid;
+
 		if (mode != null && mode.equals(UPDATE_MODE)) {
 
 			product.setData(productStr);
@@ -243,11 +251,13 @@ public class Topic extends Dialog {
 			lblInfo.setText("");
 			crtDat.setText("");
 			chgDat.setText("");
-			TopicRec rec = processService.get(version, productStr, topicStr);
+			TopicRec rec = processService.get(tenantId, version, productStr, topicStr);
 			if (rec != null) {
 				shortDescription.setText(rec.shortdescr == null ? "" : rec.shortdescr);
 				description.setText(rec.description == null ? "" : rec.description);
 				handleInfo(rec.crtdat, rec.crtusr, rec.chgdat, rec.chgusr, rec.dltdat, rec.dltusr, rec.crtver);
+				UISupport.handleSearchWords(shell, description, searchWords);
+				UISupport.handleSearchWords(shell, shortDescription, searchWords);
 			}
 			btnRemove.setEnabled(true);
 			btnRemove.setVisible(true);
@@ -270,7 +280,8 @@ public class Topic extends Dialog {
 
 	}
 
-	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr, Instant deleteDate, String deleteUser, Integer createdInVersion) {
+	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr,
+			Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
 		LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
 		crtDat.setText("Skapad: " + created.toString() + " av " + createUser + " i version: " + createdInVersion);
@@ -287,20 +298,29 @@ public class Topic extends Dialog {
 
 	}
 
-	public void setKey(TopicKey rec, String userId, Integer version) {
+	public void setKey(TopicKey rec, Integer version) {
 		mode = UPDATE_MODE;
-		this.userId = userId;
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = rec.topicName;
+		searchWords.clear();
 	}
 
 	// create child to product
-	public void setKey(ProductKey rec, String userId, Integer version) {
+	public void setKey(ProductKey rec, Integer version) {
 		mode = NEW_REG_MODE;
-		this.userId = userId;
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = null;
+		searchWords.clear();
 	}
+
+	public void setCurrentUser(User user) {
+		currentUser = user;
+	}
+
+	public void setSearchWords(Set<String> searchWords) {
+		this.searchWords.addAll(searchWords);
+	}
+
 }

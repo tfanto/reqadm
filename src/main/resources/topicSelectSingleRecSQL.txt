@@ -1,0 +1,24 @@
+select 
+	crtdat, 
+	crtusr,
+	chgdat,
+	chgusr,
+	dltdat,
+	dltusr,
+	chgnbr,
+	crtver,
+	description,
+	shortdescr, 
+	tenantid,
+	version,
+	productname,
+	topicname
+from topic 
+where 
+       tenantid=? and
+       version=? and 
+       productname=? and 
+       topicname=? 
+       
+        
+

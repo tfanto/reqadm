@@ -1,6 +1,7 @@
 package pdmf.ui;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,12 +19,12 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-import pdmf.Main;
 import pdmf.model.Cst;
 import pdmf.model.OperationKey;
 import pdmf.model.ProcessKey;
 import pdmf.model.ProductKey;
 import pdmf.model.TopicKey;
+import pdmf.model.User;
 import pdmf.service.SearchService;
 
 public class Search extends Dialog {
@@ -43,6 +44,8 @@ public class Search extends Dialog {
 	private Button btnLaneTopic;
 	private Button btnLaneProcess;
 	private Button btnLaneOperation;
+
+	private User currentUser;
 
 	public Search(Shell parent, int style) {
 		super(parent, style);
@@ -105,12 +108,15 @@ public class Search extends Dialog {
 					return;
 				}
 
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
+
 				Boolean searchInProduct = btnLaneProduct.getSelection();
 				Boolean searchInTopic = btnLaneTopic.getSelection();
 				Boolean searchInProcess = btnLaneProcess.getSelection();
 				Boolean searchInOperation = btnLaneOperation.getSelection();
 
-				List<Map<Object, List<String>>> resultSet = searchService.search(criteriaList, searchInProduct,searchInTopic,searchInProcess,searchInOperation);
+				List<Map<Object, List<String>>> resultSet = searchService.search(criteriaList, searchInProduct,
+						searchInTopic, searchInProcess, searchInOperation, tenantId);
 				searchResult.removeAll();
 				lblInfo.setText("");
 				for (Map<Object, List<String>> record : resultSet) {
@@ -140,6 +146,9 @@ public class Search extends Dialog {
 				if (e.getSource() instanceof Table) {
 					Table table = (Table) e.getSource();
 					Object tableItemObject = table.getItem(idx);
+
+					Set<String> searchWords = getSearhwords();
+
 					if (tableItemObject instanceof TableItem) {
 						TableItem tableItem = (TableItem) tableItemObject;
 
@@ -147,27 +156,34 @@ public class Search extends Dialog {
 
 						if (object instanceof ProductKey) {
 							ProductKey key = (ProductKey) object;
-							pdmf.ui.Product dialog = new pdmf.ui.Product(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-							String userId = getUser();
-							dialog.setKey(key, userId);
+							pdmf.ui.Product dialog = new pdmf.ui.Product(shell,
+									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+							dialog.setKey(key);
+							dialog.setCurrentUser(currentUser);
+							dialog.setSearchWords(searchWords);
 							dialog.open();
 						} else if (object instanceof TopicKey) {
 							TopicKey key = (TopicKey) object;
 							pdmf.ui.Topic dialog = new pdmf.ui.Topic(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-							String userId = getUser();
-							dialog.setKey(key, userId, key.version);
+							dialog.setKey(key, key.version);
+							dialog.setCurrentUser(currentUser);
+							dialog.setSearchWords(searchWords);
 							dialog.open();
 						} else if (object instanceof ProcessKey) {
 							ProcessKey key = (ProcessKey) object;
-							pdmf.ui.Process dialog = new pdmf.ui.Process(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-							String userId = getUser();
-							dialog.setKey(key, userId, key.version);
+							pdmf.ui.Process dialog = new pdmf.ui.Process(shell,
+									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+							dialog.setKey(key, key.version);
+							dialog.setCurrentUser(currentUser);
+							dialog.setSearchWords(searchWords);
 							dialog.open();
 						} else if (object instanceof OperationKey) {
 							OperationKey key = (OperationKey) object;
-							pdmf.ui.Operation dialog = new pdmf.ui.Operation(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-							String userId = getUser();
-							dialog.setKey(key, userId, key.version);
+							pdmf.ui.Operation dialog = new pdmf.ui.Operation(shell,
+									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+							dialog.setKey(key, key.version);
+							dialog.setCurrentUser(currentUser);
+							dialog.setSearchWords(searchWords);
 							dialog.open();
 						}
 					}
@@ -250,7 +266,31 @@ public class Search extends Dialog {
 		return str;
 	}
 
-	private String getUser() {
-		return Main.getUser().getUserId();
+	public void setCurrentUser(User user) {
+		currentUser = user;
 	}
+
+	private Set<String> getSearhwords() {
+
+		Set<String> list = new HashSet<>();
+		list = lineToWords(list, ord01.getText());
+		list = lineToWords(list, ord02.getText());
+		list = lineToWords(list, ord03.getText());
+		return list;
+	}
+
+	private Set<String> lineToWords(Set<String> wordList, String line) {
+		if (line == null || line.trim().length() < 1)
+			return wordList;
+
+		String str[] = line.split(" ");
+		if (str.length < 1) {
+			return wordList;
+		}
+		for (int i = 0; i < str.length; i++) {
+			wordList.add(str[i].trim());
+		}
+		return wordList;
+	}
+
 }

@@ -13,10 +13,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-import pdmf.Main;
 import pdmf.model.Cst;
 import pdmf.model.ProductKey;
 import pdmf.model.ProductRec;
+import pdmf.model.User;
 import pdmf.service.ProductService;
 
 public class ProductVersion extends Dialog {
@@ -37,6 +37,8 @@ public class ProductVersion extends Dialog {
 	private ProductRec selectedVersion = null;
 	private Tree productTree;
 	private Text newVersion;
+
+	private User currentUser;
 
 	/**
 	 * Create the dialog.
@@ -98,6 +100,7 @@ public class ProductVersion extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				String wrkProductName = product.getText();
 				if (wrkProductName == null || wrkProductName.trim().length() < 1) {
 					lblInfo.setText(Cst.VERSION_MUST_BE_SELECTED);
@@ -141,20 +144,20 @@ public class ProductVersion extends Dialog {
 					return;
 				}
 
-				ProductRec rec = productService.get(fromVersion, wrkProductName);
+				ProductRec rec = productService.get(tenantId, fromVersion, wrkProductName);
 				if (rec == null) {
 					product.setData(null);
 					lblInfo.setText(wrkProductName + " " + fromVersion + " does not exist");
 					return;
 				} else {
-					ProductRec recToVersion = productService.get(toVersion, wrkProductName);
+					ProductRec recToVersion = productService.get(tenantId, toVersion, wrkProductName);
 					if (recToVersion != null) {
 						product.setData(null);
 						lblInfo.setText(wrkProductName + " " + toVersion + " already exists");
 						return;
 					}
-					String user = getUser();
-					productService.createNewVersion(fromVersion, toVersion, wrkProductName, user);
+					productService.createNewVersion(tenantId, fromVersion, toVersion, wrkProductName,
+							currentUser.userId);
 					newVersion.setText("");
 				}
 				refreshProductTree();
@@ -173,6 +176,7 @@ public class ProductVersion extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				ProductRec versionRec = (ProductRec) e.item.getData();
 				if (versionRec != null) {
 					selectedVersion = versionRec;
@@ -190,12 +194,14 @@ public class ProductVersion extends Dialog {
 					return;
 				}
 
-				ProductRec dbRec = productService.get(selectedVersion.key.version, selectedVersion.key.productName);
+				ProductRec dbRec = productService.get(tenantId, selectedVersion.key.version,
+						selectedVersion.key.productName);
 				if (dbRec != null) {
 					product.setText(selectedVersion.key.productName);
 					product.setData(dbRec.chgnbr);
 					description.setText(dbRec.description == null ? "" : dbRec.description);
-					shell.setText("Version: " + selectedVersion.key.productName + " " + selectedVersion.description + " ver. " + selectedVersion.key.version);
+					shell.setText("Version: " + selectedVersion.key.productName + " " + selectedVersion.description
+							+ " ver. " + selectedVersion.key.version);
 				} else {
 					product.setData(null);
 					refreshProductTree();
@@ -212,33 +218,33 @@ public class ProductVersion extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				String wrkProductName = product.getText();
 				if (wrkProductName == null || wrkProductName.trim().length() < 1) {
 					lblInfo.setText(Cst.PRODUCTNAME_MUST_HAVE_A_VALUE);
 					return;
 				}
 
-				Integer firstVersion = productService.getFirstVersionForProduct(wrkProductName);
-				if(firstVersion != null) {
-					lblInfo.setText(wrkProductName +  " already exist");
-					return;					
+				Integer firstVersion = productService.getFirstVersionForProduct(tenantId, wrkProductName);
+				if (firstVersion != null) {
+					lblInfo.setText(wrkProductName + " already exist");
+					return;
 				}
 
 				Integer toVersion = 0;
 
-				ProductRec rec = productService.get(toVersion, wrkProductName);
+				ProductRec rec = productService.get(tenantId, toVersion, wrkProductName);
 				if (rec != null) {
 					product.setData(null);
 					lblInfo.setText(wrkProductName + " " + toVersion + " already exist");
 					return;
 				} else {
-					String user = getUser();
 					String wrkDescription = description.getText();
-					ProductKey key = new ProductKey(toVersion, wrkProductName);
+					ProductKey key = new ProductKey(tenantId, toVersion, wrkProductName);
 					rec = new ProductRec(key, null, null, null);
 					rec.description = wrkDescription;
 					rec.status = "wrk";
-					productService.insert(rec, user);
+					productService.insert(rec, currentUser.userId);
 				}
 				newVersion.setText("");
 				refreshProductTree();
@@ -260,12 +266,15 @@ public class ProductVersion extends Dialog {
 	private void refreshProductTree() {
 		selectedVersion = null;
 		productTree.removeAll();
-		java.util.List<String> products = productService.list();
+
+		String tenantId = currentUser.getCurrentTenant().key.tenantid;
+
+		java.util.List<String> products = productService.list(tenantId);
 		int idx = 0;
 		for (String productName : products) {
 			TreeItem treeItem = new TreeItem(productTree, SWT.NONE, idx);
 			treeItem.setText(productName);
-			java.util.List<ProductRec> versions = productService.list(productName);
+			java.util.List<ProductRec> versions = productService.list(tenantId, productName);
 			int idx2 = 0;
 			for (ProductRec versionRec : versions) {
 				TreeItem versionItem = new TreeItem(treeItem, SWT.NONE, idx2);
@@ -287,12 +296,11 @@ public class ProductVersion extends Dialog {
 		product.setData(null);
 	}
 
-	private String getUser() {
-		return Main.getUser().getUserId();
-	}
-
 	public void setKey(ProductKey rec) {
-		// TODO Auto-generated method stub
-
 	}
+
+	public void setCurrentUser(User user) {
+		currentUser = user;
+	}
+
 }

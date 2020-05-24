@@ -1,0 +1,5 @@
+select distinct productname from product 
+   where tenantid=? 
+      order by productname
+      
+      

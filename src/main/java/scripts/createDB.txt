@@ -11,6 +11,21 @@ ALTER USER reqadm SET search_path = reqadm, public;
 GRANT CONNECT ON DATABASE reqadm TO reqadm;
 
 
+-- Table: reqadm.tenant
+
+-- DROP TABLE reqadm.tenant;
+
+CREATE TABLE reqadm.tenant
+(
+    tenantid character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    description character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT tenant_pkey PRIMARY KEY (tenantid)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE reqadm.tenant
+    OWNER to reqadm;
 
 --- Table: reqadm.product
 
@@ -18,7 +33,7 @@ GRANT CONNECT ON DATABASE reqadm TO reqadm;
 
 CREATE TABLE reqadm.product
 (
-    tenant integer NOT NULL,
+    tenantid  character varying(50) NOT NULL,
     version integer NOT NULL,
     productname character varying(50) COLLATE pg_catalog."default" NOT NULL,
     description character varying(995) COLLATE pg_catalog."default",
@@ -32,7 +47,7 @@ CREATE TABLE reqadm.product
     dltusr character varying(100) COLLATE pg_catalog."default",
     dltdat timestamp with time zone,
     status character varying(50) COLLATE pg_catalog."default",
-    CONSTRAINT product_pkey PRIMARY KEY (tenant, version, productname)
+    CONSTRAINT product_pkey PRIMARY KEY (tenantid, version, productname)
 
 )
 
@@ -48,7 +63,7 @@ ALTER TABLE reqadm.product
 
 CREATE TABLE reqadm.topic
 (
-    tenant integer NOT NULL,
+    tenantid  character varying(50) NOT NULL,
     version integer NOT NULL,
     productname character varying(50) COLLATE pg_catalog."default" NOT NULL,
     topicname character varying(50) COLLATE pg_catalog."default" NOT NULL,
@@ -62,9 +77,9 @@ CREATE TABLE reqadm.topic
     crtver integer NOT NULL,    
     dltusr character varying(100) COLLATE pg_catalog."default",
     dltdat timestamp with time zone,
-    CONSTRAINT topic_pkey PRIMARY KEY (tenant, version, productname, topicname),
-    CONSTRAINT topic_productname_fkey FOREIGN KEY (tenant,version, productname)
-        REFERENCES reqadm.product (tenant,version, productname) MATCH SIMPLE
+    CONSTRAINT topic_pkey PRIMARY KEY (tenantid, version, productname, topicname),
+    CONSTRAINT topic_productname_fkey FOREIGN KEY (tenantid,version, productname)
+        REFERENCES reqadm.product (tenantid,version, productname) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE RESTRICT
 )
@@ -82,7 +97,7 @@ ALTER TABLE reqadm.topic
 
 CREATE TABLE reqadm.process
 (
-    tenant integer NOT NULL,
+    tenantid  character varying(50) NOT NULL,
     version integer NOT NULL,
     productname character varying(50) COLLATE pg_catalog."default" NOT NULL,
     topicname character varying(50) COLLATE pg_catalog."default" NOT NULL,
@@ -98,9 +113,9 @@ CREATE TABLE reqadm.process
     crtver integer NOT NULL,    
     dltusr character varying(100) COLLATE pg_catalog."default",
     dltdat timestamp with time zone,
-    CONSTRAINT process_pkey PRIMARY KEY (tenant, version, productname, topicname, processname, processseq),
-    CONSTRAINT process_productname_topicname_fkey FOREIGN KEY (tenant, version, productname, topicname)
-        REFERENCES reqadm.topic (tenant, version, productname, topicname) MATCH SIMPLE
+    CONSTRAINT process_pkey PRIMARY KEY (tenantid, version, productname, topicname, processname, processseq),
+    CONSTRAINT process_productname_topicname_fkey FOREIGN KEY (tenantid, version, productname, topicname)
+        REFERENCES reqadm.topic (tenantid, version, productname, topicname) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE RESTRICT
 )
@@ -117,7 +132,7 @@ ALTER TABLE reqadm.process
 
 CREATE TABLE reqadm.oper
 (
-    tenant integer NOT NULL,
+    tenantid  character varying(50) NOT NULL,
     version integer NOT NULL,
     productname character varying(50) COLLATE pg_catalog."default" NOT NULL,
     topicname character varying(50) COLLATE pg_catalog."default" NOT NULL,
@@ -135,9 +150,9 @@ CREATE TABLE reqadm.oper
     crtver integer NOT NULL,    
     dltusr character varying(100) COLLATE pg_catalog."default",
     dltdat timestamp with time zone,
-    CONSTRAINT oper_pkey PRIMARY KEY (tenant,version, productname, topicname,  processname, processseq, operationname, operationseq),
-    CONSTRAINT process_productname_topicname_operationfkey1 FOREIGN KEY (tenant,version, productname, topicname, processname, processseq)
-        REFERENCES reqadm.process (tenant,version, productname, topicname, processname, processseq) MATCH SIMPLE
+    CONSTRAINT oper_pkey PRIMARY KEY (tenantid,version, productname, topicname,  processname, processseq, operationname, operationseq),
+    CONSTRAINT process_productname_topicname_operationfkey1 FOREIGN KEY (tenantid,version, productname, topicname, processname, processseq)
+        REFERENCES reqadm.process (tenantid,version, productname, topicname, processname, processseq) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE RESTRICT
 )

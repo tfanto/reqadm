@@ -23,19 +23,16 @@ public class OperationService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperationService.class);
 
-	private String operationDeleteMarkedSQL = "select count(*) from  oper  where productname=? and topicname=? and processname=? and seq=? and operationname=? and operationseq=? and version=? and dltusr notnull";
-	private String operationExistsSQL = "select count(*) from  oper  where productname=? and topicname=? and processname=? and seq=? and operationname=? and operationseq=? and version=?";
-	private String operationSelectSingleRecSQL = "select operationname, operationseq, description,crtdat,chgnbr,shortdescr,crtusr,chgdat,chgusr,crtver,dltdat,dltusr from oper where productname=? and topicname=? and processname=? and seq=?  and operationname=? and operationseq=? and version=?";
-	private String operationInsertSQL = "insert into oper  (version, productname, topicname,processname,seq,operationname,operationseq, description,crtdat,chgnbr,crtusr,crtver,shortdescr) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
-	private String operationSelectSQL = "select topicname,processname,seq, operationname,operationseq, description,crtdat,chgnbr,shortdescr,crtusr,chgdat,chgusr,crtver,dltdat,dltusr from oper where productname=?  and topicname=? and processname=? and seq=?  and version=? order by productname,topicname,processname,seq,operationname,operationseq";
-	private String operationSelectSQL2 = "select topicname,processname,seq, operationname,operationseq, description,crtdat,chgnbr,shortdescr,crtusr,chgdat,chgusr,crtver,dltdat,dltusr from oper where productname=?  and topicname=? and processname=?  and version=? order by productname,topicname,processname,seq,operationname,operationseq";
+	public List<OperationRec> list(String tenantid, Integer version, String productName, String topicName,
+			String processName) {
 
-	public List<OperationRec> list(Integer version, String productName, String topicName, String processName) {
-
+		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
 		ServiceHelper.validate("Topic", topicName);
 		ServiceHelper.validate("Process", processName);
+
+		String theSQL = ServiceHelper.getSQL("operationSelectSQL2");
 
 		List<OperationRec> ret = new ArrayList<>();
 		Connection connection = null;
@@ -44,35 +41,45 @@ public class OperationService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				stmt = connection.prepareStatement(operationSelectSQL2);
-				stmt.setString(1, productName);
-				stmt.setString(2, topicName);
-				stmt.setString(3, processName);
-				stmt.setInt(4, version);
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setString(1, tenantid);
+				stmt.setInt(2, version);
+				stmt.setString(3, productName);
+				stmt.setString(4, topicName);
+				stmt.setString(5, processName);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
-					Integer seq = rs.getInt(3);
-					String operationName = rs.getString(4);
-					Integer operationSeq = rs.getInt(5);
-					String description = rs.getString(6);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(7));
-					Integer chgnbr = rs.getInt(8);
-					String shortdescr = rs.getString(9);
-					String crtusr = rs.getString(10);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(11));
-					String chgusr = rs.getString(12);
-					Integer crtver = rs.getInt(13);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(14));
-					String dltusr = rs.getString(15);
-					OperationKey key = new OperationKey(version, productName, topicName, processName, seq, operationName, operationSeq);
-					OperationRec rec = new OperationRec(key, description, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltdat = dltdat;
-					rec.dltusr = dltusr;
+
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
+
+					String rs_tenantid = rs.getString("tenantid");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
+					String rs_topicname = rs.getString("topicname");
+					String rs_processname = rs.getString("processname");
+					Integer rs_processseq = rs.getInt("processseq");
+					String rs_operationname = rs.getString("operationname");
+					Integer rs_operationseq = rs.getInt("operationseq");
+
+					OperationKey key = new OperationKey(rs_tenantid, rs_version, rs_productname, rs_topicname,
+							rs_processname, rs_processseq, rs_operationname, rs_operationseq);
+					OperationRec rec = new OperationRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltdat = rs_dltdat;
+					rec.dltusr = rs_dltusr;
 					ret.add(rec);
 				}
 				return ret;
@@ -87,13 +94,17 @@ public class OperationService {
 		return ret;
 	}
 
-	public List<OperationRec> list(Integer version, String productName, String topicName, String processName, Integer seq) {
+	public List<OperationRec> list(String tenantid, Integer version, String productName, String topicName,
+			String processName, Integer processeq) {
 
+		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
 		ServiceHelper.validate("Topic", topicName);
 		ServiceHelper.validate("Process", processName);
-		ServiceHelper.validate("ProcessSeq", seq);
+		ServiceHelper.validate("ProcessSeq", processeq);
+
+		String theSQL = ServiceHelper.getSQL("operationSelectSQL");
 
 		List<OperationRec> ret = new ArrayList<>();
 		Connection connection = null;
@@ -102,35 +113,45 @@ public class OperationService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				stmt = connection.prepareStatement(operationSelectSQL);
-				stmt.setString(1, productName);
-				stmt.setString(2, topicName);
-				stmt.setString(3, processName);
-				stmt.setInt(4, seq);
-				stmt.setInt(5, version);
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setString(1, tenantid);
+				stmt.setInt(2, version);
+				stmt.setString(3, productName);
+				stmt.setString(4, topicName);
+				stmt.setString(5, processName);
+				stmt.setInt(6, processeq);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
-					String operationName = rs.getString(4);
-					Integer operationSeq = rs.getInt(5);
-					String description = rs.getString(6);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(7));
-					Integer chgnbr = rs.getInt(8);
-					String shortdescr = rs.getString(9);
-					String crtusr = rs.getString(10);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(11));
-					String chgusr = rs.getString(12);
-					Integer crtver = rs.getInt(13);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(14));
-					String dltusr = rs.getString(15);
-					OperationKey key = new OperationKey(version, productName, topicName, processName, seq, operationName, operationSeq);
-					OperationRec rec = new OperationRec(key, description, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltdat = dltdat;
-					rec.dltusr = dltusr;
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
+
+					String rs_tenantid = rs.getString("tenantid");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
+					String rs_topicname = rs.getString("topicname");
+					String rs_processname = rs.getString("processname");
+					Integer rs_processseq = rs.getInt("processseq");
+					String rs_operationname = rs.getString("operationname");
+					Integer rs_operationseq = rs.getInt("operationseq");
+
+					OperationKey key = new OperationKey(rs_tenantid, rs_version, rs_productname, rs_topicname,
+							rs_processname, rs_processseq, rs_operationname, rs_operationseq);
+					OperationRec rec = new OperationRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltdat = rs_dltdat;
+					rec.dltusr = rs_dltusr;
 					ret.add(rec);
 				}
 				return ret;
@@ -148,20 +169,23 @@ public class OperationService {
 	public boolean exists(OperationRec rec) {
 		ServiceHelper.validate(rec);
 
+		String theSQL = ServiceHelper.getSQL("operationExistsSQL");
+
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				stmt = connection.prepareStatement(operationExistsSQL);
-				stmt.setString(1, rec.key.productName);
-				stmt.setString(2, rec.key.topicName);
-				stmt.setString(3, rec.key.processName);
-				stmt.setInt(4, rec.key.sequence);
-				stmt.setString(5, rec.key.operationName);
-				stmt.setInt(6, rec.key.operationSequence);
-				stmt.setInt(7, rec.key.version);
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setString(1, rec.key.tenantid);
+				stmt.setInt(2, rec.key.version);
+				stmt.setString(3, rec.key.productName);
+				stmt.setString(4, rec.key.topicName);
+				stmt.setString(5, rec.key.processName);
+				stmt.setInt(6, rec.key.sequence);
+				stmt.setString(7, rec.key.operationName);
+				stmt.setInt(8, rec.key.operationSequence);
 				rs = stmt.executeQuery();
 				rs.next();
 				Integer n = rs.getInt(1);
@@ -183,17 +207,19 @@ public class OperationService {
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
+		String theSQL = ServiceHelper.getSQL("operationDeleteMarkedSQL");
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				stmt = connection.prepareStatement(operationDeleteMarkedSQL);
-				stmt.setString(1, key.productName);
-				stmt.setString(2, key.topicName);
-				stmt.setString(3, key.processName);
-				stmt.setInt(4, key.sequence);
-				stmt.setString(5, key.operationName);
-				stmt.setInt(6, key.operationSequence);
-				stmt.setInt(7, key.version);
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setString(1, key.tenantid);
+				stmt.setInt(2, key.version);
+				stmt.setString(3, key.productName);
+				stmt.setString(4, key.topicName);
+				stmt.setString(5, key.processName);
+				stmt.setInt(6, key.sequence);
+				stmt.setString(7, key.operationName);
+				stmt.setInt(8, key.operationSequence);
 				rs = stmt.executeQuery();
 				rs.next();
 				Integer n = rs.getInt(1);
@@ -209,7 +235,9 @@ public class OperationService {
 		return false;
 	}
 
-	public OperationRec get(Integer version, String productName, String topicName, String processName, Integer sequence, String operationName, Integer operationSeq) {
+	public OperationRec get(String tenantid, Integer version, String productName, String topicName, String processName,
+			Integer sequence, String operationName, Integer operationSeq) {
+		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
 		ServiceHelper.validate("Topic", topicName);
@@ -218,6 +246,7 @@ public class OperationService {
 		ServiceHelper.validate("OperationName", operationName);
 		ServiceHelper.validate("OperationSeq", operationSeq);
 
+		String theSQL = ServiceHelper.getSQL("operationSelectSingleRecSQL");
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -225,36 +254,47 @@ public class OperationService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				stmt = connection.prepareStatement(operationSelectSingleRecSQL);
-				stmt.setString(1, productName);
-				stmt.setString(2, topicName);
-				stmt.setString(3, processName);
-				stmt.setInt(4, sequence);
-				stmt.setString(5, operationName);
-				stmt.setInt(6, operationSeq);
-				stmt.setInt(7, version);
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setString(1, tenantid);
+				stmt.setInt(2, version);
+				stmt.setString(3, productName);
+				stmt.setString(4, topicName);
+				stmt.setString(5, processName);
+				stmt.setInt(6, sequence);
+				stmt.setString(7, operationName);
+				stmt.setInt(8, operationSeq);
 				rs = stmt.executeQuery();
 				if (rs.next()) {
-					String descr = rs.getString(3);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(4));
-					Integer chgnbr = rs.getInt(5);
-					String shortdescr = rs.getString(6);
-					String crtusr = rs.getString(7);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(8));
-					String chgusr = rs.getString(9);
-					Integer crtver = rs.getInt(10);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(11));
-					String dltusr = rs.getString(12);
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
 
-					OperationKey key = new OperationKey(version, productName, topicName, processName, sequence, operationName, operationSeq);
-					rec = new OperationRec(key, descr, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltdat = dltdat;
-					rec.dltusr = dltusr;
+					String rs_tenantid = rs.getString("tenantid");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
+					String rs_topicname = rs.getString("topicname");
+					String rs_processname = rs.getString("processname");
+					Integer rs_processseq = rs.getInt("processseq");
+					String rs_operationname = rs.getString("operationname");
+					Integer rs_operationseq = rs.getInt("operationseq");
+
+					OperationKey key = new OperationKey(rs_tenantid, rs_version, rs_productname, rs_topicname,
+							rs_processname, rs_processseq, rs_operationname, rs_operationseq);
+					rec = new OperationRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltdat = rs_dltdat;
+					rec.dltusr = rs_dltusr;
 				}
 			}
 		} catch (SQLException e) {
@@ -271,10 +311,9 @@ public class OperationService {
 
 		ServiceHelper.validate(rec);
 		ServiceHelper.validate("userid", loggedInUserId);
-		
 
-		if (ProductService.isLocked(rec.key.version, rec.key.productName)) {
-			LOGGER.info("LOCKED " + rec.key.version + " " + rec.key.productName);
+		if (ProductService.isLocked(rec.key.tenantid, rec.key.version, rec.key.productName)) {
+			LOGGER.info("LOCKED " + rec.key.tenantid + " " + rec.key.version + " " + rec.key.productName);
 			return null;
 		}
 
@@ -298,26 +337,30 @@ public class OperationService {
 	private Integer insert(OperationRec rec, String loggedInUserId) {
 		Connection connection = null;
 		PreparedStatement stmt = null;
+		String theSQL = ServiceHelper.getSQL("operationInsertSQL");
+
 		try {
 			connection = Db.open();
 			if (connection != null) {
-								
-				Integer firstVersion = getFirstVersionForOperation(connection, rec.key.productName, rec.key.topicName, rec.key.processName, rec.key.sequence, rec.key.operationName, rec.key.operationSequence);
-				stmt = connection.prepareStatement(operationInsertSQL);
-				stmt.setInt(1, rec.key.version);
-				stmt.setString(2, rec.key.productName);
-				stmt.setString(3, rec.key.topicName);
-				stmt.setString(4, rec.key.processName);
-				stmt.setInt(5, rec.key.sequence);
-				stmt.setString(6, rec.key.operationName);
-				stmt.setInt(7, rec.key.operationSequence);
-				stmt.setString(8, rec.description);
-				stmt.setTimestamp(9, Db.Instant2TimeStamp(Instant.now()));
-				stmt.setInt(10, 0);
-				stmt.setString(11, loggedInUserId);
-				stmt.setInt(12, firstVersion == null ? rec.key.version : firstVersion);
 
-				stmt.setString(13, rec.shortdescr);
+				Integer firstVersion = getFirstVersionForOperation(connection, rec.key.tenantid, rec.key.productName,
+						rec.key.topicName, rec.key.processName, rec.key.sequence, rec.key.operationName,
+						rec.key.operationSequence);
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setString(1, rec.key.tenantid);
+				stmt.setInt(2, rec.key.version);
+				stmt.setString(3, rec.key.productName);
+				stmt.setString(4, rec.key.topicName);
+				stmt.setString(5, rec.key.processName);
+				stmt.setInt(6, rec.key.sequence);
+				stmt.setString(7, rec.key.operationName);
+				stmt.setInt(8, rec.key.operationSequence);
+				stmt.setString(9, rec.description);
+				stmt.setTimestamp(10, Db.Instant2TimeStamp(Instant.now()));
+				stmt.setInt(11, 0);
+				stmt.setString(12, loggedInUserId);
+				stmt.setInt(13, firstVersion == null ? rec.key.version : firstVersion);
+				stmt.setString(14, rec.shortdescr);
 				return stmt.executeUpdate();
 			}
 		} catch (SQLException e) {
@@ -335,7 +378,8 @@ public class OperationService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				OperationRec dbRec = get(rec.key.version, rec.key.productName, rec.key.topicName, rec.key.processName, rec.key.sequence, rec.key.operationName, rec.key.operationSequence);
+				OperationRec dbRec = get(rec.key.tenantid, rec.key.version, rec.key.productName, rec.key.topicName,
+						rec.key.processName, rec.key.sequence, rec.key.operationName, rec.key.operationSequence);
 				if (dbRec == null) {
 					return 0;
 				}
@@ -347,10 +391,11 @@ public class OperationService {
 				key.put("productname", rec.key.productName);
 				key.put("topicname", rec.key.topicName);
 				key.put("processname", rec.key.processName);
-				key.put("seq", rec.key.sequence);
+				key.put("processseq", rec.key.sequence);
 				key.put("operationname", rec.key.operationName);
 				key.put("operationseq", rec.key.operationSequence);
 				key.put("version", rec.key.version);
+				key.put("tenantid", rec.key.tenantid);
 
 				Map<String, Object> value = new HashMap<>();
 				value.put("description", rec.description);
@@ -371,7 +416,9 @@ public class OperationService {
 		return null;
 	}
 
-	public void remove(Integer version, String productName, String topicName, String processName, Integer sequence, String operationName, Integer operationSequence, String userid) {
+	public void remove(String tenantid, Integer version, String productName, String topicName, String processName,
+			Integer sequence, String operationName, Integer operationSequence, String userid) {
+		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Userid", userid);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
@@ -384,7 +431,8 @@ public class OperationService {
 		PreparedStatement stmt = null;
 
 		// already done we dont want to change the delete date
-		OperationKey key = new OperationKey(version, productName, topicName, processName, sequence, operationName, operationSequence);
+		OperationKey key = new OperationKey(tenantid, version, productName, topicName, processName, sequence,
+				operationName, operationSequence);
 		if (isDeleteMarked(key)) {
 			LOGGER.info("Record is already marked for delete. No Action.");
 			return;
@@ -394,12 +442,13 @@ public class OperationService {
 			connection = Db.open();
 			if (connection != null) {
 
-				if (ProductService.isLocked(version, productName)) {
-					LOGGER.info("LOCKED " + version + " " + productName);
+				if (ProductService.isLocked(tenantid, version, productName)) {
+					LOGGER.info("LOCKED " + tenantid + " " + version + " " + productName);
 					return;
 				}
 
-				stmt = connection.prepareStatement("update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and processname=? and seq=? and operationname=? and operationseq=?  and version=?");
+				stmt = connection.prepareStatement(
+						"update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and processname=? and processseq=? and operationname=? and operationseq=?  and version=? and tenantid=?");
 				stmt.setString(1, userid);
 				stmt.setString(2, productName);
 				stmt.setString(3, topicName);
@@ -408,6 +457,7 @@ public class OperationService {
 				stmt.setString(6, operationName);
 				stmt.setInt(7, operationSequence);
 				stmt.setInt(8, version);
+				stmt.setString(9, tenantid);
 				stmt.executeUpdate();
 			}
 		} catch (SQLException e) {
@@ -418,7 +468,9 @@ public class OperationService {
 		}
 	}
 
-	private Integer getFirstVersionForOperation(Connection connection, String product, String topic, String process, Integer processSeq, String operation, Integer operationSeq) throws SQLException {
+	private Integer getFirstVersionForOperation(Connection connection, String tenantid, String product, String topic,
+			String process, Integer processSeq, String operation, Integer operationSeq) throws SQLException {
+		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Product", product);
 		ServiceHelper.validate("Topic", topic);
 		ServiceHelper.validate("Process", process);
@@ -429,13 +481,15 @@ public class OperationService {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt = connection.prepareStatement("select version from oper where productname=? and topicname=? and processname=? and seq=?  and operationname=? and operationseq=? order by version");
+			stmt = connection.prepareStatement(
+					"select version from oper where productname=? and topicname=? and processname=? and processseq=?  and operationname=? and operationseq=? and tenantid=? order by version");
 			stmt.setString(1, product);
 			stmt.setString(2, topic);
 			stmt.setString(3, process);
 			stmt.setInt(4, processSeq);
 			stmt.setString(5, operation);
 			stmt.setInt(6, operationSeq);
+			stmt.setString(7, tenantid);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				return rs.getInt(1);

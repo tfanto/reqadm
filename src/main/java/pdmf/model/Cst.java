@@ -25,7 +25,10 @@ public class Cst {
 	public static final String REMOVE = "Ta bort";
 	public static final String CLEAR = "Rensa";
 
-	public static final String WRK_WITH_PRODUCTS = "Arbeta med produkter";
+	public static final String WRK_WITH_PRODUCTS = "Arbeta med produkt";
+	public static final String TENANT_SELECT = "Välj klient";
+	public static final String WRK_WITH_TENANT = "Arbeta med klient";
+	public static final String WRK_WITH_NEWPRODUCT = "Arbeta med produkt/version";
 	public static final String PRODUCT_VIEWER = "Produktvisning";
 	public static final String SEARCH = "Leta";
 	public static final String SEARCH_RESULT = "Sökresultat";
@@ -43,6 +46,8 @@ public class Cst {
 	public static final String TARGET_VERSION_MUST_BE_AN_INTEGER = "Målversion måste vara en siffra , inga decimaler";
 	public static final String TARGET_VERSION_MUST_BE_BIGGER = "Målversion måste vara högre än frånversionen";
 	public static final String PRODUCTNAME_MUST_HAVE_A_VALUE = "Produktnamn måste ha ett värde";
+	public static final String TENANTID_MUST_HAVE_A_VALUE = "Tenantid måste ha ett värde";
+	public static final String TENANT_DESCRIPTION_HAVE_A_VALUE = "Tenantbeskrivning måste ha ett värde";
 	public static final String SELECT_A_VERSION = "Version ej vald ";
 	public static final String ALREADY_DELETE_NO_ACTION = "Post bortagsmarkerad. Kan ej ändras";
 	public static final String VERSION_LOCKED = "Versionen är låst ingen ändring tillåten";

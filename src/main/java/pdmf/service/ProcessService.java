@@ -23,17 +23,13 @@ public class ProcessService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessService.class);
 
-	private String processDeleteMarkedSQL = "select count(*) from  process  where productname=? and topicname=? and processname=? and seq=? and version=? and dltusr notnull";
-	private String processExistsSQL = "select count(*) from  process  where productname=? and topicname=? and processname=? and seq=? and version=?";
-	private String processSelectSingleRecSQL = "select processname,seq, description,crtdat,chgnbr,shortdescr,crtusr,chgdat,chgusr,crtver,dltdat,dltusr  from process where productname=? and topicname=? and processname=? and seq=? and version=?";
-	private String processInsertSQL = "insert into process  (version, productname, topicname,processname,seq,description,crtdat,chgnbr,crtver,crtusr,shortdescr) values(?,?,?,?,?,?,?,?,?,?,?)";
-	private String processSelectSQL = "select topicname,processname,seq, description,crtdat,chgnbr,shortdescr,crtusr,chgdat,chgusr,crtver,dltdat,dltusr  from process where productname=?  and topicname=?  and version=? order by productname,topicname,processname,seq";
-
-	public List<ProcessRec> list(Integer version, String productName, String topicName) {
+	public List<ProcessRec> list(String tenantid, Integer version, String productName, String topicName) {
+		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
 		ServiceHelper.validate("Topic", topicName);
 
+		String theSQL = ServiceHelper.getSQL("processSelectSQL");
 		List<ProcessRec> ret = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement stmt = null;
@@ -41,34 +37,41 @@ public class ProcessService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				stmt = connection.prepareStatement(processSelectSQL);
-				stmt.setString(1, productName);
-				stmt.setString(2, topicName);
-				stmt.setInt(3, version);
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setString(1, tenantid);
+				stmt.setInt(2, version);
+				stmt.setString(3, productName);
+				stmt.setString(4, topicName);
 				rs = stmt.executeQuery();
 				while (rs.next()) {
-					String processName = rs.getString(2);
-					Integer sequence = rs.getInt(3);
-					String description = rs.getString(4);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(5));
-					Integer chgnbr = rs.getInt(6);
-					String shortdescr = rs.getString(7);
-					String crtusr = rs.getString(8);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(9));
-					String chgusr = rs.getString(10);
-					Integer crtver = rs.getInt(11);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(12));
-					String dltusr = rs.getString(13);
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
 
-					ProcessKey key = new ProcessKey(version, productName, topicName, processName, sequence);
-					ProcessRec rec = new ProcessRec(key, description, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltdat = dltdat;
-					rec.dltusr = dltusr;
+					String rs_tenantid = rs.getString("tenantid");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
+					String rs_topicname = rs.getString("topicname");
+					String rs_processname = rs.getString("processname");
+					Integer rs_processseq = rs.getInt("processseq");
+
+					ProcessKey key = new ProcessKey(rs_tenantid, rs_version, rs_productname, rs_topicname,
+							rs_processname, rs_processseq);
+					ProcessRec rec = new ProcessRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltdat = rs_dltdat;
+					rec.dltusr = rs_dltusr;
 					ret.add(rec);
 				}
 				return ret;
@@ -89,15 +92,17 @@ public class ProcessService {
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
+		String theSQL = ServiceHelper.getSQL("processExistsSQL");
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				stmt = connection.prepareStatement(processExistsSQL);
-				stmt.setString(1, process.key.productName);
-				stmt.setString(2, process.key.topicName);
-				stmt.setString(3, process.key.processName);
-				stmt.setInt(4, process.key.sequence);
-				stmt.setInt(5, process.key.version);
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setString(1, process.key.tenantid);
+				stmt.setInt(2, process.key.version);
+				stmt.setString(3, process.key.productName);
+				stmt.setString(4, process.key.topicName);
+				stmt.setString(5, process.key.processName);
+				stmt.setInt(6, process.key.processSeq);
 				rs = stmt.executeQuery();
 				rs.next();
 				Integer n = rs.getInt(1);
@@ -119,15 +124,17 @@ public class ProcessService {
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
+		String theSQL = ServiceHelper.getSQL("processDeleteMarkedSQL");
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				stmt = connection.prepareStatement(processDeleteMarkedSQL);
-				stmt.setString(1, key.productName);
-				stmt.setString(2, key.topicName);
-				stmt.setString(3, key.processName);
-				stmt.setInt(4, key.sequence);
-				stmt.setInt(5, key.version);
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setString(1, key.tenantid);
+				stmt.setInt(2, key.version);
+				stmt.setString(3, key.productName);
+				stmt.setString(4, key.topicName);
+				stmt.setString(5, key.processName);
+				stmt.setInt(6, key.processSeq);
 				rs = stmt.executeQuery();
 				rs.next();
 				Integer n = rs.getInt(1);
@@ -143,12 +150,15 @@ public class ProcessService {
 		return false;
 	}
 
-	public ProcessRec get(Integer version, String productName, String topicName, String processName, Integer sequence) {
+	public ProcessRec get(String tenantid, Integer version, String productName, String topicName, String processName,
+			Integer sequence) {
+		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
 		ServiceHelper.validate("Topic", topicName);
 		ServiceHelper.validate("Process", processName);
 		ServiceHelper.validate("Sequence", sequence);
+		String theSQL = ServiceHelper.getSQL("processSelectSingleRecSQL");
 
 		Connection connection = null;
 		PreparedStatement stmt = null;
@@ -157,34 +167,43 @@ public class ProcessService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				stmt = connection.prepareStatement(processSelectSingleRecSQL);
-				stmt.setString(1, productName);
-				stmt.setString(2, topicName);
-				stmt.setString(3, processName);
-				stmt.setInt(4, sequence);
-				stmt.setInt(5, version);
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setString(1, tenantid);
+				stmt.setInt(2, version);
+				stmt.setString(3, productName);
+				stmt.setString(4, topicName);
+				stmt.setString(5, processName);
+				stmt.setInt(6, sequence);
 				rs = stmt.executeQuery();
 				if (rs.next()) {
-					String descr = rs.getString(3);
-					Instant crtdat = Db.TimeStamp2Instant(rs.getTimestamp(4));
-					Integer chgnbr = rs.getInt(5);
-					String shortdescr = rs.getString(6);
-					String crtusr = rs.getString(7);
-					Instant chgdat = Db.TimeStamp2Instant(rs.getTimestamp(8));
-					String chgusr = rs.getString(9);
-					Integer crtver = rs.getInt(10);
-					Instant dltdat = Db.TimeStamp2Instant(rs.getTimestamp(11));
-					String dltusr = rs.getString(12);
+					Instant rs_crtdat = Db.TimeStamp2Instant(rs.getTimestamp("crtdat"));
+					String rs_crtusr = rs.getString("crtusr");
+					Instant rs_chgdat = Db.TimeStamp2Instant(rs.getTimestamp("chgdat"));
+					String rs_chgusr = rs.getString("chgusr");
+					Instant rs_dltdat = Db.TimeStamp2Instant(rs.getTimestamp("dltdat"));
+					String rs_dltusr = rs.getString("dltusr");
+					Integer rs_chgnbr = rs.getInt("chgnbr");
+					Integer rs_crtver = rs.getInt("crtver");
+					String rs_description = rs.getString("description");
+					String rs_shortdescr = rs.getString("shortdescr");
 
-					ProcessKey key = new ProcessKey(version, productName, topicName, processName, sequence);
-					rec = new ProcessRec(key, descr, crtdat, chgnbr);
-					rec.shortdescr = shortdescr;
-					rec.crtusr = crtusr;
-					rec.chgdat = chgdat;
-					rec.chgusr = chgusr;
-					rec.crtver = crtver;
-					rec.dltdat = dltdat;
-					rec.dltusr = dltusr;
+					String rs_tenantid = rs.getString("tenantid");
+					Integer rs_version = rs.getInt("version");
+					String rs_productname = rs.getString("productname");
+					String rs_topicname = rs.getString("topicname");
+					String rs_processname = rs.getString("processname");
+					Integer rs_processseq = rs.getInt("processseq");
+
+					ProcessKey key = new ProcessKey(rs_tenantid, rs_version, rs_productname, rs_topicname, rs_processname,
+							rs_processseq);
+					rec = new ProcessRec(key, rs_description, rs_crtdat, rs_chgnbr);
+					rec.shortdescr = rs_shortdescr;
+					rec.crtusr = rs_crtusr;
+					rec.chgdat = rs_chgdat;
+					rec.chgusr = rs_chgusr;
+					rec.crtver = rs_crtver;
+					rec.dltdat = rs_dltdat;
+					rec.dltusr = rs_dltusr;
 				}
 			}
 		} catch (SQLException e) {
@@ -201,8 +220,8 @@ public class ProcessService {
 		ServiceHelper.validate(rec);
 		ServiceHelper.validate("userid", loggedInUserId);
 
-		if (ProductService.isLocked(rec.key.version, rec.key.productName)) {
-			LOGGER.info("LOCKED " + rec.key.version + " " + rec.key.productName);
+		if (ProductService.isLocked(rec.key.tenantid, rec.key.version, rec.key.productName)) {
+			LOGGER.info("LOCKED " + rec.key.tenantid + " " + rec.key.version + " " + rec.key.productName);
 			return null;
 		}
 
@@ -210,7 +229,7 @@ public class ProcessService {
 			LOGGER.info("Record is marked for delete. No Action.");
 			return null;
 		}
-		
+
 		rec.shortdescr = ServiceHelper.ensureStringLength(rec.shortdescr, 100);
 		rec.description = ServiceHelper.ensureStringLength(rec.description, 995);
 
@@ -226,22 +245,26 @@ public class ProcessService {
 	private Integer insert(ProcessRec rec, String loggedInUserId) {
 		Connection connection = null;
 		PreparedStatement stmt = null;
+		String theSQL = ServiceHelper.getSQL("processInsertSQL");
+
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				Integer firstVersion = getFirstVersionForProcess(connection, rec.key.productName, rec.key.topicName, rec.key.processName, rec.key.sequence);
-				stmt = connection.prepareStatement(processInsertSQL);
-				stmt.setInt(1, rec.key.version);
-				stmt.setString(2, rec.key.productName);
-				stmt.setString(3, rec.key.topicName);
-				stmt.setString(4, rec.key.processName);
-				stmt.setInt(5, rec.key.sequence);
-				stmt.setString(6, rec.description);
-				stmt.setTimestamp(7, Db.Instant2TimeStamp(Instant.now()));
-				stmt.setInt(8, 0);
-				stmt.setInt(9, firstVersion == null ? rec.key.version : firstVersion);
-				stmt.setString(10, loggedInUserId);
-				stmt.setString(11, rec.shortdescr);
+				Integer firstVersion = getFirstVersionForProcess(connection, rec.key.tenantid, rec.key.productName,
+						rec.key.topicName, rec.key.processName, rec.key.processSeq);
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setString(1, rec.key.tenantid);
+				stmt.setInt(2, rec.key.version);
+				stmt.setString(3, rec.key.productName);
+				stmt.setString(4, rec.key.topicName);
+				stmt.setString(5, rec.key.processName);
+				stmt.setInt(6, rec.key.processSeq);
+				stmt.setString(7, rec.description);
+				stmt.setTimestamp(8, Db.Instant2TimeStamp(Instant.now()));
+				stmt.setInt(9, 0);
+				stmt.setInt(10, firstVersion == null ? rec.key.version : firstVersion);
+				stmt.setString(11, loggedInUserId);
+				stmt.setString(12, rec.shortdescr);
 				return stmt.executeUpdate();
 			}
 		} catch (SQLException e) {
@@ -259,7 +282,8 @@ public class ProcessService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				ProcessRec dbRec = get(rec.key.version, rec.key.productName, rec.key.topicName, rec.key.processName, rec.key.sequence);
+				ProcessRec dbRec = get(rec.key.tenantid, rec.key.version, rec.key.productName, rec.key.topicName,
+						rec.key.processName, rec.key.processSeq);
 				if (dbRec == null) {
 					return 0;
 				}
@@ -271,8 +295,9 @@ public class ProcessService {
 				key.put("productname", rec.key.productName);
 				key.put("topicname", rec.key.topicName);
 				key.put("processname", rec.key.processName);
-				key.put("seq", rec.key.sequence);
+				key.put("processseq", rec.key.processSeq);
 				key.put("version", rec.key.version);
+				key.put("tenantid", rec.key.tenantid);
 
 				Map<String, Object> value = new HashMap<>();
 				value.put("description", rec.description);
@@ -293,7 +318,9 @@ public class ProcessService {
 		return null;
 	}
 
-	public void remove(Integer version, String productName, String topicName, String processName, Integer sequence, String userid) {
+	public void remove(String tenantid, Integer version, String productName, String topicName, String processName,
+			Integer sequence, String userid) {
+		ServiceHelper.validate("tenant", tenantid);
 		ServiceHelper.validate("Userid", userid);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
@@ -304,7 +331,7 @@ public class ProcessService {
 		PreparedStatement stmt = null;
 
 		// already done we dont want to change the delete date
-		ProcessKey key = new ProcessKey(version, productName, topicName, processName, sequence);
+		ProcessKey key = new ProcessKey(tenantid, version, productName, topicName, processName, sequence);
 		if (isDeleteMarked(key)) {
 			LOGGER.info("Record is already marked for delete. No Action.");
 			return;
@@ -314,12 +341,13 @@ public class ProcessService {
 			connection = Db.open();
 			if (connection != null) {
 				connection.setAutoCommit(false);
-				if (ProductService.isLocked(version, productName)) {
-					LOGGER.info("LOCKED " + version + " " + productName);
+				if (ProductService.isLocked(tenantid, version, productName)) {
+					LOGGER.info("LOCKED " + tenantid + " " + version + " " + productName);
 					return;
 				}
 
-				stmt = connection.prepareStatement("update process set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and processname=? and seq=?  and version=?");
+				stmt = connection.prepareStatement(
+						"update process set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and processname=? and processseq=?  and version=? and tenantid=?");
 
 				stmt.setString(1, userid);
 				stmt.setString(2, productName);
@@ -327,8 +355,10 @@ public class ProcessService {
 				stmt.setString(4, processName);
 				stmt.setInt(5, sequence);
 				stmt.setInt(6, version);
+				stmt.setString(7, tenantid);
 				stmt.executeUpdate();
-				deleteAllDependencies(connection, version, productName, topicName, processName, sequence, userid);
+				deleteAllDependencies(connection, tenantid, version, productName, topicName, processName, sequence,
+						userid);
 				connection.commit();
 			}
 		} catch (SQLException e) {
@@ -343,25 +373,30 @@ public class ProcessService {
 		}
 	}
 
-	private void deleteAllDependencies(Connection connection, Integer version, String productName, String topicName, String processName, Integer processSeq, String userId) throws SQLException {
+	private void deleteAllDependencies(Connection connection, String tenantid, Integer version, String productName,
+			String topicName, String processName, Integer processSeq, String userId) throws SQLException {
 
 		PreparedStatement stmtOperation = null;
 
 		try {
-			stmtOperation = connection.prepareStatement("update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=?  and processname=? and seq=? and version=?");
+			stmtOperation = connection.prepareStatement(
+					"update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=?  and processname=? and processseq=? and version=? and tenantid=?");
 			stmtOperation.setString(1, userId);
 			stmtOperation.setString(2, productName);
 			stmtOperation.setString(3, topicName);
 			stmtOperation.setString(4, processName);
 			stmtOperation.setInt(5, processSeq);
 			stmtOperation.setInt(6, version);
+			stmtOperation.setString(7, tenantid);
 			stmtOperation.executeUpdate();
 		} finally {
 			Db.close(stmtOperation);
 		}
 	}
 
-	private Integer getFirstVersionForProcess(Connection connection, String product, String topic, String process, Integer processSeq) throws SQLException {
+	private Integer getFirstVersionForProcess(Connection connection, String tenantid, String product, String topic,
+			String process, Integer processSeq) throws SQLException {
+		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Product", product);
 		ServiceHelper.validate("Topic", topic);
 		ServiceHelper.validate("Process", process);
@@ -370,11 +405,13 @@ public class ProcessService {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt = connection.prepareStatement("select version from process where productname=? and topicname=? and processname=? and seq=? order by version");
+			stmt = connection.prepareStatement(
+					"select version from process where productname=? and topicname=? and processname=? and processseq=? and tenantid=? order by version");
 			stmt.setString(1, product);
 			stmt.setString(2, topic);
 			stmt.setString(3, process);
 			stmt.setInt(4, processSeq);
+			stmt.setString(5, tenantid);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				return rs.getInt(1);

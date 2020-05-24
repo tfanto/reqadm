@@ -47,21 +47,25 @@ public class ExportSupport {
 			Document doc = docBuilder.newDocument();
 			doc.setXmlStandalone(true);
 
-			ProductRec productRec = productService.get(key.version, key.productName);
+			ProductRec productRec = productService.get(key.tenantid, key.version, key.productName);
 			Element product = buildProduct(doc, productRec);
 			doc.appendChild(product);
 
-			List<TopicRec> topics = topicService.list(productRec.key.version, productRec.key.productName);
+			List<TopicRec> topics = topicService.list(productRec.key.tenantid, productRec.key.version,
+					productRec.key.productName);
 			for (TopicRec topicRec : topics) {
 				Element topic = buildTopic(doc, topicRec);
 				product.appendChild(topic);
 
-				List<ProcessRec> processes = processService.list(topicRec.key.version, topicRec.key.productName, topicRec.key.topicName);
+				List<ProcessRec> processes = processService.list(topicRec.key.tenantid, topicRec.key.version,
+						topicRec.key.productName, topicRec.key.topicName);
 				for (ProcessRec processRec : processes) {
 					Element process = buildProcess(doc, processRec);
 					topic.appendChild(process);
 
-					List<OperationRec> operations = operationService.list(processRec.key.version, processRec.key.productName, processRec.key.topicName, processRec.key.processName);
+					List<OperationRec> operations = operationService.list(processRec.key.tenantid,
+							processRec.key.version, processRec.key.productName, processRec.key.topicName,
+							processRec.key.processName);
 					for (OperationRec operationRec : operations) {
 						Element operation = buildOperation(doc, operationRec);
 						process.appendChild(operation);
@@ -140,13 +144,13 @@ public class ExportSupport {
 		description.setAttribute("shortinfo", rec.shortdescr);
 		topic.appendChild(description);
 
-
 		return topic;
 	}
 
 	private Element buildProcess(Document doc, ProcessRec rec) {
 		Element process = doc.createElement("process");
 		process.setAttribute("name", rec.key.processName);
+		process.setAttribute("sequence", String.valueOf(rec.key.processSeq));
 		process.setAttribute("created", rec.crtdat.toString());
 		process.setAttribute("createdby", rec.crtusr);
 		if (rec.chgusr != null && rec.chgdat != null) {
@@ -163,13 +167,13 @@ public class ExportSupport {
 		description.setAttribute("shortinfo", rec.shortdescr);
 		process.appendChild(description);
 
-
 		return process;
 	}
 
 	private Element buildOperation(Document doc, OperationRec rec) {
 		Element operation = doc.createElement("operation");
 		operation.setAttribute("name", rec.key.operationName);
+		operation.setAttribute("sequence", String.valueOf(rec.key.operationSequence));
 		operation.setAttribute("created", rec.crtdat.toString());
 		operation.setAttribute("createdby", rec.crtusr);
 		if (rec.chgusr != null && rec.chgdat != null) {
@@ -185,7 +189,6 @@ public class ExportSupport {
 		description.setAttribute("info", rec.description);
 		description.setAttribute("shortinfo", rec.shortdescr);
 		operation.appendChild(description);
-
 
 		return operation;
 	}

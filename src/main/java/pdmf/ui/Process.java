@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -20,6 +22,7 @@ import pdmf.model.Cst;
 import pdmf.model.ProcessKey;
 import pdmf.model.ProcessRec;
 import pdmf.model.TopicKey;
+import pdmf.model.User;
 import pdmf.service.ProcessService;
 import pdmf.service.ProductService;
 import pdmf.sys.RecordChangedByAnotherUser;
@@ -29,6 +32,8 @@ public class Process extends Dialog {
 	private static final String NEW_REG_MODE = "ny post";
 	private static final String UPDATE_MODE = "ändra post";
 	private String mode = null;
+
+	private User currentUser;
 
 	private ProcessService processService = new ProcessService();
 
@@ -52,13 +57,14 @@ public class Process extends Dialog {
 	private Label crtDat;
 	private Label chgDat;
 
-	private String userId = null;
 	private Integer version = null;
 
 	String productStr;
 	String topicStr;
 	String processStr;
 	Integer processStepInt;
+
+	private Set<String> searchWords = new HashSet<String>();
 
 	/**
 	 * Create the dialog.
@@ -93,8 +99,8 @@ public class Process extends Dialog {
 	 * Create contents of the dialog.
 	 */
 	private void createContents() {
-		//shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		shell = new Shell(getParent(), getStyle());		
+		// shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		shell = new Shell(getParent(), getStyle());
 		shell.setSize(518, 560);
 		shell.setText(getText() + " " + mode);
 		shell.setLayout(null);
@@ -133,6 +139,8 @@ public class Process extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
+
 				String wrkProductName = (String) product.getData();
 
 				String wrkTopicName = topic.getText();
@@ -160,19 +168,21 @@ public class Process extends Dialog {
 					return;
 
 				}
-				
-				if (ProductService.isLocked(version, wrkProductName)) {
+
+				if (ProductService.isLocked(tenantId, version, wrkProductName)) {
 					lblInfo.setText(Cst.VERSION_LOCKED);
 					return;
 				}
 
-				ProcessKey key = new ProcessKey(version, wrkProductName, wrkTopicName, wrkProcessName, wrkProcessStep);
+				ProcessKey key = new ProcessKey(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName,
+						wrkProcessStep);
 				if (processService.isDeleteMarked(key)) {
 					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
 					return;
 				}
 
-				ProcessRec rec = processService.get(version, wrkProductName, wrkTopicName, wrkProcessName, wrkProcessStep);
+				ProcessRec rec = processService.get(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName,
+						wrkProcessStep);
 
 				if (mode.equals(NEW_REG_MODE)) {
 					if (rec != null) {
@@ -195,7 +205,7 @@ public class Process extends Dialog {
 				rec.description = wrkDescription;
 
 				try {
-					processService.store(rec, userId);
+					processService.store(rec, currentUser.userId);
 					chgnbr = null;
 					result = 1;
 					shell.dispose();
@@ -213,6 +223,8 @@ public class Process extends Dialog {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 				String productName = (String) product.getData();
 				String topicName = topic.getText();
@@ -241,12 +253,13 @@ public class Process extends Dialog {
 
 				}
 
-				if (ProductService.isLocked(version, productName)) {
+				if (ProductService.isLocked(tenantId, version, productName)) {
 					lblInfo.setText(Cst.VERSION_LOCKED);
 					return;
 				}
 
-				ProcessKey key = new ProcessKey(version, productName, topicName, processName, wrProcesskSequence);
+				ProcessKey key = new ProcessKey(tenantId, version, productName, topicName, processName,
+						wrProcesskSequence);
 				if (processService.isDeleteMarked(key)) {
 					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
 					return;
@@ -255,7 +268,8 @@ public class Process extends Dialog {
 				btnRemove.setEnabled(true);
 				lblInfo.setText("");
 				try {
-					processService.remove(version, productName, topicName, processName, wrProcesskSequence, userId);
+					processService.remove(tenantId, version, productName, topicName, processName, wrProcesskSequence,
+							currentUser.userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {
@@ -277,13 +291,15 @@ public class Process extends Dialog {
 		chgDat.setText("chg");
 		chgDat.setBounds(10, 453, 482, 25);
 
-		shortDescription = new StyledText(shell,SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
+		shortDescription = new StyledText(shell, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		shortDescription.setTextLimit(100);
 		shortDescription.setBounds(167, 83, 239, 73);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
 		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(167, 60, 151, 15);
+
+		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 		if (mode != null && mode.equals(UPDATE_MODE)) {
 
@@ -298,11 +314,13 @@ public class Process extends Dialog {
 			lblInfo.setText("");
 			crtDat.setText("");
 			chgDat.setText("");
-			ProcessRec rec = processService.get(version, productStr, topicStr, processStr, processStepInt);
+			ProcessRec rec = processService.get(tenantId, version, productStr, topicStr, processStr, processStepInt);
 			if (rec != null) {
 				shortDescription.setText(rec.shortdescr == null ? "" : rec.shortdescr);
 				description.setText(rec.description == null ? "" : rec.description);
 				handleInfo(rec.crtdat, rec.crtusr, rec.chgdat, rec.chgusr, rec.dltdat, rec.dltusr, rec.crtver);
+				UISupport.handleSearchWords(shell, description, searchWords);
+				UISupport.handleSearchWords(shell, shortDescription, searchWords);
 			}
 			btnRemove.setEnabled(true);
 			btnRemove.setVisible(true);
@@ -324,10 +342,10 @@ public class Process extends Dialog {
 			btnRemove.setEnabled(false);
 			btnRemove.setVisible(false);
 		}
-
 	}
 
-	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr, Instant deleteDate, String deleteUser, Integer createdInVersion) {
+	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr,
+			Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
 		LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
 		crtDat.setText("Skapad: " + created.toString() + " av " + createUser + " i version: " + createdInVersion);
@@ -344,24 +362,33 @@ public class Process extends Dialog {
 
 	}
 
-	public void setKey(ProcessKey rec, String userId, Integer version) {
+	public void setKey(ProcessKey rec, Integer version) {
 		mode = UPDATE_MODE;
-		this.userId = userId;
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = rec.topicName;
 		processStr = rec.processName;
-		processStepInt = rec.sequence;
+		processStepInt = rec.processSeq;
+		searchWords.clear();
 	}
 
 	// create child to process
-	public void setKey(TopicKey rec, String userId, Integer version) {
+	public void setKey(TopicKey rec, Integer version) {
 		mode = NEW_REG_MODE;
-		this.userId = userId;
 		this.version = version;
 		productStr = rec.productName;
 		topicStr = rec.topicName;
 		processStr = null;
 		processStepInt = null;
+		searchWords.clear();
 	}
+
+	public void setCurrentUser(User user) {
+		currentUser = user;
+	}
+
+	public void setSearchWords(Set<String> searchWords) {
+		this.searchWords.addAll(searchWords);
+	}
+
 }

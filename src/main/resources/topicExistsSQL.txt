@@ -1,0 +1,13 @@
+select count(*) 
+from  topic  
+where 
+   tenantid=? and
+   version=? and
+   productname=? and 
+   topicname=?
+   
+   
+   
+    
+   
+

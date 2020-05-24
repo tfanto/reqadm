@@ -1,0 +1,21 @@
+select 
+   version, 
+   productname, 
+   description, 
+   crtdat, 
+   chgnbr, 
+   shortdescr, 
+   crtusr, 
+   chgdat, 
+   chgusr, 
+   crtver, 
+   dltdat, 
+   dltusr, 
+   status,
+   tenantid  
+from product 
+   where 
+   tenantid=? and 
+   version=?  
+order by 
+   productname
