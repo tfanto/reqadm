@@ -42,8 +42,7 @@ public class Main {
 	private MenuItem mntmProductViewer = null;
 	private MenuItem mntmNewProductVersion = null;
 	private MenuItem mntmQuery = null;
-	private MenuItem mntmTenant = null;
-	private MenuItem mntmNewItem_1 = null;
+	private MenuItem mntmWelcome = null;
 	private MenuItem mntmSelectTenant = null;
 	private MenuItem mntmClient = null;
 
@@ -137,27 +136,15 @@ public class Main {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Search dialog = new Search(shell, SWT.DIALOG_TRIM | SWT.MODELESS);
-				dialog.setText("Leta");
+				dialog.setText(Cst.SEARCH);
 				dialog.setCurrentUser(currentUser);
 				dialog.open();
 			}
 		});
-		mntmQuery.setText("Leta");
+		mntmQuery.setText(Cst.SEARCH);
 
-		mntmTenant = new MenuItem(menu_2, SWT.NONE);
-		mntmTenant.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Tenant dialog = new Tenant(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-				dialog.setText(Cst.WRK_WITH_TENANT);
-				dialog.setCurrentUser(currentUser);
-				dialog.open();
-			}
-		});
-		mntmTenant.setText(Cst.WRK_WITH_TENANT);
-
-		mntmNewItem_1 = new MenuItem(menuAtgarder, SWT.NONE);
-		mntmNewItem_1.addSelectionListener(new SelectionAdapter() {
+		mntmWelcome = new MenuItem(menuAtgarder, SWT.NONE);
+		mntmWelcome.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Info dialog = new Info(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
@@ -165,7 +152,7 @@ public class Main {
 				dialog.open();
 			}
 		});
-		mntmNewItem_1.setText("Info");
+		mntmWelcome.setText("Info");
 
 		MenuItem mntmKlient = new MenuItem(mainMenu, SWT.CASCADE);
 		mntmKlient.setText("Klient");
@@ -213,8 +200,7 @@ public class Main {
 		mntmProductViewer.setEnabled(enabled);
 		mntmNewProductVersion.setEnabled(enabled);
 		mntmQuery.setEnabled(enabled);
-		mntmTenant.setEnabled(enabled);
-		mntmNewItem_1.setEnabled(enabled);
+		mntmWelcome.setEnabled(enabled);
 
 	}
 
