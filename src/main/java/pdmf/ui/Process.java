@@ -139,7 +139,7 @@ public class Process extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				Integer tenantId = currentUser.getCurrentTenant().getId();
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 				String wrkProductName = (String) product.getData();
 
@@ -224,7 +224,7 @@ public class Process extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				Integer tenantId = currentUser.getCurrentTenant().getId();
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 				String productName = (String) product.getData();
 				String topicName = topic.getText();
@@ -299,7 +299,7 @@ public class Process extends Dialog {
 		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(167, 60, 151, 15);
 
-		Integer tenantId = currentUser.getCurrentTenant().getId();
+		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 		if (mode != null && mode.equals(UPDATE_MODE)) {
 

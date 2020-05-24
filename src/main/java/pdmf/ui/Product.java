@@ -116,7 +116,7 @@ public class Product extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				Integer tenantId = currentUser.getCurrentTenant().getId();
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 				String wrkProductName = (String) product.getText();
 				if (wrkProductName == null || wrkProductName.trim().length() < 1) {
@@ -188,7 +188,7 @@ public class Product extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				Integer tenantId = currentUser.getCurrentTenant().getId();
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 				String wrkProductName = (String) product.getText();
 				if (wrkProductName == null || wrkProductName.trim().length() < 1) {
@@ -265,7 +265,7 @@ public class Product extends Dialog {
 		product.setText(p);
 		version.setText(v.toString());
 
-		Integer tenantId = currentUser.getCurrentTenant().getId();
+		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 		lblInfo.setText("");
 		crtDat.setText("");

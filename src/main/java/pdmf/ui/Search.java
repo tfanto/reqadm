@@ -108,7 +108,7 @@ public class Search extends Dialog {
 					return;
 				}
 
-				Integer tenantId = currentUser.getCurrentTenant().getId();
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 				Boolean searchInProduct = btnLaneProduct.getSelection();
 				Boolean searchInTopic = btnLaneTopic.getSelection();

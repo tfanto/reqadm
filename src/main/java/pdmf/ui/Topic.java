@@ -125,7 +125,7 @@ public class Topic extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				Integer tenantId = currentUser.getCurrentTenant().getId();
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				String wrkProductName = (String) product.getData();
 
 				String wrkTopicName = topic.getText();
@@ -187,7 +187,7 @@ public class Topic extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				Integer tenantId = currentUser.getCurrentTenant().getId();
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				String productName = (String) product.getData();
 				String topicName = topic.getText();
 				if (topicName.trim().length() < 1) {
@@ -239,7 +239,7 @@ public class Topic extends Dialog {
 		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(167, 60, 151, 15);
 
-		Integer tenantId = currentUser.getCurrentTenant().getId();
+		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 		if (mode != null && mode.equals(UPDATE_MODE)) {
 
@@ -257,7 +257,7 @@ public class Topic extends Dialog {
 				description.setText(rec.description == null ? "" : rec.description);
 				handleInfo(rec.crtdat, rec.crtusr, rec.chgdat, rec.chgusr, rec.dltdat, rec.dltusr, rec.crtver);
 				UISupport.handleSearchWords(shell, description, searchWords);
-				UISupport.handleSearchWords(shell, shortDescription, searchWords);				
+				UISupport.handleSearchWords(shell, shortDescription, searchWords);
 			}
 			btnRemove.setEnabled(true);
 			btnRemove.setVisible(true);

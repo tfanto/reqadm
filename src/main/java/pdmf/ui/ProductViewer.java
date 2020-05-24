@@ -185,7 +185,7 @@ public class ProductViewer extends Dialog {
 			}
 
 			private void handleOperation(OperationKey key) {
-				OperationRec pRec = operationService.get(key.tenant, key.version, key.productName, key.topicName,
+				OperationRec pRec = operationService.get(key.tenantid, key.version, key.productName, key.topicName,
 						key.processName, key.sequence, key.operationName, key.operationSequence);
 				if (pRec == null) {
 					clear();
@@ -198,7 +198,7 @@ public class ProductViewer extends Dialog {
 			}
 
 			private void handleProcess(ProcessKey key) {
-				ProcessRec pRec = processService.get(key.tenant, key.version, key.productName, key.topicName,
+				ProcessRec pRec = processService.get(key.tenantid, key.version, key.productName, key.topicName,
 						key.processName, key.processSeq);
 				if (pRec == null) {
 					clear();
@@ -211,7 +211,7 @@ public class ProductViewer extends Dialog {
 			}
 
 			private void handleTopic(TopicKey key) {
-				TopicRec pRec = topicService.get(key.tenant, key.version, key.productName, key.topicName);
+				TopicRec pRec = topicService.get(key.tenantid, key.version, key.productName, key.topicName);
 				if (pRec == null) {
 					clear();
 				} else {
@@ -223,7 +223,7 @@ public class ProductViewer extends Dialog {
 			}
 
 			private void handleProduct(ProductKey key) {
-				ProductRec pRec = productService.get(key.tenant, key.version, key.productName);
+				ProductRec pRec = productService.get(key.tenantid, key.version, key.productName);
 				if (pRec == null) {
 					clear();
 				} else {
@@ -289,7 +289,7 @@ public class ProductViewer extends Dialog {
 				if (i < 0)
 					return;
 
-				Integer tenantId = currentUser.getCurrentTenant().getId();
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				String productName = selectProduct.getItem(i);
 				refreshVersionCombo(tenantId, productName);
 			}
@@ -316,7 +316,7 @@ public class ProductViewer extends Dialog {
 				} catch (NumberFormatException nfe) {
 					return;
 				}
-				Integer tenantId = currentUser.getCurrentTenant().getId();
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				refreshProductTree(productTree, productName, version, tenantId);
 			}
 		});
@@ -329,12 +329,12 @@ public class ProductViewer extends Dialog {
 		Label lblLblVersion = new Label(shell, SWT.NONE);
 		lblLblVersion.setText("V\u00E4lj version");
 		lblLblVersion.setBounds(806, 45, 81, 15);
-		Integer tenantId = currentUser.getCurrentTenant().getId();
+		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 		refreshProductCombo(tenantId);
 
 	}
 
-	private void refreshVersionCombo(Integer tenantId, String productName) {
+	private void refreshVersionCombo(String tenantId, String productName) {
 
 		selectVersion.removeAll();
 		List<ProductRec> productRecs = productService.list(tenantId, productName);
@@ -343,7 +343,7 @@ public class ProductViewer extends Dialog {
 		}
 	}
 
-	private void refreshProductCombo(Integer tenantId) {
+	private void refreshProductCombo(String tenantId) {
 
 		selectProduct.removeAll();
 		selectVersion.removeAll();
@@ -353,7 +353,7 @@ public class ProductViewer extends Dialog {
 		}
 	}
 
-	private void refreshProductTree(Tree productTree, String productName, Integer version, Integer tenantId) {
+	private void refreshProductTree(Tree productTree, String productName, Integer version, String tenantId) {
 
 		clear();
 		productTree.removeAll();
@@ -374,7 +374,7 @@ public class ProductViewer extends Dialog {
 				versionTreeItem.setBackground(0, dltItemColor);
 			}
 
-			java.util.List<TopicRec> topics = topicService.list(versionRec.key.tenant, versionRec.key.version,
+			java.util.List<TopicRec> topics = topicService.list(versionRec.key.tenantid, versionRec.key.version,
 					versionRec.key.productName);
 			int idxTopic = 0;
 			for (TopicRec topicRec : topics) {
@@ -390,7 +390,7 @@ public class ProductViewer extends Dialog {
 					topicTreeItem.setBackground(1, dltItemColor);
 				}
 
-				java.util.List<ProcessRec> processes = processService.list(topicRec.key.tenant, topicRec.key.version,
+				java.util.List<ProcessRec> processes = processService.list(topicRec.key.tenantid, topicRec.key.version,
 						topicRec.key.productName, topicRec.key.topicName);
 				int idxProcess = 0;
 				for (ProcessRec processRec : processes) {
@@ -406,7 +406,7 @@ public class ProductViewer extends Dialog {
 						processTreeItem.setBackground(2, dltItemColor);
 					}
 
-					java.util.List<OperationRec> operations = operationService.list(processRec.key.tenant,
+					java.util.List<OperationRec> operations = operationService.list(processRec.key.tenantid,
 							processRec.key.version, processRec.key.productName, processRec.key.topicName,
 							processRec.key.processName, processRec.key.processSeq);
 					int idxOperation = 0;
@@ -497,7 +497,7 @@ public class ProductViewer extends Dialog {
 									dialog.setKey(rec);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
-									refreshProductTree(tree, rec.productName, rec.version, rec.tenant);
+									refreshProductTree(tree, rec.productName, rec.version, rec.tenantid);
 								}
 							});
 
@@ -555,7 +555,7 @@ public class ProductViewer extends Dialog {
 									dialog.setKey(rec, rec.version);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
-									refreshProductTree(tree, rec.productName, rec.version, rec.tenant);
+									refreshProductTree(tree, rec.productName, rec.version, rec.tenantid);
 								}
 							});
 
@@ -575,7 +575,7 @@ public class ProductViewer extends Dialog {
 									dialog.setKey(rec, rec.version);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
-									refreshProductTree(tree, rec.productName, rec.version, rec.tenant);
+									refreshProductTree(tree, rec.productName, rec.version, rec.tenantid);
 								}
 							});
 
@@ -590,7 +590,7 @@ public class ProductViewer extends Dialog {
 									dialog.setKey(rec, rec.version);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
-									refreshProductTree(tree, rec.productName, rec.version, rec.tenant);
+									refreshProductTree(tree, rec.productName, rec.version, rec.tenantid);
 								}
 							});
 
@@ -610,7 +610,7 @@ public class ProductViewer extends Dialog {
 									dialog.setKey(rec, rec.version);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
-									refreshProductTree(tree, rec.productName, rec.version, rec.tenant);
+									refreshProductTree(tree, rec.productName, rec.version, rec.tenantid);
 								}
 							});
 
@@ -625,7 +625,7 @@ public class ProductViewer extends Dialog {
 									dialog.setKey(key, key.version);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
-									refreshProductTree(tree, key.productName, key.version, key.tenant);
+									refreshProductTree(tree, key.productName, key.version, key.tenantid);
 								}
 							});
 
@@ -645,7 +645,7 @@ public class ProductViewer extends Dialog {
 									dialog.setKey(key, key.version);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
-									refreshProductTree(tree, key.productName, key.version, key.tenant);
+									refreshProductTree(tree, key.productName, key.version, key.tenantid);
 								}
 							});
 

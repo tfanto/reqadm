@@ -100,7 +100,7 @@ public class ProductVersion extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				Integer tenantId = currentUser.getCurrentTenant().getId();
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				String wrkProductName = product.getText();
 				if (wrkProductName == null || wrkProductName.trim().length() < 1) {
 					lblInfo.setText(Cst.VERSION_MUST_BE_SELECTED);
@@ -176,7 +176,7 @@ public class ProductVersion extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				Integer tenantId = currentUser.getCurrentTenant().getId();
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				ProductRec versionRec = (ProductRec) e.item.getData();
 				if (versionRec != null) {
 					selectedVersion = versionRec;
@@ -218,7 +218,7 @@ public class ProductVersion extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				Integer tenantId = currentUser.getCurrentTenant().getId();
+				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				String wrkProductName = product.getText();
 				if (wrkProductName == null || wrkProductName.trim().length() < 1) {
 					lblInfo.setText(Cst.PRODUCTNAME_MUST_HAVE_A_VALUE);
@@ -267,7 +267,7 @@ public class ProductVersion extends Dialog {
 		selectedVersion = null;
 		productTree.removeAll();
 
-		Integer tenantId = currentUser.getCurrentTenant().getId();
+		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
 		java.util.List<String> products = productService.list(tenantId);
 		int idx = 0;
