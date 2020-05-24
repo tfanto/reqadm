@@ -1,6 +1,6 @@
 select count(*) from  process  
 where 
-	tenant=? and
+	tenantid=? and
 	version=?  and
 	productname=? and 
 	topicname=? and 

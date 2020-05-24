@@ -1,4 +1,4 @@
 insert into product 
-   (tenant,version, productname, description,crtdat,chgnbr,crtver,crtusr,shortdescr,status) 
+   (tenantid,version, productname, description,crtdat,chgnbr,crtver,crtusr,shortdescr,status) 
    values(?,?,?,?,?,?,?,?,?,?)
    

@@ -12,10 +12,10 @@ select
    dltdat, 
    dltusr, 
    status,
-   tenant  
+   tenantid  
 from product 
    where 
-   tenant=? and 
+   tenantid=? and 
    version=?  
 order by 
    productname

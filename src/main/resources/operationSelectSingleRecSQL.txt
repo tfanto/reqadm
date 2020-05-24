@@ -9,7 +9,7 @@ select
 	crtver,
 	description,
 	shortdescr,
-	tenant,
+	tenantid,
 	version,
 	productname,
 	topicname,
@@ -19,7 +19,7 @@ select
 	operationseq 
 from oper 
 	where 
-		tenant=? and
+		tenantid=? and
 		version=? and 
 		productname=? and 
 		topicname=? and 

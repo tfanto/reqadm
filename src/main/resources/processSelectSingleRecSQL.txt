@@ -9,7 +9,7 @@ select processname,
 	crtver,
 	description,
 	shortdescr, 
-	tenant,
+	tenantid,
 	version,
 	productname,
 	topicname,
@@ -17,7 +17,7 @@ select processname,
 	processseq
 from process 
 where 
-	tenant = ? and
+	tenantid = ? and
 	version=? and 
 	productname=? and 
 	topicname=? and 

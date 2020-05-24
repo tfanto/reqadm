@@ -1,5 +1,5 @@
 select distinct productname from product 
-   where tenant=? 
+   where tenantid=? 
       order by productname
       
       

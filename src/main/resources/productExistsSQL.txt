@@ -1,6 +1,6 @@
 select count(*) from  product 
    where 
-   	tenant=? and 
+   	tenantid=? and 
    	version=? and 
    	productname=?
    	

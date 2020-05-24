@@ -1,6 +1,6 @@
 select count(*) from  oper  
    where 
-	  tenant=? and 
+	  tenantid=? and 
 	  version=? and
 	  productname=? and 
 	  topicname=? and 

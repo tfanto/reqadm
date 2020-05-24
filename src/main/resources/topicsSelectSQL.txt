@@ -9,13 +9,13 @@ select
 	crtver,
 	description,
 	shortdescr, 	
-	tenant,
+	tenantid,
 	version,
 	productname,
 	topicname
 from topic 
 where 
-       tenant=? and 
+       tenantid=? and 
        version=? and 
        productname=?        
 order by 

@@ -11,13 +11,13 @@ select
 	shortdescr,
 	status,  
 		
-	tenant,
+	tenantid,
 	version,
 	productname
 			 
 from product 
 where
-	tenant=? and  
+	tenantid=? and  
 	productname=?
 order by 
 	version
