@@ -15,7 +15,7 @@ public class TestHelper {
 
 	private static Integer version = 1;
 
-	public static Integer tenant = 1;
+	public static String tenant = "1";
 
 	private static ProductService productService = new ProductService();
 	private static TopicService topicService = new TopicService();

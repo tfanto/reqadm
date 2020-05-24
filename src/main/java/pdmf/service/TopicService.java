@@ -23,9 +23,9 @@ public class TopicService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TopicService.class);
 
-	public List<TopicRec> list(Integer tenant, Integer version, String productName) {
+	public List<TopicRec> list(String tenantid, Integer version, String productName) {
 
-		ServiceHelper.validate("Tenant", tenant);
+		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
 		List<TopicRec> ret = new ArrayList<>();
@@ -39,7 +39,7 @@ public class TopicService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setInt(1, tenant);
+				stmt.setString(1, tenantid);
 				stmt.setInt(2, version);
 				stmt.setString(3, productName);
 				rs = stmt.executeQuery();
@@ -56,12 +56,12 @@ public class TopicService {
 					String rs_description = rs.getString("description");
 					String rs_shortdescr = rs.getString("shortdescr");
 
-					Integer rs_tenant = rs.getInt("tenant");
+					String rs_tenantid = rs.getString("tenantid");
 					Integer rs_version = rs.getInt("version");
 					String rs_productname = rs.getString("productname");
 					String rs_topicname = rs.getString("topicname");
 
-					TopicKey key = new TopicKey(rs_tenant, rs_version, rs_productname, rs_topicname);
+					TopicKey key = new TopicKey(rs_tenantid, rs_version, rs_productname, rs_topicname);
 					TopicRec rec = new TopicRec(key, rs_description, rs_crtdat, rs_chgnbr);
 					rec.shortdescr = rs_shortdescr;
 					rec.crtusr = rs_crtusr;
@@ -97,7 +97,7 @@ public class TopicService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setInt(1, topic.key.tenant);
+				stmt.setString(1, topic.key.tenantid);
 				stmt.setInt(2, topic.key.version);
 				stmt.setString(3, topic.key.productName);
 				stmt.setString(4, topic.key.topicName);
@@ -129,7 +129,7 @@ public class TopicService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setInt(1, key.tenant);
+				stmt.setString(1, key.tenantid);
 				stmt.setInt(2, key.version);
 				stmt.setString(3, key.productName);
 				stmt.setString(4, key.topicName);
@@ -148,8 +148,8 @@ public class TopicService {
 		return false;
 	}
 
-	public TopicRec get(Integer tenant, Integer version, String productName, String topicName) {
-		ServiceHelper.validate("Tenant", tenant);
+	public TopicRec get(String tenantid, Integer version, String productName, String topicName) {
+		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
 		ServiceHelper.validate("Topic", topicName);
@@ -165,7 +165,7 @@ public class TopicService {
 			connection = Db.open();
 			if (connection != null) {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setInt(1, tenant);
+				stmt.setString(1, tenantid);
 				stmt.setInt(2, version);
 				stmt.setString(3, productName);
 				stmt.setString(4, topicName);
@@ -183,12 +183,12 @@ public class TopicService {
 					String rs_description = rs.getString("description");
 					String rs_shortdescr = rs.getString("shortdescr");
 
-					Integer rs_tenant = rs.getInt("tenant");
+					String rs_tenantid = rs.getString("tenantid");
 					Integer rs_version = rs.getInt("version");
 					String rs_productname = rs.getString("productname");
 					String rs_topicname = rs.getString("topicname");
 
-					TopicKey key = new TopicKey(rs_tenant, rs_version, rs_productname, rs_topicname);
+					TopicKey key = new TopicKey(rs_tenantid, rs_version, rs_productname, rs_topicname);
 					rec = new TopicRec(key, rs_description, rs_crtdat, rs_chgnbr);
 					rec.shortdescr = rs_shortdescr;
 					rec.crtusr = rs_crtusr;
@@ -213,8 +213,8 @@ public class TopicService {
 		ServiceHelper.validate(topic);
 		ServiceHelper.validate("user", loggedInUserId);
 
-		if (ProductService.isLocked(topic.key.tenant, topic.key.version, topic.key.productName)) {
-			LOGGER.info("LOCKED " + topic.key.tenant + " " + topic.key.version + " " + topic.key.productName);
+		if (ProductService.isLocked(topic.key.tenantid, topic.key.version, topic.key.productName)) {
+			LOGGER.info("LOCKED " + topic.key.tenantid + " " + topic.key.version + " " + topic.key.productName);
 			return "";
 		}
 
@@ -244,10 +244,10 @@ public class TopicService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				Integer firstVersion = getFirstVersionForTopic(connection, topic.key.tenant, topic.key.productName,
+				Integer firstVersion = getFirstVersionForTopic(connection, topic.key.tenantid, topic.key.productName,
 						topic.key.topicName);
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setInt(1, topic.key.tenant);
+				stmt.setString(1, topic.key.tenantid);
 				stmt.setInt(2, topic.key.version);
 				stmt.setString(3, topic.key.productName);
 				stmt.setString(4, topic.key.topicName);
@@ -275,7 +275,7 @@ public class TopicService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				TopicRec dbRec = get(topic.key.tenant, topic.key.version, topic.key.productName, topic.key.topicName);
+				TopicRec dbRec = get(topic.key.tenantid, topic.key.version, topic.key.productName, topic.key.topicName);
 				if (dbRec == null) {
 					return 0;
 				}
@@ -287,7 +287,7 @@ public class TopicService {
 				key.put("productname", topic.key.productName);
 				key.put("topicname", topic.key.topicName);
 				key.put("version", topic.key.version);
-				key.put("tenant", topic.key.tenant);
+				key.put("tenantid", topic.key.tenantid);
 
 				Map<String, Object> value = new HashMap<>();
 				value.put("description", topic.description);
@@ -308,8 +308,8 @@ public class TopicService {
 		return null;
 	}
 
-	public void remove(Integer tenant, Integer version, String productName, String topicName, String userId) {
-		ServiceHelper.validate("Tenant", tenant);
+	public void remove(String tenantid, Integer version, String productName, String topicName, String userId) {
+		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
 		ServiceHelper.validate("Topic", topicName);
@@ -317,13 +317,13 @@ public class TopicService {
 		Connection connection = null;
 		PreparedStatement stmt = null;
 
-		if (ProductService.isLocked(tenant, version, productName)) {
-			LOGGER.info("LOCKED " + tenant + "  " + version + " " + productName);
+		if (ProductService.isLocked(tenantid, version, productName)) {
+			LOGGER.info("LOCKED " + tenantid + "  " + version + " " + productName);
 			return;
 		}
 
 		// already done we dont want to change the delete date
-		TopicKey key = new TopicKey(tenant, version, productName, topicName);
+		TopicKey key = new TopicKey(tenantid, version, productName, topicName);
 		if (isDeleteMarked(key)) {
 			LOGGER.info("Record is already marked for delete. No Action.");
 			return;
@@ -335,14 +335,14 @@ public class TopicService {
 				connection.setAutoCommit(false);
 
 				stmt = connection.prepareStatement(
-						"update topic set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and version=? and tenant=?");
+						"update topic set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and version=? and tenantid=?");
 				stmt.setString(1, userId);
 				stmt.setString(2, productName);
 				stmt.setString(3, topicName);
 				stmt.setInt(4, version);
-				stmt.setInt(5, tenant);
+				stmt.setString(5, tenantid);
 				stmt.executeUpdate();
-				deleteAllDependencies(connection, tenant, version, productName, topicName, userId);
+				deleteAllDependencies(connection, tenantid, version, productName, topicName, userId);
 				connection.commit();
 			}
 		} catch (SQLException e) {
@@ -357,7 +357,7 @@ public class TopicService {
 		}
 	}
 
-	private void deleteAllDependencies(Connection connection, Integer tenant, Integer version, String productName,
+	private void deleteAllDependencies(Connection connection, String tenantid, Integer version, String productName,
 			String topicName, String userId) throws SQLException {
 
 		PreparedStatement stmtProcess = null;
@@ -365,19 +365,19 @@ public class TopicService {
 
 		try {
 			stmtProcess = connection.prepareStatement(
-					"update process set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and version=? and tenant=?");
+					"update process set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and version=? and tenantid=?");
 			stmtProcess.setString(1, userId);
 			stmtProcess.setString(2, productName);
 			stmtProcess.setString(3, topicName);
 			stmtProcess.setInt(4, version);
-			stmtProcess.setInt(5, tenant);
+			stmtProcess.setString(5, tenantid);
 			stmtOperation = connection.prepareStatement(
-					"update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and version=? and tenant=?");
+					"update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and version=? and tenantid=?");
 			stmtOperation.setString(1, userId);
 			stmtOperation.setString(2, productName);
 			stmtOperation.setString(3, topicName);
 			stmtOperation.setInt(4, version);
-			stmtOperation.setInt(5, tenant);
+			stmtOperation.setString(5, tenantid);
 
 			stmtProcess.executeUpdate();
 			stmtOperation.executeUpdate();
@@ -387,10 +387,10 @@ public class TopicService {
 		}
 	}
 
-	private Integer getFirstVersionForTopic(Connection connection, Integer tenant, String product, String topic)
+	private Integer getFirstVersionForTopic(Connection connection, String tenantid, String product, String topic)
 			throws SQLException {
 
-		ServiceHelper.validate("Tenant", tenant);
+		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Product", product);
 		ServiceHelper.validate("Topic", topic);
 
@@ -398,10 +398,10 @@ public class TopicService {
 		ResultSet rs = null;
 		try {
 			stmt = connection.prepareStatement(
-					"select version from topic where productname=? and topicname=? and tenant=? order by version");
+					"select version from topic where productname=? and topicname=? and tenantid=? order by version");
 			stmt.setString(1, product);
 			stmt.setString(2, topic);
-			stmt.setInt(3, tenant);
+			stmt.setString(3, tenantid);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				return rs.getInt(1);

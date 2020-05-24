@@ -5,14 +5,14 @@ import java.io.Serializable;
 public class TopicKey implements Serializable {
 	private static final long serialVersionUID = -8409617580136497812L;
 
-	public Integer tenant;
+	public String tenantid;
 	public Integer version;
 	public String productName;
 	public String topicName;
 
-	public TopicKey(Integer tenant, Integer version, String productName, String topicName) {
+	public TopicKey(String tenantid, Integer version, String productName, String topicName) {
 		super();
-		this.tenant = tenant;
+		this.tenantid = tenantid;
 		this.version = version;
 		this.productName = productName;
 		this.topicName = topicName;
@@ -23,7 +23,7 @@ public class TopicKey implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((productName == null) ? 0 : productName.hashCode());
-		result = prime * result + ((tenant == null) ? 0 : tenant.hashCode());
+		result = prime * result + ((tenantid == null) ? 0 : tenantid.hashCode());
 		result = prime * result + ((topicName == null) ? 0 : topicName.hashCode());
 		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		return result;
@@ -43,10 +43,10 @@ public class TopicKey implements Serializable {
 				return false;
 		} else if (!productName.equals(other.productName))
 			return false;
-		if (tenant == null) {
-			if (other.tenant != null)
+		if (tenantid == null) {
+			if (other.tenantid != null)
 				return false;
-		} else if (!tenant.equals(other.tenant))
+		} else if (!tenantid.equals(other.tenantid))
 			return false;
 		if (topicName == null) {
 			if (other.topicName != null)

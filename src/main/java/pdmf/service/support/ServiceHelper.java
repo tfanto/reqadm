@@ -83,7 +83,7 @@ public class ServiceHelper {
 		if (key == null) {
 			throw new IllegalArgumentException("ProductKey  is null");
 		}
-		if (key.tenant == null) {
+		if (key.tenantid == null) {
 			throw new IllegalArgumentException("ProductKey.tenant  is null");
 		}
 		if (key.version == null) {
@@ -107,7 +107,7 @@ public class ServiceHelper {
 		if (key == null) {
 			throw new IllegalArgumentException("TopicKey  is null");
 		}
-		if (key.tenant == null) {
+		if (key.tenantid == null) {
 			throw new IllegalArgumentException("TopicKey.tenant  is null");
 		}
 		if (key.version == null) {
@@ -134,7 +134,7 @@ public class ServiceHelper {
 		if (key == null) {
 			throw new IllegalArgumentException("ProcessKey  is null");
 		}
-		if (key.tenant == null) {
+		if (key.tenantid == null) {
 			throw new IllegalArgumentException("ProcessKey.tenant  is null");
 		}
 		if (key.version == null) {
@@ -167,7 +167,7 @@ public class ServiceHelper {
 		if (key == null) {
 			throw new IllegalArgumentException("Operation  is null");
 		}
-		if (key.tenant == null) {
+		if (key.tenantid == null) {
 			throw new IllegalArgumentException("OperationKey.tenant  is null");
 		}
 		if (key.version == null) {

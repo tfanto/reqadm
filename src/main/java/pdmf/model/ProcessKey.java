@@ -5,17 +5,17 @@ import java.io.Serializable;
 public class ProcessKey implements Serializable {
 
 	private static final long serialVersionUID = 4021320549293252610L;
-	public Integer tenant;
+	public String tenantid;
 	public Integer version;
 	public String productName;
 	public String topicName;
 	public String processName;
 	public Integer processSeq = 0;
 
-	public ProcessKey(Integer tenant, Integer version, String productName, String topicName, String processName,
+	public ProcessKey(String tenantid, Integer version, String productName, String topicName, String processName,
 			Integer processseq) {
 		super();
-		this.tenant = tenant;
+		this.tenantid = tenantid;
 		this.version = version;
 		this.productName = productName;
 		this.topicName = topicName;
@@ -30,7 +30,7 @@ public class ProcessKey implements Serializable {
 		result = prime * result + ((processName == null) ? 0 : processName.hashCode());
 		result = prime * result + ((productName == null) ? 0 : productName.hashCode());
 		result = prime * result + ((processSeq == null) ? 0 : processSeq.hashCode());
-		result = prime * result + ((tenant == null) ? 0 : tenant.hashCode());
+		result = prime * result + ((tenantid == null) ? 0 : tenantid.hashCode());
 		result = prime * result + ((topicName == null) ? 0 : topicName.hashCode());
 		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		return result;
@@ -60,10 +60,10 @@ public class ProcessKey implements Serializable {
 				return false;
 		} else if (!processSeq.equals(other.processSeq))
 			return false;
-		if (tenant == null) {
-			if (other.tenant != null)
+		if (tenantid == null) {
+			if (other.tenantid != null)
 				return false;
-		} else if (!tenant.equals(other.tenant))
+		} else if (!tenantid.equals(other.tenantid))
 			return false;
 		if (topicName == null) {
 			if (other.topicName != null)

@@ -5,13 +5,13 @@ import java.io.Serializable;
 public class ProductKey implements Serializable {
 	private static final long serialVersionUID = 6361881510351353199L;
 
-	public Integer tenant;
+	public String tenantid;
 	public Integer version;
 	public String productName;
 
-	public ProductKey(Integer tenant, Integer version, String productName) {
+	public ProductKey(String tenantid, Integer version, String productName) {
 		super();
-		this.tenant = tenant;
+		this.tenantid = tenantid;
 		this.version = version;
 		this.productName = productName;
 	}
@@ -21,7 +21,7 @@ public class ProductKey implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((productName == null) ? 0 : productName.hashCode());
-		result = prime * result + ((tenant == null) ? 0 : tenant.hashCode());
+		result = prime * result + ((tenantid == null) ? 0 : tenantid.hashCode());
 		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		return result;
 	}
@@ -40,10 +40,10 @@ public class ProductKey implements Serializable {
 				return false;
 		} else if (!productName.equals(other.productName))
 			return false;
-		if (tenant == null) {
-			if (other.tenant != null)
+		if (tenantid == null) {
+			if (other.tenantid != null)
 				return false;
-		} else if (!tenant.equals(other.tenant))
+		} else if (!tenantid.equals(other.tenantid))
 			return false;
 		if (version == null) {
 			if (other.version != null)
@@ -52,7 +52,5 @@ public class ProductKey implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
 
 }

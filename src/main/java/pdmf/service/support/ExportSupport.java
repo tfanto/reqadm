@@ -47,23 +47,23 @@ public class ExportSupport {
 			Document doc = docBuilder.newDocument();
 			doc.setXmlStandalone(true);
 
-			ProductRec productRec = productService.get(key.tenant, key.version, key.productName);
+			ProductRec productRec = productService.get(key.tenantid, key.version, key.productName);
 			Element product = buildProduct(doc, productRec);
 			doc.appendChild(product);
 
-			List<TopicRec> topics = topicService.list(productRec.key.tenant, productRec.key.version,
+			List<TopicRec> topics = topicService.list(productRec.key.tenantid, productRec.key.version,
 					productRec.key.productName);
 			for (TopicRec topicRec : topics) {
 				Element topic = buildTopic(doc, topicRec);
 				product.appendChild(topic);
 
-				List<ProcessRec> processes = processService.list(topicRec.key.tenant, topicRec.key.version,
+				List<ProcessRec> processes = processService.list(topicRec.key.tenantid, topicRec.key.version,
 						topicRec.key.productName, topicRec.key.topicName);
 				for (ProcessRec processRec : processes) {
 					Element process = buildProcess(doc, processRec);
 					topic.appendChild(process);
 
-					List<OperationRec> operations = operationService.list(processRec.key.tenant, processRec.key.version,
+					List<OperationRec> operations = operationService.list(processRec.key.tenantid, processRec.key.version,
 							processRec.key.productName, processRec.key.topicName, processRec.key.processName);
 					for (OperationRec operationRec : operations) {
 						Element operation = buildOperation(doc, operationRec);

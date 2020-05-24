@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class OperationKey implements Serializable {
 	private static final long serialVersionUID = -8409422351081296093L;
-	public Integer tenant;
+	public String tenantid;
 	public Integer version;
 	public String productName;
 	public String topicName;
@@ -13,10 +13,10 @@ public class OperationKey implements Serializable {
 	public String operationName;
 	public Integer operationSequence = 0;
 
-	public OperationKey(Integer tenant, Integer version, String productName, String topicName, String processName,
+	public OperationKey(String tenantid, Integer version, String productName, String topicName, String processName,
 			Integer sequence, String operationName, Integer operationSequence) {
 		super();
-		this.tenant = tenant;
+		this.tenantid = tenantid;
 		this.version = version;
 		this.productName = productName;
 		this.topicName = topicName;
@@ -35,7 +35,7 @@ public class OperationKey implements Serializable {
 		result = prime * result + ((processName == null) ? 0 : processName.hashCode());
 		result = prime * result + ((productName == null) ? 0 : productName.hashCode());
 		result = prime * result + ((sequence == null) ? 0 : sequence.hashCode());
-		result = prime * result + ((tenant == null) ? 0 : tenant.hashCode());
+		result = prime * result + ((tenantid == null) ? 0 : tenantid.hashCode());
 		result = prime * result + ((topicName == null) ? 0 : topicName.hashCode());
 		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		return result;
@@ -75,10 +75,10 @@ public class OperationKey implements Serializable {
 				return false;
 		} else if (!sequence.equals(other.sequence))
 			return false;
-		if (tenant == null) {
-			if (other.tenant != null)
+		if (tenantid == null) {
+			if (other.tenantid != null)
 				return false;
-		} else if (!tenant.equals(other.tenant))
+		} else if (!tenantid.equals(other.tenantid))
 			return false;
 		if (topicName == null) {
 			if (other.topicName != null)
