@@ -8,10 +8,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 
 import pdmf.model.Cst;
 import pdmf.model.TenantKey;
@@ -28,7 +27,7 @@ public class Tenant extends Dialog {
 	private Text tenant;
 	private Label lblInfo = null;
 	private StyledText description;
-	private Tree tenantTree;
+	private List tenantList;
 
 	private User currentUser;
 
@@ -90,26 +89,16 @@ public class Tenant extends Dialog {
 		lblInfo.setBounds(10, 272, 458, 15);
 		lblInfo.setText("info");
 
-		tenantTree = new Tree(shell, SWT.SINGLE | SWT.BORDER);
-		tenantTree.addSelectionListener(new SelectionAdapter() {
+		tenantList = new List(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		tenantList.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
-				Object source = e.getSource();
-				Tree theTree = null;
-				if(source instanceof Tree) {
-					theTree = (Tree) source;
-				}
-				TreeItem treeItems[] = theTree.getSelection();
-				if(treeItems == null || treeItems.length < 1) {
+
+				int idx = tenantList.getSelectionIndex();
+				if (idx < 0) {
 					return;
 				}
-				
-				TreeItem selectedTreeItem = treeItems[0];
-				String tenantId = selectedTreeItem.getText();
-				
-
-
+				String tenantId = tenantList.getItem(idx);
 				tenant.setText("");
 				description.setText("");
 				lblInfo.setText("");
@@ -121,11 +110,11 @@ public class Tenant extends Dialog {
 					description.setText(rec.description == null ? "" : rec.description);
 					shell.setText("Tenant : " + rec.key.tenantid + " " + rec.description);
 				} else {
-					refreshTenantTree();
+					refreshTenantList();
 				}
 			}
 		});
-		tenantTree.setBounds(10, 58, 115, 202);
+		tenantList.setBounds(10, 58, 115, 202);
 
 		Button btnStore = new Button(shell, SWT.NONE);
 		btnStore.addSelectionListener(new SelectionAdapter() {
@@ -147,7 +136,7 @@ public class Tenant extends Dialog {
 				TenantKey key = new TenantKey(tenantId);
 				rec = new TenantRec(key, descr);
 				tenantService.store(rec, currentUser.userId);
-				refreshTenantTree();
+				refreshTenantList();
 				clearForm();
 				lblInfo.setText("");
 
@@ -156,17 +145,14 @@ public class Tenant extends Dialog {
 		btnStore.setBounds(348, 31, 120, 25);
 		btnStore.setText("Spara");
 
-		refreshTenantTree();
+		refreshTenantList();
 	}
 
-	private void refreshTenantTree() {
-		tenantTree.removeAll();
+	private void refreshTenantList() {
+		tenantList.removeAll();
 		java.util.List<TenantRec> tenants = tenantService.list();
-		int idx = 0;
 		for (TenantRec tenant : tenants) {
-			TreeItem treeItem = new TreeItem(tenantTree, SWT.NONE, idx);
-			treeItem.setText(tenant.key.tenantid);
-			idx++;
+			tenantList.add(tenant.key.tenantid);
 		}
 	}
 

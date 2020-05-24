@@ -31,6 +31,18 @@ public class Main {
 
 	private static User currentUser;
 
+	private Menu menu = null;
+	private MenuItem mntmNewSubmenu = null;
+	private Menu menu_1 = null;
+	private MenuItem mntmMaintainArtifacts = null;
+	private Menu menu_2 = null;
+	private MenuItem mntmProductViewer = null;
+	private MenuItem mntmNewProductVersion = null;
+	private MenuItem mntmQuery = null;
+	private MenuItem mntmTenant = null;
+	private MenuItem mntmNewItem_1 = null;
+	private MenuItem mntmSelectTenant = null;
+
 	/**
 	 * Launch the application.
 	 * 
@@ -67,6 +79,7 @@ public class Main {
 	/**
 	 * Create contents of the window.
 	 */
+
 	protected void createContents() {
 
 		shell = new Shell();
@@ -74,22 +87,22 @@ public class Main {
 		shell.setText(Cst.PGM_NAME);
 		shell.setLayout(new FormLayout());
 
-		Menu menu = new Menu(shell, SWT.BAR);
+		menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);
 
-		MenuItem mntmNewSubmenu = new MenuItem(menu, SWT.CASCADE);
+		mntmNewSubmenu = new MenuItem(menu, SWT.CASCADE);
 		mntmNewSubmenu.setText("Åtgärder");
 
-		Menu menu_1 = new Menu(mntmNewSubmenu);
+		menu_1 = new Menu(mntmNewSubmenu);
 		mntmNewSubmenu.setMenu(menu_1);
 
-		MenuItem mntmMaintainArtifacts = new MenuItem(menu_1, SWT.CASCADE);
+		mntmMaintainArtifacts = new MenuItem(menu_1, SWT.CASCADE);
 		mntmMaintainArtifacts.setText("Underhåll");
 
-		Menu menu_2 = new Menu(mntmMaintainArtifacts);
+		menu_2 = new Menu(mntmMaintainArtifacts);
 		mntmMaintainArtifacts.setMenu(menu_2);
 
-		MenuItem mntmProductViewer = new MenuItem(menu_2, SWT.NONE);
+		mntmProductViewer = new MenuItem(menu_2, SWT.NONE);
 		mntmProductViewer.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -101,7 +114,7 @@ public class Main {
 		});
 		mntmProductViewer.setText(Cst.WRK_WITH_PRODUCTS);
 
-		MenuItem mntmNewProductVersion = new MenuItem(menu_2, SWT.NONE);
+		mntmNewProductVersion = new MenuItem(menu_2, SWT.NONE);
 		mntmNewProductVersion.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -113,7 +126,7 @@ public class Main {
 		});
 		mntmNewProductVersion.setText(Cst.WRK_WITH_NEWPRODUCT);
 
-		MenuItem mntmQuery = new MenuItem(menu_1, SWT.NONE);
+		mntmQuery = new MenuItem(menu_1, SWT.NONE);
 		mntmQuery.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -125,7 +138,7 @@ public class Main {
 		});
 		mntmQuery.setText("Leta");
 
-		MenuItem mntmTenant = new MenuItem(menu_2, SWT.NONE);
+		mntmTenant = new MenuItem(menu_2, SWT.NONE);
 		mntmTenant.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -137,7 +150,7 @@ public class Main {
 		});
 		mntmTenant.setText(Cst.WRK_WITH_TENANT);
 
-		MenuItem mntmNewItem_1 = new MenuItem(menu_1, SWT.NONE);
+		mntmNewItem_1 = new MenuItem(menu_1, SWT.NONE);
 		mntmNewItem_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -147,6 +160,28 @@ public class Main {
 			}
 		});
 		mntmNewItem_1.setText("Info");
+		
+		mntmSelectTenant = new MenuItem(menu, SWT.NONE);
+		mntmSelectTenant.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				System.out.println("VÄLJ TENANT");
+				
+			}
+		});
+		mntmSelectTenant.setText("Välj klient");
+
+		setMenuEnabled(false);
+	}
+
+	private void setMenuEnabled(Boolean enabled) {
+
+		mntmProductViewer.setEnabled(enabled);
+		mntmNewProductVersion.setEnabled(enabled);
+		mntmQuery.setEnabled(enabled);
+		mntmTenant.setEnabled(enabled);
+		mntmNewItem_1.setEnabled(enabled);
 
 	}
 
@@ -156,5 +191,4 @@ public class Main {
 		return user;
 
 	}
-
 }
