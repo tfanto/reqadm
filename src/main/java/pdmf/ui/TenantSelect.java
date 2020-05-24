@@ -13,12 +13,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import pdmf.model.Cst;
-import pdmf.model.TenantKey;
 import pdmf.model.TenantRec;
 import pdmf.model.User;
 import pdmf.service.TenantService;
 
-public class Tenant extends Dialog {
+public class TenantSelect extends Dialog {
 
 	private TenantService tenantService = new TenantService();
 
@@ -29,7 +28,6 @@ public class Tenant extends Dialog {
 	private StyledText description;
 	private List tenantList;
 
-	private User currentUser;
 
 	/**
 	 * Create the dialog.
@@ -37,7 +35,7 @@ public class Tenant extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public Tenant(Shell parent, int style) {
+	public TenantSelect(Shell parent, int style) {
 		super(parent, style);
 		setText("Tenant");
 	}
@@ -80,9 +78,11 @@ public class Tenant extends Dialog {
 
 		tenant = new Text(shell, SWT.BORDER);
 		tenant.setBounds(10, 33, 115, 25);
+		tenant.setEditable(false);
 
 		description = new StyledText(shell, SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 		description.setBounds(125, 33, 181, 227);
+		description.setEditable(false);
 		description.setTextLimit(995);
 
 		lblInfo = new Label(shell, SWT.NONE);
@@ -116,8 +116,8 @@ public class Tenant extends Dialog {
 		});
 		tenantList.setBounds(10, 58, 115, 202);
 
-		Button btnStore = new Button(shell, SWT.NONE);
-		btnStore.addSelectionListener(new SelectionAdapter() {
+		Button btnSelect = new Button(shell, SWT.NONE);
+		btnSelect.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
@@ -133,17 +133,14 @@ public class Tenant extends Dialog {
 				}
 
 				TenantRec rec = tenantService.get(tenantId);
-				TenantKey key = new TenantKey(tenantId);
-				rec = new TenantRec(key, descr);
-				tenantService.store(rec, currentUser.userId);
-				refreshTenantList();
-				clearForm();
-				lblInfo.setText("");
-
+				if (rec != null) {				
+					result = rec;
+					shell.dispose();
+				}
 			}
 		});
-		btnStore.setBounds(348, 31, 120, 25);
-		btnStore.setText("Spara");
+		btnSelect.setBounds(348, 31, 120, 25);
+		btnSelect.setText("Ok");
 
 		refreshTenantList();
 	}
@@ -156,13 +153,5 @@ public class Tenant extends Dialog {
 		}
 	}
 
-	private void clearForm() {
-		description.setText("");
-		tenant.setText("");
-	}
-
-	public void setCurrentUser(User user) {
-		currentUser = user;
-	}
 
 }

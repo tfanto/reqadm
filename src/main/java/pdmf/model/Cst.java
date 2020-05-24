@@ -26,7 +26,8 @@ public class Cst {
 	public static final String CLEAR = "Rensa";
 
 	public static final String WRK_WITH_PRODUCTS = "Arbeta med produkt";
-	public static final String WRK_WITH_TENANT = "Arbeta med tenant";
+	public static final String TENANT_SELECT = "Välj klient";
+	public static final String WRK_WITH_TENANT = "Arbeta med klient";
 	public static final String WRK_WITH_NEWPRODUCT = "Arbeta med produkt/version";
 	public static final String PRODUCT_VIEWER = "Produktvisning";
 	public static final String SEARCH = "Leta";

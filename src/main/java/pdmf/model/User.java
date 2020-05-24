@@ -7,8 +7,6 @@ public class User {
 
 	public User() {
 		userId = System.getProperty("user.name");
-		TenantKey key = new TenantKey("1");
-		currentTenant = new TenantRec(key, "Forshaga Golv AB");
 	}
 
 	public String getUserId() {

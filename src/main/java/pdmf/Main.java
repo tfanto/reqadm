@@ -10,12 +10,14 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 import pdmf.model.Cst;
+import pdmf.model.TenantRec;
 import pdmf.model.User;
 import pdmf.sys.Db;
 import pdmf.ui.Info;
 import pdmf.ui.ProductVersion;
 import pdmf.ui.Search;
 import pdmf.ui.Tenant;
+import pdmf.ui.TenantSelect;
 
 /**
  * https://github.com/maven-eclipse/maven-eclipse.github.io
@@ -42,6 +44,8 @@ public class Main {
 	private MenuItem mntmTenant = null;
 	private MenuItem mntmNewItem_1 = null;
 	private MenuItem mntmSelectTenant = null;
+
+	private TenantRec selectedTenant = null;
 
 	/**
 	 * Launch the application.
@@ -160,14 +164,23 @@ public class Main {
 			}
 		});
 		mntmNewItem_1.setText("Info");
-		
+
 		mntmSelectTenant = new MenuItem(menu, SWT.NONE);
 		mntmSelectTenant.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
-				System.out.println("VÄLJ TENANT");
-				
+				TenantSelect dialog = new TenantSelect(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+				dialog.setText(Cst.TENANT_SELECT);
+				Object result = dialog.open();
+				if (result instanceof TenantRec) {
+					selectedTenant = (TenantRec) result;
+					setMenuEnabled(true);
+					currentUser.setCurrentTenant(selectedTenant);
+					return;
+				} else {
+					selectedTenant = null;
+					setMenuEnabled(false);
+				}
 			}
 		});
 		mntmSelectTenant.setText("Välj klient");
