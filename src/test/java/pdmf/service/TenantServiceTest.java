@@ -65,34 +65,35 @@ public class TenantServiceTest extends TestHelper {
 		String tenantid = UUID.randomUUID().toString();
 		TenantKey key = new TenantKey(tenantid);
 		TenantRec rec = new TenantRec(key, "En tenant");
-		tenantService.store(rec,"test");
+		tenantService.store(rec, "test");
 		Boolean ok = tenantService.exists(tenantid);
 		Assert.assertTrue(ok);
+		tenantService.remove(tenantid);
 	}
-	
+
 	@Test
 	public void get() {
 		String tenantid = UUID.randomUUID().toString();
 		TenantKey key = new TenantKey(tenantid);
 		TenantRec rec = new TenantRec(key, "En tenant");
-		tenantService.store(rec,"test");
+		tenantService.store(rec, "test");
 		TenantRec fetched = tenantService.get(tenantid);
 		Assert.assertTrue(fetched.key.tenantid.equals(tenantid));
+		tenantService.remove(tenantid);
 	}
-	
+
 	@Test
 	public void update() {
 		String tenantid = UUID.randomUUID().toString();
 		TenantKey key = new TenantKey(tenantid);
 		TenantRec rec = new TenantRec(key, "En tenant");
-		tenantService.store(rec,"test");
+		tenantService.store(rec, "test");
 		TenantRec fetched = tenantService.get(tenantid);
 		fetched.description = "apa";
-		tenantService.store(fetched,"test");
+		tenantService.store(fetched, "test");
 		TenantRec fetchedAgain = tenantService.get(tenantid);
 		Assert.assertEquals("apa", fetchedAgain.description);
+		tenantService.remove(tenantid);
 	}
-
-	
 
 }

@@ -532,10 +532,8 @@ public class ProductViewer extends Dialog {
 
 											}
 										} catch (FileNotFoundException e1) {
-											// TODO Auto-generated catch block
 											e1.printStackTrace();
 										} catch (IOException e1) {
-											// TODO Auto-generated catch block
 											e1.printStackTrace();
 										} finally {
 

@@ -297,8 +297,6 @@ public class ProductVersion extends Dialog {
 	}
 
 	public void setKey(ProductKey rec) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void setCurrentUser(User user) {

@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Text;
 
 import pdmf.model.Cst;
 import pdmf.model.TenantRec;
-import pdmf.model.User;
 import pdmf.service.TenantService;
 
 public class TenantSelect extends Dialog {
@@ -27,7 +26,6 @@ public class TenantSelect extends Dialog {
 	private Label lblInfo = null;
 	private StyledText description;
 	private List tenantList;
-
 
 	/**
 	 * Create the dialog.
@@ -133,7 +131,7 @@ public class TenantSelect extends Dialog {
 				}
 
 				TenantRec rec = tenantService.get(tenantId);
-				if (rec != null) {				
+				if (rec != null) {
 					result = rec;
 					shell.dispose();
 				}
@@ -152,6 +150,5 @@ public class TenantSelect extends Dialog {
 			tenantList.add(tenant.key.tenantid);
 		}
 	}
-
 
 }

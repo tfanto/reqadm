@@ -189,4 +189,27 @@ public class TenantService {
 		return 0;
 	}
 
+	public void remove(String tenantId) {
+		ServiceHelper.validate("tenantid", tenantId);
+
+		Connection connection = null;
+		PreparedStatement stmt = null;
+
+		String theSQL = "delete from  tenant where tenantid=?";
+
+		try {
+			connection = Db.open();
+			if (connection != null) {
+				stmt = connection.prepareStatement(theSQL);
+				stmt.setString(1, tenantId);
+				stmt.executeUpdate();
+			}
+		} catch (SQLException e) {
+			LOGGER.error(e.toString(), e);
+		} finally {
+			Db.close(stmt);
+			Db.close(connection);
+		}
+	}
+
 }

@@ -30,6 +30,7 @@ public class Tenant extends Dialog {
 	private List tenantList;
 
 	private User currentUser;
+	private Button btnRemove;
 
 	/**
 	 * Create the dialog.
@@ -39,7 +40,7 @@ public class Tenant extends Dialog {
 	 */
 	public Tenant(Shell parent, int style) {
 		super(parent, style);
-		setText("Tenant");
+		setText("[Tenant]");
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class Tenant extends Dialog {
 	private void createContents() {
 		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 
-		shell.setSize(496, 348);
+		shell.setSize(428, 348);
 		shell.setText(getText());
 		shell.setLayout(null);
 
@@ -86,7 +87,7 @@ public class Tenant extends Dialog {
 		description.setTextLimit(995);
 
 		lblInfo = new Label(shell, SWT.NONE);
-		lblInfo.setBounds(10, 272, 458, 15);
+		lblInfo.setBounds(10, 272, 384, 15);
 		lblInfo.setText("info");
 
 		tenantList = new List(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -108,7 +109,7 @@ public class Tenant extends Dialog {
 				if (rec != null) {
 					tenant.setText(rec.key.tenantid);
 					description.setText(rec.description == null ? "" : rec.description);
-					shell.setText("Tenant : " + rec.key.tenantid + " " + rec.description);
+					shell.setText("[Tenant] : " + rec.key.tenantid + " " + rec.description);
 				} else {
 					refreshTenantList();
 				}
@@ -139,11 +140,31 @@ public class Tenant extends Dialog {
 				refreshTenantList();
 				clearForm();
 				lblInfo.setText("");
-
+				shell.setText("[Tenant]");
 			}
 		});
-		btnStore.setBounds(348, 31, 120, 25);
-		btnStore.setText("Spara");
+		btnStore.setBounds(322, 31, 76, 25);
+		btnStore.setText(Cst.STORE);
+		
+		btnRemove = new Button(shell, SWT.NONE);
+		btnRemove.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				String tenantId = tenant.getText();
+				if (tenantId == null || tenantId.trim().length() < 1) {
+					lblInfo.setText(Cst.TENANTID_MUST_HAVE_A_VALUE);
+					return;
+				}				
+				tenantService.remove(tenantId);
+				refreshTenantList();
+				clearForm();
+				lblInfo.setText("");
+				shell.setText("[Tenant]");
+			}
+		});
+		btnRemove.setText(Cst.REMOVE);
+		btnRemove.setBounds(322, 68, 76, 25);
 
 		refreshTenantList();
 	}
