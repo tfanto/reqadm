@@ -62,8 +62,7 @@ public class ProcessService {
 					String rs_processname = rs.getString("processname");
 					Integer rs_processseq = rs.getInt("processseq");
 
-					ProcessKey key = new ProcessKey(rs_tenantid, rs_version, rs_productname, rs_topicname,
-							rs_processname, rs_processseq);
+					ProcessKey key = new ProcessKey(rs_tenantid, rs_version, rs_productname, rs_topicname, rs_processname, rs_processseq);
 					ProcessRec rec = new ProcessRec(key, rs_description, rs_crtdat, rs_chgnbr);
 					rec.shortdescr = rs_shortdescr;
 					rec.crtusr = rs_crtusr;
@@ -150,8 +149,7 @@ public class ProcessService {
 		return false;
 	}
 
-	public ProcessRec get(String tenantid, Integer version, String productName, String topicName, String processName,
-			Integer sequence) {
+	public ProcessRec get(String tenantid, Integer version, String productName, String topicName, String processName, Integer sequence) {
 		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
@@ -194,8 +192,7 @@ public class ProcessService {
 					String rs_processname = rs.getString("processname");
 					Integer rs_processseq = rs.getInt("processseq");
 
-					ProcessKey key = new ProcessKey(rs_tenantid, rs_version, rs_productname, rs_topicname, rs_processname,
-							rs_processseq);
+					ProcessKey key = new ProcessKey(rs_tenantid, rs_version, rs_productname, rs_topicname, rs_processname, rs_processseq);
 					rec = new ProcessRec(key, rs_description, rs_crtdat, rs_chgnbr);
 					rec.shortdescr = rs_shortdescr;
 					rec.crtusr = rs_crtusr;
@@ -250,8 +247,7 @@ public class ProcessService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				Integer firstVersion = getFirstVersionForProcess(connection, rec.key.tenantid, rec.key.productName,
-						rec.key.topicName, rec.key.processName, rec.key.processSeq);
+				Integer firstVersion = getFirstVersionForProcess(connection, rec.key.tenantid, rec.key.productName, rec.key.topicName, rec.key.processName, rec.key.processSeq);
 				stmt = connection.prepareStatement(theSQL);
 				stmt.setString(1, rec.key.tenantid);
 				stmt.setInt(2, rec.key.version);
@@ -282,8 +278,7 @@ public class ProcessService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				ProcessRec dbRec = get(rec.key.tenantid, rec.key.version, rec.key.productName, rec.key.topicName,
-						rec.key.processName, rec.key.processSeq);
+				ProcessRec dbRec = get(rec.key.tenantid, rec.key.version, rec.key.productName, rec.key.topicName, rec.key.processName, rec.key.processSeq);
 				if (dbRec == null) {
 					return 0;
 				}
@@ -318,8 +313,7 @@ public class ProcessService {
 		return null;
 	}
 
-	public void remove(String tenantid, Integer version, String productName, String topicName, String processName,
-			Integer sequence, String userid) {
+	public void remove(String tenantid, Integer version, String productName, String topicName, String processName, Integer sequence, String userid) {
 		ServiceHelper.validate("tenant", tenantid);
 		ServiceHelper.validate("Userid", userid);
 		ServiceHelper.validate("Version", version);
@@ -357,8 +351,7 @@ public class ProcessService {
 				stmt.setInt(6, version);
 				stmt.setString(7, tenantid);
 				stmt.executeUpdate();
-				deleteAllDependencies(connection, tenantid, version, productName, topicName, processName, sequence,
-						userid);
+				deleteAllDependencies(connection, tenantid, version, productName, topicName, processName, sequence, userid);
 				connection.commit();
 			}
 		} catch (SQLException e) {
@@ -373,8 +366,8 @@ public class ProcessService {
 		}
 	}
 
-	private void deleteAllDependencies(Connection connection, String tenantid, Integer version, String productName,
-			String topicName, String processName, Integer processSeq, String userId) throws SQLException {
+	private void deleteAllDependencies(Connection connection, String tenantid, Integer version, String productName, String topicName, String processName, Integer processSeq, String userId)
+			throws SQLException {
 
 		PreparedStatement stmtOperation = null;
 
@@ -394,8 +387,7 @@ public class ProcessService {
 		}
 	}
 
-	private Integer getFirstVersionForProcess(Connection connection, String tenantid, String product, String topic,
-			String process, Integer processSeq) throws SQLException {
+	private Integer getFirstVersionForProcess(Connection connection, String tenantid, String product, String topic, String process, Integer processSeq) throws SQLException {
 		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Product", product);
 		ServiceHelper.validate("Topic", topic);
@@ -405,8 +397,7 @@ public class ProcessService {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt = connection.prepareStatement(
-					"select version from process where productname=? and topicname=? and processname=? and processseq=? and tenantid=? order by version");
+			stmt = connection.prepareStatement("select version from process where productname=? and topicname=? and processname=? and processseq=? and tenantid=? order by version");
 			stmt.setString(1, product);
 			stmt.setString(2, topic);
 			stmt.setString(3, process);

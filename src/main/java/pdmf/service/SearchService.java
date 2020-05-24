@@ -65,8 +65,7 @@ public class SearchService {
 		return resultCriteria;
 	}
 
-	public List<Map<Object, List<String>>> search(List<String> criteriaList, Boolean searchInProduct,
-			Boolean searchInTopic, Boolean searchInProcess, Boolean searchInOperation, String tenantid) {
+	public List<Map<Object, List<String>>> search(List<String> criteriaList, Boolean searchInProduct, Boolean searchInTopic, Boolean searchInProcess, Boolean searchInOperation, String tenantid) {
 		ServiceHelper.validate(criteriaList);
 		ServiceHelper.validate("tenant", tenantid);
 		ServiceHelper.validate("searchInProduct", searchInProduct);
@@ -114,8 +113,7 @@ public class SearchService {
 		return resultSet;
 	}
 
-	private List<Map<Object, List<String>>> searchInOperation(Connection connection, String tenantid, String criteria,
-			List<Map<Object, List<String>>> resultSet) throws SQLException {
+	private List<Map<Object, List<String>>> searchInOperation(Connection connection, String tenantid, String criteria, List<Map<Object, List<String>>> resultSet) throws SQLException {
 
 		String sql = String.format(selectSQL_OPERATION, criteria, criteria);
 		PreparedStatement stmt = null;
@@ -145,8 +143,7 @@ public class SearchService {
 				Integer operationSeq = rs.getInt(11);
 
 				// create a key
-				OperationKey key = new OperationKey(tenantid, version, productName, topicName, processName, seq,
-						operationName, operationSeq);
+				OperationKey key = new OperationKey(tenantid, version, productName, topicName, processName, seq, operationName, operationSeq);
 				// create data
 				List<String> data = new ArrayList<>();
 				data.add(descr);
@@ -166,8 +163,7 @@ public class SearchService {
 		}
 	}
 
-	private List<Map<Object, List<String>>> searchInProcess(Connection connection, String tenantid, String criteria,
-			List<Map<Object, List<String>>> resultSet) throws SQLException {
+	private List<Map<Object, List<String>>> searchInProcess(Connection connection, String tenantid, String criteria, List<Map<Object, List<String>>> resultSet) throws SQLException {
 
 		String sql = String.format(selectSQL_PROCESS, criteria, criteria);
 		PreparedStatement stmt = null;
@@ -213,8 +209,7 @@ public class SearchService {
 		}
 	}
 
-	private List<Map<Object, List<String>>> searchInTopic(Connection connection, String tenantid, String criteria,
-			List<Map<Object, List<String>>> resultSet) throws SQLException {
+	private List<Map<Object, List<String>>> searchInTopic(Connection connection, String tenantid, String criteria, List<Map<Object, List<String>>> resultSet) throws SQLException {
 
 		String sql = String.format(selectSQL_TOPIC, criteria, criteria);
 		PreparedStatement stmt = null;
@@ -258,8 +253,7 @@ public class SearchService {
 		}
 	}
 
-	private List<Map<Object, List<String>>> searchInProduct(Connection connection, String tenantid, String criteria,
-			List<Map<Object, List<String>>> resultSet) throws SQLException {
+	private List<Map<Object, List<String>>> searchInProduct(Connection connection, String tenantid, String criteria, List<Map<Object, List<String>>> resultSet) throws SQLException {
 
 		String sql = String.format(selectSQL_PRODUCT, criteria, criteria);
 		PreparedStatement stmt = null;

@@ -244,8 +244,7 @@ public class TopicService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				Integer firstVersion = getFirstVersionForTopic(connection, topic.key.tenantid, topic.key.productName,
-						topic.key.topicName);
+				Integer firstVersion = getFirstVersionForTopic(connection, topic.key.tenantid, topic.key.productName, topic.key.topicName);
 				stmt = connection.prepareStatement(theSQL);
 				stmt.setString(1, topic.key.tenantid);
 				stmt.setInt(2, topic.key.version);
@@ -334,8 +333,7 @@ public class TopicService {
 			if (connection != null) {
 				connection.setAutoCommit(false);
 
-				stmt = connection.prepareStatement(
-						"update topic set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and version=? and tenantid=?");
+				stmt = connection.prepareStatement("update topic set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and version=? and tenantid=?");
 				stmt.setString(1, userId);
 				stmt.setString(2, productName);
 				stmt.setString(3, topicName);
@@ -357,22 +355,19 @@ public class TopicService {
 		}
 	}
 
-	private void deleteAllDependencies(Connection connection, String tenantid, Integer version, String productName,
-			String topicName, String userId) throws SQLException {
+	private void deleteAllDependencies(Connection connection, String tenantid, Integer version, String productName, String topicName, String userId) throws SQLException {
 
 		PreparedStatement stmtProcess = null;
 		PreparedStatement stmtOperation = null;
 
 		try {
-			stmtProcess = connection.prepareStatement(
-					"update process set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and version=? and tenantid=?");
+			stmtProcess = connection.prepareStatement("update process set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and version=? and tenantid=?");
 			stmtProcess.setString(1, userId);
 			stmtProcess.setString(2, productName);
 			stmtProcess.setString(3, topicName);
 			stmtProcess.setInt(4, version);
 			stmtProcess.setString(5, tenantid);
-			stmtOperation = connection.prepareStatement(
-					"update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and version=? and tenantid=?");
+			stmtOperation = connection.prepareStatement("update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and version=? and tenantid=?");
 			stmtOperation.setString(1, userId);
 			stmtOperation.setString(2, productName);
 			stmtOperation.setString(3, topicName);
@@ -387,8 +382,7 @@ public class TopicService {
 		}
 	}
 
-	private Integer getFirstVersionForTopic(Connection connection, String tenantid, String product, String topic)
-			throws SQLException {
+	private Integer getFirstVersionForTopic(Connection connection, String tenantid, String product, String topic) throws SQLException {
 
 		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Product", product);
@@ -397,8 +391,7 @@ public class TopicService {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt = connection.prepareStatement(
-					"select version from topic where productname=? and topicname=? and tenantid=? order by version");
+			stmt = connection.prepareStatement("select version from topic where productname=? and topicname=? and tenantid=? order by version");
 			stmt.setString(1, product);
 			stmt.setString(2, topic);
 			stmt.setString(3, tenantid);
