@@ -63,8 +63,9 @@ public class ExportSupport {
 					Element process = buildProcess(doc, processRec);
 					topic.appendChild(process);
 
-					List<OperationRec> operations = operationService.list(processRec.key.tenantid, processRec.key.version,
-							processRec.key.productName, processRec.key.topicName, processRec.key.processName);
+					List<OperationRec> operations = operationService.list(processRec.key.tenantid,
+							processRec.key.version, processRec.key.productName, processRec.key.topicName,
+							processRec.key.processName);
 					for (OperationRec operationRec : operations) {
 						Element operation = buildOperation(doc, operationRec);
 						process.appendChild(operation);
@@ -149,6 +150,7 @@ public class ExportSupport {
 	private Element buildProcess(Document doc, ProcessRec rec) {
 		Element process = doc.createElement("process");
 		process.setAttribute("name", rec.key.processName);
+		process.setAttribute("sequence", String.valueOf(rec.key.processSeq));
 		process.setAttribute("created", rec.crtdat.toString());
 		process.setAttribute("createdby", rec.crtusr);
 		if (rec.chgusr != null && rec.chgdat != null) {
@@ -171,6 +173,7 @@ public class ExportSupport {
 	private Element buildOperation(Document doc, OperationRec rec) {
 		Element operation = doc.createElement("operation");
 		operation.setAttribute("name", rec.key.operationName);
+		operation.setAttribute("sequence", String.valueOf(rec.key.operationSequence));
 		operation.setAttribute("created", rec.crtdat.toString());
 		operation.setAttribute("createdby", rec.crtusr);
 		if (rec.chgusr != null && rec.chgdat != null) {
