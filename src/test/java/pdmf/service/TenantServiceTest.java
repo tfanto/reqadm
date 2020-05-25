@@ -1,7 +1,7 @@
 package pdmf.service;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,6 +15,8 @@ import pdmf.model.TenantRec;
 import pdmf.sys.Db;
 
 public class TenantServiceTest extends TestHelper {
+
+	Random rnd = new Random();
 
 	@BeforeClass
 	public static void beforeClass() {
@@ -48,21 +50,24 @@ public class TenantServiceTest extends TestHelper {
 
 	@Test
 	public void exists() {
-		String tenantid = UUID.randomUUID().toString();
+		Integer i = rnd.nextInt();
+		String tenantid = i.toString();
 		Boolean ok = tenantService.exists(tenantid);
 		Assert.assertFalse(ok);
 	}
 
 	@Test
 	public void get_NonExisting() {
-		String tenantid = UUID.randomUUID().toString();
+		Integer i = rnd.nextInt();
+		String tenantid = i.toString();
 		TenantRec rec = tenantService.get(tenantid);
 		Assert.assertNull(rec);
 	}
 
 	@Test
 	public void insert() {
-		String tenantid = UUID.randomUUID().toString();
+		Integer i = rnd.nextInt();
+		String tenantid = i.toString();
 		TenantKey key = new TenantKey(tenantid);
 		TenantRec rec = new TenantRec(key, "En tenant");
 		tenantService.store(rec, "test");
@@ -73,7 +78,8 @@ public class TenantServiceTest extends TestHelper {
 
 	@Test
 	public void get() {
-		String tenantid = UUID.randomUUID().toString();
+		Integer i = rnd.nextInt();
+		String tenantid = i.toString();
 		TenantKey key = new TenantKey(tenantid);
 		TenantRec rec = new TenantRec(key, "En tenant");
 		tenantService.store(rec, "test");
@@ -84,7 +90,8 @@ public class TenantServiceTest extends TestHelper {
 
 	@Test
 	public void update() {
-		String tenantid = UUID.randomUUID().toString();
+		Integer i = rnd.nextInt();
+		String tenantid = i.toString();
 		TenantKey key = new TenantKey(tenantid);
 		TenantRec rec = new TenantRec(key, "En tenant");
 		tenantService.store(rec, "test");

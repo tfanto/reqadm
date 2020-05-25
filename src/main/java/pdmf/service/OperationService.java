@@ -13,8 +13,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pdmf.model.Cst;
 import pdmf.model.OperationKey;
 import pdmf.model.OperationRec;
+import pdmf.model.ProcessKey;
 import pdmf.service.support.ServiceHelper;
 import pdmf.sys.Db;
 import pdmf.sys.RecordChangedByAnotherUser;
@@ -22,9 +24,10 @@ import pdmf.sys.RecordChangedByAnotherUser;
 public class OperationService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperationService.class);
+	ProcessService processService = new ProcessService();
 
-	public List<OperationRec> list(String tenantid, Integer version, String productName, String topicName,
-			String processName) {
+
+	public List<OperationRec> list(String tenantid, Integer version, String productName, String topicName, String processName) {
 
 		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Version", version);
@@ -70,8 +73,7 @@ public class OperationService {
 					String rs_operationname = rs.getString("operationname");
 					Integer rs_operationseq = rs.getInt("operationseq");
 
-					OperationKey key = new OperationKey(rs_tenantid, rs_version, rs_productname, rs_topicname,
-							rs_processname, rs_processseq, rs_operationname, rs_operationseq);
+					OperationKey key = new OperationKey(rs_tenantid, rs_version, rs_productname, rs_topicname, rs_processname, rs_processseq, rs_operationname, rs_operationseq);
 					OperationRec rec = new OperationRec(key, rs_description, rs_crtdat, rs_chgnbr);
 					rec.shortdescr = rs_shortdescr;
 					rec.crtusr = rs_crtusr;
@@ -94,8 +96,7 @@ public class OperationService {
 		return ret;
 	}
 
-	public List<OperationRec> list(String tenantid, Integer version, String productName, String topicName,
-			String processName, Integer processeq) {
+	public List<OperationRec> list(String tenantid, Integer version, String productName, String topicName, String processName, Integer processeq) {
 
 		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Version", version);
@@ -142,8 +143,7 @@ public class OperationService {
 					String rs_operationname = rs.getString("operationname");
 					Integer rs_operationseq = rs.getInt("operationseq");
 
-					OperationKey key = new OperationKey(rs_tenantid, rs_version, rs_productname, rs_topicname,
-							rs_processname, rs_processseq, rs_operationname, rs_operationseq);
+					OperationKey key = new OperationKey(rs_tenantid, rs_version, rs_productname, rs_topicname, rs_processname, rs_processseq, rs_operationname, rs_operationseq);
 					OperationRec rec = new OperationRec(key, rs_description, rs_crtdat, rs_chgnbr);
 					rec.shortdescr = rs_shortdescr;
 					rec.crtusr = rs_crtusr;
@@ -235,8 +235,7 @@ public class OperationService {
 		return false;
 	}
 
-	public OperationRec get(String tenantid, Integer version, String productName, String topicName, String processName,
-			Integer sequence, String operationName, Integer operationSeq) {
+	public OperationRec get(String tenantid, Integer version, String productName, String topicName, String processName, Integer sequence, String operationName, Integer operationSeq) {
 		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
@@ -285,8 +284,7 @@ public class OperationService {
 					String rs_operationname = rs.getString("operationname");
 					Integer rs_operationseq = rs.getInt("operationseq");
 
-					OperationKey key = new OperationKey(rs_tenantid, rs_version, rs_productname, rs_topicname,
-							rs_processname, rs_processseq, rs_operationname, rs_operationseq);
+					OperationKey key = new OperationKey(rs_tenantid, rs_version, rs_productname, rs_topicname, rs_processname, rs_processseq, rs_operationname, rs_operationseq);
 					rec = new OperationRec(key, rs_description, rs_crtdat, rs_chgnbr);
 					rec.shortdescr = rs_shortdescr;
 					rec.crtusr = rs_crtusr;
@@ -318,7 +316,12 @@ public class OperationService {
 		}
 
 		if (isDeleteMarked(rec.key)) {
-			LOGGER.info("Record is marked for delete. No Action.");
+			LOGGER.info(Cst.ALREADY_DELETE_NO_ACTION);
+			return null;
+		}
+		
+		if (isParentDeleteMarked(rec.key)) {
+			LOGGER.info(Cst.PARENT_IS_DELETE_NO_ACTION);
 			return null;
 		}
 
@@ -343,8 +346,7 @@ public class OperationService {
 			connection = Db.open();
 			if (connection != null) {
 
-				Integer firstVersion = getFirstVersionForOperation(connection, rec.key.tenantid, rec.key.productName,
-						rec.key.topicName, rec.key.processName, rec.key.sequence, rec.key.operationName,
+				Integer firstVersion = getFirstVersionForOperation(connection, rec.key.tenantid, rec.key.productName, rec.key.topicName, rec.key.processName, rec.key.sequence, rec.key.operationName,
 						rec.key.operationSequence);
 				stmt = connection.prepareStatement(theSQL);
 				stmt.setString(1, rec.key.tenantid);
@@ -378,8 +380,8 @@ public class OperationService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				OperationRec dbRec = get(rec.key.tenantid, rec.key.version, rec.key.productName, rec.key.topicName,
-						rec.key.processName, rec.key.sequence, rec.key.operationName, rec.key.operationSequence);
+				OperationRec dbRec = get(rec.key.tenantid, rec.key.version, rec.key.productName, rec.key.topicName, rec.key.processName, rec.key.sequence, rec.key.operationName,
+						rec.key.operationSequence);
 				if (dbRec == null) {
 					return 0;
 				}
@@ -416,8 +418,7 @@ public class OperationService {
 		return null;
 	}
 
-	public void remove(String tenantid, Integer version, String productName, String topicName, String processName,
-			Integer sequence, String operationName, Integer operationSequence, String userid) {
+	public void remove(String tenantid, Integer version, String productName, String topicName, String processName, Integer sequence, String operationName, Integer operationSequence, String userid) {
 		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Userid", userid);
 		ServiceHelper.validate("Version", version);
@@ -431,13 +432,13 @@ public class OperationService {
 		PreparedStatement stmt = null;
 
 		// already done we dont want to change the delete date
-		OperationKey key = new OperationKey(tenantid, version, productName, topicName, processName, sequence,
-				operationName, operationSequence);
+		OperationKey key = new OperationKey(tenantid, version, productName, topicName, processName, sequence, operationName, operationSequence);
 		if (isDeleteMarked(key)) {
-			LOGGER.info("Record is already marked for delete. No Action.");
+			LOGGER.info(Cst.ALREADY_DELETE_NO_ACTION);
 			return;
 		}
 
+		String theSQL = ServiceHelper.getSQL("operationDeleteMarkSQL");
 		try {
 			connection = Db.open();
 			if (connection != null) {
@@ -447,8 +448,7 @@ public class OperationService {
 					return;
 				}
 
-				stmt = connection.prepareStatement(
-						"update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and processname=? and processseq=? and operationname=? and operationseq=?  and version=? and tenantid=?");
+				stmt = connection.prepareStatement(theSQL);
 				stmt.setString(1, userid);
 				stmt.setString(2, productName);
 				stmt.setString(3, topicName);
@@ -468,8 +468,8 @@ public class OperationService {
 		}
 	}
 
-	private Integer getFirstVersionForOperation(Connection connection, String tenantid, String product, String topic,
-			String process, Integer processSeq, String operation, Integer operationSeq) throws SQLException {
+	private Integer getFirstVersionForOperation(Connection connection, String tenantid, String product, String topic, String process, Integer processSeq, String operation, Integer operationSeq)
+			throws SQLException {
 		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Product", product);
 		ServiceHelper.validate("Topic", topic);
@@ -478,11 +478,12 @@ public class OperationService {
 		ServiceHelper.validate("Operation", operation);
 		ServiceHelper.validate("OperationSeq", operationSeq);
 
+		String theSQL = ServiceHelper.getSQL("operationGetFirstVersionSQL");
+
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt = connection.prepareStatement(
-					"select version from oper where productname=? and topicname=? and processname=? and processseq=?  and operationname=? and operationseq=? and tenantid=? order by version");
+			stmt = connection.prepareStatement(theSQL);
 			stmt.setString(1, product);
 			stmt.setString(2, topic);
 			stmt.setString(3, process);
@@ -500,6 +501,12 @@ public class OperationService {
 			Db.close(rs);
 			Db.close(stmt);
 		}
+	}
+
+	private Boolean isParentDeleteMarked(OperationKey opKey) {
+		ServiceHelper.validate(opKey);
+		ProcessKey key = new ProcessKey(opKey.tenantid, opKey.version, opKey.productName, opKey.topicName, opKey.processName, opKey.sequence);
+		return processService.isDeleteMarked(key);
 	}
 
 }

@@ -121,8 +121,8 @@ public class TenantService {
 		ServiceHelper.validate("user", loggedInUserId);
 		Connection connection = null;
 
-		tenant.key.tenantid = ServiceHelper.ensureStringLength(tenant.key.tenantid, 50);
-		tenant.description = ServiceHelper.ensureStringLength(tenant.description, 100);
+		tenant.key.tenantid = ServiceHelper.ensureStringLength(tenant.key.tenantid, 15);
+		tenant.description = ServiceHelper.ensureStringLength(tenant.description, 25);
 
 		try {
 			connection = Db.open();
@@ -146,6 +146,7 @@ public class TenantService {
 		ServiceHelper.validate("user", loggedInUserId);
 
 		PreparedStatement stmt = null;
+		
 
 		String theSQL = "insert into tenant (tenantid,description) values(?,?)";
 
@@ -166,6 +167,9 @@ public class TenantService {
 		PreparedStatement stmt = null;
 
 		String theSQL = "update tenant set description=? where tenantid=?";
+		
+		String shortTenantDescription = ServiceHelper.ensureStringLength(tenant.description,40);
+
 
 		try {
 			TenantRec rec = get(tenant.key.tenantid);
@@ -175,7 +179,7 @@ public class TenantService {
 
 			try {
 				stmt = connection.prepareStatement(theSQL);
-				stmt.setString(1, tenant.description);
+				stmt.setString(1, shortTenantDescription);
 				stmt.setString(2, tenant.key.tenantid);
 				return stmt.executeUpdate();
 			} catch (SQLException e) {

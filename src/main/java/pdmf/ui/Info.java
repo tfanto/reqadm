@@ -27,7 +27,7 @@ public class Info extends Dialog {
 	 */
 	public Info(Shell parent, int style) {
 		super(parent, style);
-		setText("Info");
+		setText("[" + Cst.INFO + "]");
 	}
 
 	/**

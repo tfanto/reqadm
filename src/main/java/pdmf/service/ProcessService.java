@@ -13,8 +13,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pdmf.model.Cst;
 import pdmf.model.ProcessKey;
 import pdmf.model.ProcessRec;
+import pdmf.model.TopicKey;
 import pdmf.service.support.ServiceHelper;
 import pdmf.sys.Db;
 import pdmf.sys.RecordChangedByAnotherUser;
@@ -22,6 +24,8 @@ import pdmf.sys.RecordChangedByAnotherUser;
 public class ProcessService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessService.class);
+
+	private TopicService topicService = new TopicService();
 
 	public List<ProcessRec> list(String tenantid, Integer version, String productName, String topicName) {
 		ServiceHelper.validate("Tenant", tenantid);
@@ -62,8 +66,7 @@ public class ProcessService {
 					String rs_processname = rs.getString("processname");
 					Integer rs_processseq = rs.getInt("processseq");
 
-					ProcessKey key = new ProcessKey(rs_tenantid, rs_version, rs_productname, rs_topicname,
-							rs_processname, rs_processseq);
+					ProcessKey key = new ProcessKey(rs_tenantid, rs_version, rs_productname, rs_topicname, rs_processname, rs_processseq);
 					ProcessRec rec = new ProcessRec(key, rs_description, rs_crtdat, rs_chgnbr);
 					rec.shortdescr = rs_shortdescr;
 					rec.crtusr = rs_crtusr;
@@ -150,8 +153,7 @@ public class ProcessService {
 		return false;
 	}
 
-	public ProcessRec get(String tenantid, Integer version, String productName, String topicName, String processName,
-			Integer sequence) {
+	public ProcessRec get(String tenantid, Integer version, String productName, String topicName, String processName, Integer sequence) {
 		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Version", version);
 		ServiceHelper.validate("Product", productName);
@@ -194,8 +196,7 @@ public class ProcessService {
 					String rs_processname = rs.getString("processname");
 					Integer rs_processseq = rs.getInt("processseq");
 
-					ProcessKey key = new ProcessKey(rs_tenantid, rs_version, rs_productname, rs_topicname, rs_processname,
-							rs_processseq);
+					ProcessKey key = new ProcessKey(rs_tenantid, rs_version, rs_productname, rs_topicname, rs_processname, rs_processseq);
 					rec = new ProcessRec(key, rs_description, rs_crtdat, rs_chgnbr);
 					rec.shortdescr = rs_shortdescr;
 					rec.crtusr = rs_crtusr;
@@ -226,7 +227,12 @@ public class ProcessService {
 		}
 
 		if (isDeleteMarked(rec.key)) {
-			LOGGER.info("Record is marked for delete. No Action.");
+			LOGGER.info(Cst.ALREADY_DELETE_NO_ACTION);
+			return null;
+		}
+
+		if (isParentDeleteMarked(rec.key)) {
+			LOGGER.info(Cst.PARENT_IS_DELETE_NO_ACTION);
 			return null;
 		}
 
@@ -250,8 +256,7 @@ public class ProcessService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				Integer firstVersion = getFirstVersionForProcess(connection, rec.key.tenantid, rec.key.productName,
-						rec.key.topicName, rec.key.processName, rec.key.processSeq);
+				Integer firstVersion = getFirstVersionForProcess(connection, rec.key.tenantid, rec.key.productName, rec.key.topicName, rec.key.processName, rec.key.processSeq);
 				stmt = connection.prepareStatement(theSQL);
 				stmt.setString(1, rec.key.tenantid);
 				stmt.setInt(2, rec.key.version);
@@ -282,8 +287,7 @@ public class ProcessService {
 		try {
 			connection = Db.open();
 			if (connection != null) {
-				ProcessRec dbRec = get(rec.key.tenantid, rec.key.version, rec.key.productName, rec.key.topicName,
-						rec.key.processName, rec.key.processSeq);
+				ProcessRec dbRec = get(rec.key.tenantid, rec.key.version, rec.key.productName, rec.key.topicName, rec.key.processName, rec.key.processSeq);
 				if (dbRec == null) {
 					return 0;
 				}
@@ -318,8 +322,7 @@ public class ProcessService {
 		return null;
 	}
 
-	public void remove(String tenantid, Integer version, String productName, String topicName, String processName,
-			Integer sequence, String userid) {
+	public void remove(String tenantid, Integer version, String productName, String topicName, String processName, Integer sequence, String userid) {
 		ServiceHelper.validate("tenant", tenantid);
 		ServiceHelper.validate("Userid", userid);
 		ServiceHelper.validate("Version", version);
@@ -333,9 +336,11 @@ public class ProcessService {
 		// already done we dont want to change the delete date
 		ProcessKey key = new ProcessKey(tenantid, version, productName, topicName, processName, sequence);
 		if (isDeleteMarked(key)) {
-			LOGGER.info("Record is already marked for delete. No Action.");
+			LOGGER.info(Cst.ALREADY_DELETE_NO_ACTION);
 			return;
 		}
+
+		String theSQL = ServiceHelper.getSQL("processDeleteMarkSQL");
 
 		try {
 			connection = Db.open();
@@ -345,10 +350,7 @@ public class ProcessService {
 					LOGGER.info("LOCKED " + tenantid + " " + version + " " + productName);
 					return;
 				}
-
-				stmt = connection.prepareStatement(
-						"update process set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and processname=? and processseq=?  and version=? and tenantid=?");
-
+				stmt = connection.prepareStatement(theSQL);
 				stmt.setString(1, userid);
 				stmt.setString(2, productName);
 				stmt.setString(3, topicName);
@@ -357,8 +359,7 @@ public class ProcessService {
 				stmt.setInt(6, version);
 				stmt.setString(7, tenantid);
 				stmt.executeUpdate();
-				deleteAllDependencies(connection, tenantid, version, productName, topicName, processName, sequence,
-						userid);
+				deleteAllDependencies(connection, tenantid, version, productName, topicName, processName, sequence, userid);
 				connection.commit();
 			}
 		} catch (SQLException e) {
@@ -373,8 +374,8 @@ public class ProcessService {
 		}
 	}
 
-	private void deleteAllDependencies(Connection connection, String tenantid, Integer version, String productName,
-			String topicName, String processName, Integer processSeq, String userId) throws SQLException {
+	private void deleteAllDependencies(Connection connection, String tenantid, Integer version, String productName, String topicName, String processName, Integer processSeq, String userId)
+			throws SQLException {
 
 		PreparedStatement stmtOperation = null;
 
@@ -394,8 +395,7 @@ public class ProcessService {
 		}
 	}
 
-	private Integer getFirstVersionForProcess(Connection connection, String tenantid, String product, String topic,
-			String process, Integer processSeq) throws SQLException {
+	private Integer getFirstVersionForProcess(Connection connection, String tenantid, String product, String topic, String process, Integer processSeq) throws SQLException {
 		ServiceHelper.validate("Tenant", tenantid);
 		ServiceHelper.validate("Product", product);
 		ServiceHelper.validate("Topic", topic);
@@ -405,8 +405,7 @@ public class ProcessService {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt = connection.prepareStatement(
-					"select version from process where productname=? and topicname=? and processname=? and processseq=? and tenantid=? order by version");
+			stmt = connection.prepareStatement("select version from process where productname=? and topicname=? and processname=? and processseq=? and tenantid=? order by version");
 			stmt.setString(1, product);
 			stmt.setString(2, topic);
 			stmt.setString(3, process);
@@ -424,6 +423,12 @@ public class ProcessService {
 			Db.close(rs);
 			Db.close(stmt);
 		}
+	}
+
+	private Boolean isParentDeleteMarked(ProcessKey opKey) {
+		ServiceHelper.validate(opKey);
+		TopicKey key = new TopicKey(opKey.tenantid, opKey.version, opKey.productName, opKey.topicName);
+		return topicService.isDeleteMarked(key);
 	}
 
 }

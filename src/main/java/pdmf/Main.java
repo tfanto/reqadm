@@ -42,8 +42,7 @@ public class Main {
 	private MenuItem mntmProductViewer = null;
 	private MenuItem mntmNewProductVersion = null;
 	private MenuItem mntmQuery = null;
-	private MenuItem mntmTenant = null;
-	private MenuItem mntmNewItem_1 = null;
+	private MenuItem mntmWelcome = null;
 	private MenuItem mntmSelectTenant = null;
 	private MenuItem mntmClient = null;
 
@@ -90,20 +89,21 @@ public class Main {
 
 		shell = new Shell();
 		shell.setSize(482, 176);
-		shell.setText(Cst.PGM_NAME);
+		shell.setText(Cst.PGM_NAME );
+
 		shell.setLayout(new FormLayout());
 
 		mainMenu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(mainMenu);
 
 		submenuAtgarder = new MenuItem(mainMenu, SWT.CASCADE);
-		submenuAtgarder.setText("Åtgärder");
+		submenuAtgarder.setText(Cst.ATGARDER);
 
 		menuAtgarder = new Menu(submenuAtgarder);
 		submenuAtgarder.setMenu(menuAtgarder);
 
 		mntmMaintainArtifacts = new MenuItem(menuAtgarder, SWT.CASCADE);
-		mntmMaintainArtifacts.setText("Underhåll");
+		mntmMaintainArtifacts.setText(Cst.MAINTAINANCE);
 
 		menu_2 = new Menu(mntmMaintainArtifacts);
 		mntmMaintainArtifacts.setMenu(menu_2);
@@ -137,38 +137,26 @@ public class Main {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Search dialog = new Search(shell, SWT.DIALOG_TRIM | SWT.MODELESS);
-				dialog.setText("Leta");
+				dialog.setText(Cst.SEARCH);
 				dialog.setCurrentUser(currentUser);
 				dialog.open();
 			}
 		});
-		mntmQuery.setText("Leta");
+		mntmQuery.setText(Cst.SEARCH);
 
-		mntmTenant = new MenuItem(menu_2, SWT.NONE);
-		mntmTenant.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Tenant dialog = new Tenant(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-				dialog.setText(Cst.WRK_WITH_TENANT);
-				dialog.setCurrentUser(currentUser);
-				dialog.open();
-			}
-		});
-		mntmTenant.setText(Cst.WRK_WITH_TENANT);
-
-		mntmNewItem_1 = new MenuItem(menuAtgarder, SWT.NONE);
-		mntmNewItem_1.addSelectionListener(new SelectionAdapter() {
+		mntmWelcome = new MenuItem(menuAtgarder, SWT.NONE);
+		mntmWelcome.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Info dialog = new Info(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-				dialog.setText("Välkommen");
+				dialog.setText(Cst.WELCOME);
 				dialog.open();
 			}
 		});
-		mntmNewItem_1.setText("Info");
+		mntmWelcome.setText(Cst.INFO);
 
 		MenuItem mntmKlient = new MenuItem(mainMenu, SWT.CASCADE);
-		mntmKlient.setText("Klient");
+		mntmKlient.setText(Cst.TENANT);
 
 		Menu menu = new Menu(mntmKlient);
 		mntmKlient.setMenu(menu);
@@ -184,6 +172,7 @@ public class Main {
 					selectedTenant = (TenantRec) result;
 					setMenuEnabled(true);
 					currentUser.setCurrentTenant(selectedTenant);
+					//shell.setText(Cst.PGM_NAME  + "  " +  currentUser.getCurrentTenant().key.tenantid + " " + currentUser.getCurrentTenant().description);
 					return;
 				} else {
 					selectedTenant = null;
@@ -213,8 +202,7 @@ public class Main {
 		mntmProductViewer.setEnabled(enabled);
 		mntmNewProductVersion.setEnabled(enabled);
 		mntmQuery.setEnabled(enabled);
-		mntmTenant.setEnabled(enabled);
-		mntmNewItem_1.setEnabled(enabled);
+		mntmWelcome.setEnabled(enabled);
 
 	}
 
