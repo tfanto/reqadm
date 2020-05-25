@@ -81,10 +81,11 @@ public class Tenant extends Dialog {
 
 		tenant = new Text(shell, SWT.BORDER);
 		tenant.setBounds(10, 33, 115, 25);
+		tenant.setTextLimit(10);
 
 		description = new StyledText(shell, SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 		description.setBounds(125, 33, 181, 227);
-		description.setTextLimit(995);
+		description.setTextLimit(25);
 
 		lblInfo = new Label(shell, SWT.NONE);
 		lblInfo.setBounds(10, 272, 384, 15);
