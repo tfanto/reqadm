@@ -118,7 +118,8 @@ public class ProductViewer extends Dialog {
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
 		shell.setSize(1200, 689);
-		shell.setText(getText());
+		shell.setText(getText() +  " " + currentUser.getCurrentTenant().key.tenantid + " " + currentUser.getCurrentTenant().description);		
+
 		shell.setLayout(null);
 
 		Label lblDescription = new Label(shell, SWT.NONE);

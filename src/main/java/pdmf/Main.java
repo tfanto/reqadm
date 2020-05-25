@@ -89,20 +89,21 @@ public class Main {
 
 		shell = new Shell();
 		shell.setSize(482, 176);
-		shell.setText(Cst.PGM_NAME);
+		shell.setText(Cst.PGM_NAME );
+
 		shell.setLayout(new FormLayout());
 
 		mainMenu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(mainMenu);
 
 		submenuAtgarder = new MenuItem(mainMenu, SWT.CASCADE);
-		submenuAtgarder.setText("Åtgärder");
+		submenuAtgarder.setText(Cst.ATGARDER);
 
 		menuAtgarder = new Menu(submenuAtgarder);
 		submenuAtgarder.setMenu(menuAtgarder);
 
 		mntmMaintainArtifacts = new MenuItem(menuAtgarder, SWT.CASCADE);
-		mntmMaintainArtifacts.setText("Underhåll");
+		mntmMaintainArtifacts.setText(Cst.MAINTAINANCE);
 
 		menu_2 = new Menu(mntmMaintainArtifacts);
 		mntmMaintainArtifacts.setMenu(menu_2);
@@ -148,14 +149,14 @@ public class Main {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Info dialog = new Info(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-				dialog.setText("Välkommen");
+				dialog.setText(Cst.WELCOME);
 				dialog.open();
 			}
 		});
-		mntmWelcome.setText("Info");
+		mntmWelcome.setText(Cst.INFO);
 
 		MenuItem mntmKlient = new MenuItem(mainMenu, SWT.CASCADE);
-		mntmKlient.setText("Klient");
+		mntmKlient.setText(Cst.TENANT);
 
 		Menu menu = new Menu(mntmKlient);
 		mntmKlient.setMenu(menu);
@@ -171,6 +172,7 @@ public class Main {
 					selectedTenant = (TenantRec) result;
 					setMenuEnabled(true);
 					currentUser.setCurrentTenant(selectedTenant);
+					//shell.setText(Cst.PGM_NAME  + "  " +  currentUser.getCurrentTenant().key.tenantid + " " + currentUser.getCurrentTenant().description);
 					return;
 				} else {
 					selectedTenant = null;

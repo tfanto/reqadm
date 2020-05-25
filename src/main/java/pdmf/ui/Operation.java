@@ -107,7 +107,7 @@ public class Operation extends Dialog {
 		shell = new Shell(getParent(), getStyle());
 
 		shell.setSize(518, 560);
-		shell.setText(getText() + " " + mode);
+		shell.setText(getText() + " " + mode + " " + currentUser.getCurrentTenant().key.tenantid + " " + currentUser.getCurrentTenant().description);
 		shell.setLayout(null);
 
 		lblOperation = new Label(shell, SWT.NONE);
@@ -401,22 +401,23 @@ public class Operation extends Dialog {
 			btnRemove.setEnabled(false);
 			btnRemove.setVisible(false);
 		}
+		
 	}
 
 	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr,
 			Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
 		LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
-		crtDat.setText("Skapad: " + created.toString() + " av " + createUser + " i version: " + createdInVersion);
+		crtDat.setText(Cst.CREATED + created.toString() + Cst.BY + createUser + Cst.IN_VERSION + createdInVersion);
 
 		chgDat.setText("");
 		if (changeDate != null && chgusr != null) {
 			LocalDate changed = LocalDateTime.ofInstant(changeDate, ZoneOffset.UTC).toLocalDate();
-			chgDat.setText("Ändrad: " + changed.toString() + " av " + chgusr);
+			chgDat.setText(Cst.CHANGED + changed.toString() + Cst.BY + chgusr);
 		}
 		if (deleteDate != null && deleteUser != null) {
 			LocalDate deleted = LocalDateTime.ofInstant(deleteDate, ZoneOffset.UTC).toLocalDate();
-			chgDat.setText("Borttagen: " + deleted.toString() + " av " + deleteUser);
+			chgDat.setText(Cst.REMOVED + deleted.toString() + Cst.BY + deleteUser);
 		}
 
 	}

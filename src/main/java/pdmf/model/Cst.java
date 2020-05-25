@@ -58,5 +58,17 @@ public class Cst {
 	public static final String SEARCH_IN_TOPIC = "Sök i ämnesområde";
 	public static final String SEARCH_IN_PROCESS = "Sök i process";
 	public static final String SEARCH_IN_OPERATION = "Sök i operation";
+	public static final String ATGARDER = "Åtgärder";
+	public static final String MAINTAINANCE = "Underhåll";
+	public static final String WELCOME = "Välkommen";
+	public static final String INFO = "Info";
+	public static final String TENANT = "Klient";
+	
+	public static final String CREATED = "Skapad: ";
+	public static final String CHANGED = "Ändrad: ";
+	public static final String REMOVED = "Borttagen: ";
+	public static final String BY = " av ";
+	public static final String IN_VERSION = " i version: ";
+	
 
 }
