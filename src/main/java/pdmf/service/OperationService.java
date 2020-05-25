@@ -13,8 +13,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pdmf.model.Cst;
 import pdmf.model.OperationKey;
 import pdmf.model.OperationRec;
+import pdmf.model.ProcessKey;
 import pdmf.service.support.ServiceHelper;
 import pdmf.sys.Db;
 import pdmf.sys.RecordChangedByAnotherUser;
@@ -22,6 +24,8 @@ import pdmf.sys.RecordChangedByAnotherUser;
 public class OperationService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperationService.class);
+	ProcessService processService = new ProcessService();
+
 
 	public List<OperationRec> list(String tenantid, Integer version, String productName, String topicName, String processName) {
 
@@ -312,7 +316,12 @@ public class OperationService {
 		}
 
 		if (isDeleteMarked(rec.key)) {
-			LOGGER.info("Record is marked for delete. No Action.");
+			LOGGER.info(Cst.ALREADY_DELETE_NO_ACTION);
+			return null;
+		}
+		
+		if (isParentDeleteMarked(rec.key)) {
+			LOGGER.info(Cst.PARENT_IS_DELETE_NO_ACTION);
 			return null;
 		}
 
@@ -425,10 +434,11 @@ public class OperationService {
 		// already done we dont want to change the delete date
 		OperationKey key = new OperationKey(tenantid, version, productName, topicName, processName, sequence, operationName, operationSequence);
 		if (isDeleteMarked(key)) {
-			LOGGER.info("Record is already marked for delete. No Action.");
+			LOGGER.info(Cst.ALREADY_DELETE_NO_ACTION);
 			return;
 		}
 
+		String theSQL = ServiceHelper.getSQL("operationDeleteMarkSQL");
 		try {
 			connection = Db.open();
 			if (connection != null) {
@@ -438,8 +448,7 @@ public class OperationService {
 					return;
 				}
 
-				stmt = connection.prepareStatement(
-						"update oper set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and processname=? and processseq=? and operationname=? and operationseq=?  and version=? and tenantid=?");
+				stmt = connection.prepareStatement(theSQL);
 				stmt.setString(1, userid);
 				stmt.setString(2, productName);
 				stmt.setString(3, topicName);
@@ -469,11 +478,12 @@ public class OperationService {
 		ServiceHelper.validate("Operation", operation);
 		ServiceHelper.validate("OperationSeq", operationSeq);
 
+		String theSQL = ServiceHelper.getSQL("operationGetFirstVersionSQL");
+
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt = connection.prepareStatement(
-					"select version from oper where productname=? and topicname=? and processname=? and processseq=?  and operationname=? and operationseq=? and tenantid=? order by version");
+			stmt = connection.prepareStatement(theSQL);
 			stmt.setString(1, product);
 			stmt.setString(2, topic);
 			stmt.setString(3, process);
@@ -491,6 +501,12 @@ public class OperationService {
 			Db.close(rs);
 			Db.close(stmt);
 		}
+	}
+
+	private Boolean isParentDeleteMarked(OperationKey opKey) {
+		ServiceHelper.validate(opKey);
+		ProcessKey key = new ProcessKey(opKey.tenantid, opKey.version, opKey.productName, opKey.topicName, opKey.processName, opKey.sequence);
+		return processService.isDeleteMarked(key);
 	}
 
 }

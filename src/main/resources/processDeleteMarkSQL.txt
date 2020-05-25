@@ -1,0 +1,12 @@
+update process 
+	set dltdat=now(), 
+	chgnbr = chgnbr + 1, 
+	dltusr=? 
+where 
+	productname=? and 
+	topicname=? and 
+	processname=? and 
+	processseq=?  and 
+	version=? and 
+	tenantid=?
+	

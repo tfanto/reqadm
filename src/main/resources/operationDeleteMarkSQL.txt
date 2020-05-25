@@ -1,0 +1,15 @@
+update oper 
+	set dltdat=now(), 
+	chgnbr = chgnbr + 1, 
+	dltusr=? 
+where 
+	productname=? and 
+	topicname=? and 
+	processname=? and 
+	processseq=? and 
+	operationname=? and 
+	operationseq=?  and 
+	version=? and 
+	tenantid=?
+	
+	

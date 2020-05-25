@@ -13,6 +13,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pdmf.model.Cst;
+import pdmf.model.ProductKey;
 import pdmf.model.TopicKey;
 import pdmf.model.TopicRec;
 import pdmf.service.support.ServiceHelper;
@@ -22,6 +24,8 @@ import pdmf.sys.RecordChangedByAnotherUser;
 public class TopicService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TopicService.class);
+
+	private ProductService productService = new ProductService();
 
 	public List<TopicRec> list(String tenantid, Integer version, String productName) {
 
@@ -222,6 +226,12 @@ public class TopicService {
 			LOGGER.info("Record is marked for delete. No Action.");
 			return null;
 		}
+		
+		if (isParentDeleteMarked(topic.key)) {
+			LOGGER.info(Cst.PARENT_IS_DELETE_NO_ACTION);
+			return null;
+		}
+
 
 		topic.shortdescr = ServiceHelper.ensureStringLength(topic.shortdescr, 100);
 		topic.description = ServiceHelper.ensureStringLength(topic.description, 995);
@@ -405,6 +415,12 @@ public class TopicService {
 			Db.close(rs);
 			Db.close(stmt);
 		}
+	}
+
+	private Boolean isParentDeleteMarked(TopicKey opKey) {
+		ServiceHelper.validate(opKey);
+		ProductKey key = new ProductKey(opKey.tenantid, opKey.version, opKey.productName);
+		return productService.isDeleteMarked(key);
 	}
 
 }

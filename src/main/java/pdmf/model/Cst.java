@@ -69,6 +69,7 @@ public class Cst {
 	public static final String REMOVED = "Borttagen: ";
 	public static final String BY = " av ";
 	public static final String IN_VERSION = " i version: ";
+	public static final String PARENT_IS_DELETE_NO_ACTION = "Kan ej addera till en borttagsmarkerad post";
 	
 
 }

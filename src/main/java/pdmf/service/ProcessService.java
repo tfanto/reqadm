@@ -13,8 +13,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pdmf.model.Cst;
 import pdmf.model.ProcessKey;
 import pdmf.model.ProcessRec;
+import pdmf.model.TopicKey;
 import pdmf.service.support.ServiceHelper;
 import pdmf.sys.Db;
 import pdmf.sys.RecordChangedByAnotherUser;
@@ -22,6 +24,8 @@ import pdmf.sys.RecordChangedByAnotherUser;
 public class ProcessService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessService.class);
+
+	private TopicService topicService = new TopicService();
 
 	public List<ProcessRec> list(String tenantid, Integer version, String productName, String topicName) {
 		ServiceHelper.validate("Tenant", tenantid);
@@ -223,7 +227,12 @@ public class ProcessService {
 		}
 
 		if (isDeleteMarked(rec.key)) {
-			LOGGER.info("Record is marked for delete. No Action.");
+			LOGGER.info(Cst.ALREADY_DELETE_NO_ACTION);
+			return null;
+		}
+
+		if (isParentDeleteMarked(rec.key)) {
+			LOGGER.info(Cst.PARENT_IS_DELETE_NO_ACTION);
 			return null;
 		}
 
@@ -327,9 +336,11 @@ public class ProcessService {
 		// already done we dont want to change the delete date
 		ProcessKey key = new ProcessKey(tenantid, version, productName, topicName, processName, sequence);
 		if (isDeleteMarked(key)) {
-			LOGGER.info("Record is already marked for delete. No Action.");
+			LOGGER.info(Cst.ALREADY_DELETE_NO_ACTION);
 			return;
 		}
+
+		String theSQL = ServiceHelper.getSQL("processDeleteMarkSQL");
 
 		try {
 			connection = Db.open();
@@ -339,10 +350,7 @@ public class ProcessService {
 					LOGGER.info("LOCKED " + tenantid + " " + version + " " + productName);
 					return;
 				}
-
-				stmt = connection.prepareStatement(
-						"update process set dltdat=now(), chgnbr = chgnbr + 1, dltusr=? where productname=? and topicname=? and processname=? and processseq=?  and version=? and tenantid=?");
-
+				stmt = connection.prepareStatement(theSQL);
 				stmt.setString(1, userid);
 				stmt.setString(2, productName);
 				stmt.setString(3, topicName);
@@ -415,6 +423,12 @@ public class ProcessService {
 			Db.close(rs);
 			Db.close(stmt);
 		}
+	}
+
+	private Boolean isParentDeleteMarked(ProcessKey opKey) {
+		ServiceHelper.validate(opKey);
+		TopicKey key = new TopicKey(opKey.tenantid, opKey.version, opKey.productName, opKey.topicName);
+		return topicService.isDeleteMarked(key);
 	}
 
 }
