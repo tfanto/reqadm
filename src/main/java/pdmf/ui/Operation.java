@@ -376,6 +376,7 @@ public class Operation extends Dialog {
 				handleInfo(rec.crtdat, rec.crtusr, rec.chgdat, rec.chgusr, rec.dltdat, rec.dltusr, rec.crtver);
 				UISupport.handleSearchWords(shell, description, searchWords);
 				UISupport.handleSearchWords(shell, shortDescription, searchWords);
+				chgnbr = rec.chgnbr;
 			}
 			btnRemove.setEnabled(true);
 			btnRemove.setVisible(true);
