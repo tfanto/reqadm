@@ -69,7 +69,7 @@ public class Search extends Dialog {
 		shell = new Shell(getParent(), getStyle());
 		shell.setSize(1038, 658);
 		shell.setText(getText());
-		shell.setText(getText() + " " +   currentUser.getCurrentTenant().key.tenantid + " " + currentUser.getCurrentTenant().description);		
+		shell.setText(getText() +" "  + currentUser.getCurrentTenant().description);
 		
 		shell.setLayout(null);
 

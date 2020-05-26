@@ -118,7 +118,7 @@ public class ProductViewer extends Dialog {
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
 		shell.setSize(1200, 689);
-		shell.setText(getText() +  " " + currentUser.getCurrentTenant().key.tenantid + " " + currentUser.getCurrentTenant().description);		
+		shell.setText(getText() +  " "  + currentUser.getCurrentTenant().description);
 
 		shell.setLayout(null);
 
