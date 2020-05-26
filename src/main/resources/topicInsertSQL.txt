@@ -1,3 +1,0 @@
-insert into topic  
-(tenantid, version, productname, topicname,description,crtdat,chgnbr,crtver,crtusr,shortdescr) 
-values(?,?,?,?,?,?,?,?,?,?)

@@ -1,8 +1,0 @@
-select count(*) from  product 
-   where 
-   	tenantid=? and 
-   	version=? and 
-   	productname=?
-   	
-   
-
