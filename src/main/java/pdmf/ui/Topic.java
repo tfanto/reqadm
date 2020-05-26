@@ -98,7 +98,7 @@ public class Topic extends Dialog {
 		shell = new Shell(getParent(), getStyle());
 
 		shell.setSize(518, 560);
-		shell.setText(getText() + " " + mode + " " + currentUser.getCurrentTenant().key.tenantid + " " + currentUser.getCurrentTenant().description);		
+		shell.setText(getText() + " " + mode + " "  + currentUser.getCurrentTenant().description);
 		shell.setLayout(null);
 
 		lblTopic = new Label(shell, SWT.NONE);

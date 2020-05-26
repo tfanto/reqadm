@@ -102,7 +102,7 @@ public class Process extends Dialog {
 		// shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell = new Shell(getParent(), getStyle());
 		shell.setSize(518, 560);
-		shell.setText(getText() + " " + mode + " " + currentUser.getCurrentTenant().key.tenantid + " " + currentUser.getCurrentTenant().description);		
+		shell.setText(getText() + " " + mode + " "  + currentUser.getCurrentTenant().description);
 		shell.setLayout(null);
 
 		lblProcess = new Label(shell, SWT.NONE);

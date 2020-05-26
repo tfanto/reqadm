@@ -92,7 +92,7 @@ public class Product extends Dialog {
 //		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell = new Shell(getParent(), getStyle());
 		shell.setSize(360, 560);
-		shell.setText(getText() + " " + mode + " " + currentUser.getCurrentTenant().key.tenantid + " " + currentUser.getCurrentTenant().description);		
+		shell.setText(getText() + " " + mode + " "  + currentUser.getCurrentTenant().description);
 		shell.setLayout(null);
 
 		lblProduct = new Label(shell, SWT.NONE);

@@ -3,8 +3,11 @@ package pdmf;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -18,6 +21,7 @@ import pdmf.ui.ProductVersion;
 import pdmf.ui.Search;
 import pdmf.ui.Tenant;
 import pdmf.ui.TenantSelect;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 /**
  * https://github.com/maven-eclipse/maven-eclipse.github.io
@@ -47,6 +51,7 @@ public class Main {
 	private MenuItem mntmClient = null;
 
 	private TenantRec selectedTenant = null;
+	private Label lblSelectedTenant;
 
 	/**
 	 * Launch the application.
@@ -88,8 +93,8 @@ public class Main {
 	protected void createContents() {
 
 		shell = new Shell();
-		shell.setSize(482, 176);
-		shell.setText(Cst.PGM_NAME );
+		shell.setSize(700, 232);
+		shell.setText(Cst.PGM_NAME);
 
 		shell.setLayout(new FormLayout());
 
@@ -172,7 +177,10 @@ public class Main {
 					selectedTenant = (TenantRec) result;
 					setMenuEnabled(true);
 					currentUser.setCurrentTenant(selectedTenant);
-					//shell.setText(Cst.PGM_NAME  + "  " +  currentUser.getCurrentTenant().key.tenantid + " " + currentUser.getCurrentTenant().description);
+					lblSelectedTenant.setText(selectedTenant.description);
+					// shell.setText(Cst.PGM_NAME + " " +
+					// currentUser.getCurrentTenant().key.tenantid + " " +
+					// currentUser.getCurrentTenant().description);
 					return;
 				} else {
 					selectedTenant = null;
@@ -193,6 +201,16 @@ public class Main {
 			}
 		});
 		mntmClient.setText(Cst.WRK_WITH_TENANT);
+
+		lblSelectedTenant = new Label(shell, SWT.CENTER);
+		lblSelectedTenant.setFont(SWTResourceManager.getFont("Segoe UI", 20, SWT.BOLD | SWT.ITALIC));
+		FormData fd_lblSelectedTenant = new FormData();
+		fd_lblSelectedTenant.bottom = new FormAttachment(0, 89);
+		fd_lblSelectedTenant.top = new FormAttachment(0, 36);
+		fd_lblSelectedTenant.left = new FormAttachment(0, 10);
+		fd_lblSelectedTenant.right = new FormAttachment(0, 674);
+		lblSelectedTenant.setLayoutData(fd_lblSelectedTenant);
+		lblSelectedTenant.setText("");
 
 		setMenuEnabled(false);
 	}

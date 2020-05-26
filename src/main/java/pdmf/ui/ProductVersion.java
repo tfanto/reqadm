@@ -82,7 +82,7 @@ public class ProductVersion extends Dialog {
 		Label lblProduct = new Label(shell, SWT.NONE);
 		lblProduct.setBounds(10, 10, 115, 15);
 		lblProduct.setText(Cst.PRODUCT);
-		shell.setText(getText() + " " + currentUser.getCurrentTenant().key.tenantid + " " + currentUser.getCurrentTenant().description);		
+		shell.setText(getText()  + " "  + currentUser.getCurrentTenant().description);
 		
 
 		Label lblDescription = new Label(shell, SWT.NONE);
