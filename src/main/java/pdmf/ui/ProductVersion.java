@@ -82,8 +82,7 @@ public class ProductVersion extends Dialog {
 		Label lblProduct = new Label(shell, SWT.NONE);
 		lblProduct.setBounds(10, 10, 115, 15);
 		lblProduct.setText(Cst.PRODUCT);
-		shell.setText(getText()  + " "  + currentUser.getCurrentTenant().description);
-		
+		shell.setText(getText() + " " + currentUser.getCurrentTenant().description);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
 		lblDescription.setBounds(125, 10, 143, 15);
@@ -146,20 +145,21 @@ public class ProductVersion extends Dialog {
 					return;
 				}
 
-				ProductRec rec = productService.get(tenantId, fromVersion, wrkProductName);
+				ProductKey key = new ProductKey(tenantId, fromVersion, wrkProductName);
+				ProductRec rec = productService.get(key);
 				if (rec == null) {
 					product.setData(null);
 					lblInfo.setText(wrkProductName + " " + fromVersion + " does not exist");
 					return;
 				} else {
-					ProductRec recToVersion = productService.get(tenantId, toVersion, wrkProductName);
+					key.version = toVersion;
+					ProductRec recToVersion = productService.get(key);
 					if (recToVersion != null) {
 						product.setData(null);
 						lblInfo.setText(wrkProductName + " " + toVersion + " already exists");
 						return;
 					}
-					productService.createNewVersion(tenantId, fromVersion, toVersion, wrkProductName,
-							currentUser.userId);
+					productService.createNewVersion(tenantId, fromVersion, toVersion, wrkProductName, currentUser.userId);
 					newVersion.setText("");
 				}
 				refreshProductTree();
@@ -196,14 +196,13 @@ public class ProductVersion extends Dialog {
 					return;
 				}
 
-				ProductRec dbRec = productService.get(tenantId, selectedVersion.key.version,
-						selectedVersion.key.productName);
+				ProductKey key = new ProductKey(tenantId, selectedVersion.key.version, selectedVersion.key.productName);
+				ProductRec dbRec = productService.get(key);
 				if (dbRec != null) {
 					product.setText(selectedVersion.key.productName);
 					product.setData(dbRec.chgnbr);
 					description.setText(dbRec.description == null ? "" : dbRec.description);
-					shell.setText("Version: " + selectedVersion.key.productName + " " + selectedVersion.description
-							+ " ver. " + selectedVersion.key.version);
+					shell.setText("Version: " + selectedVersion.key.productName + " " + selectedVersion.description + " ver. " + selectedVersion.key.version);
 				} else {
 					product.setData(null);
 					refreshProductTree();
@@ -235,14 +234,14 @@ public class ProductVersion extends Dialog {
 
 				Integer toVersion = 0;
 
-				ProductRec rec = productService.get(tenantId, toVersion, wrkProductName);
+				ProductKey key = new ProductKey(tenantId, toVersion, wrkProductName);
+				ProductRec rec = productService.get(key);
 				if (rec != null) {
 					product.setData(null);
 					lblInfo.setText(wrkProductName + " " + toVersion + " already exist");
 					return;
 				} else {
 					String wrkDescription = description.getText();
-					ProductKey key = new ProductKey(tenantId, toVersion, wrkProductName);
 					rec = new ProductRec(key, null, null, null);
 					rec.description = wrkDescription;
 					rec.status = "wrk";
