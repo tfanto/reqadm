@@ -316,7 +316,7 @@ public class Operation extends Dialog {
 				btnRemove.setEnabled(true);
 				lblInfo.setText("");
 				try {
-					operationService.remove(tenantId, version, productName, topicName, processName, wrProcesskSequence, operationName, operationSequence, currentUser.userId);
+					operationService.remove(key, currentUser.userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {

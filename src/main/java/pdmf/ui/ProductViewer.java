@@ -195,7 +195,7 @@ public class ProductViewer extends Dialog {
 			}
 
 			private void handleProcess(ProcessKey key) {
-				ProcessRec pRec = processService.get(key.tenantid, key.version, key.productName, key.topicName, key.processName, key.processSeq);
+				ProcessRec pRec = processService.get(key);
 				if (pRec == null) {
 					clear();
 				} else {
