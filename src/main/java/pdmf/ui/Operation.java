@@ -107,7 +107,7 @@ public class Operation extends Dialog {
 		shell = new Shell(getParent(), getStyle());
 
 		shell.setSize(518, 560);
-		shell.setText(getText() + " " + mode + " "  + currentUser.getCurrentTenant().description);
+		shell.setText(getText() + " " + mode + " " + currentUser.getCurrentTenant().description);
 		shell.setLayout(null);
 
 		lblOperation = new Label(shell, SWT.NONE);
@@ -205,15 +205,13 @@ public class Operation extends Dialog {
 					return;
 				}
 
-				OperationKey key = new OperationKey(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName,
-						wrkProcessStep, operationName, operationSequence);
+				OperationKey key = new OperationKey(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName, wrkProcessStep, operationName, operationSequence);
 				if (operationService.isDeleteMarked(key)) {
 					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
 					return;
 				}
 
-				OperationRec rec = operationService.get(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName,
-						wrkProcessStep, operationName, operationSequence);
+				OperationRec rec = operationService.get(key);
 
 				if (mode.equals(NEW_REG_MODE)) {
 					if (rec != null) {
@@ -309,8 +307,7 @@ public class Operation extends Dialog {
 					return;
 				}
 
-				OperationKey key = new OperationKey(tenantId, version, productName, topicName, processName,
-						wrProcesskSequence, operationName, operationSequence);
+				OperationKey key = new OperationKey(tenantId, version, productName, topicName, processName, wrProcesskSequence, operationName, operationSequence);
 				if (operationService.isDeleteMarked(key)) {
 					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
 					return;
@@ -319,8 +316,7 @@ public class Operation extends Dialog {
 				btnRemove.setEnabled(true);
 				lblInfo.setText("");
 				try {
-					operationService.remove(tenantId, version, productName, topicName, processName, wrProcesskSequence,
-							operationName, operationSequence, currentUser.userId);
+					operationService.remove(key, currentUser.userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {
@@ -368,14 +364,15 @@ public class Operation extends Dialog {
 			lblInfo.setText("");
 			crtDat.setText("");
 			chgDat.setText("");
-			OperationRec rec = operationService.get(tenantId, version, productStr, topicStr, processStr, processStepInt,
-					operationStr, operationStepInt);
+			OperationKey key = new OperationKey(tenantId, version, productStr, topicStr, processStr, processStepInt, operationStr, operationStepInt);
+			OperationRec rec = operationService.get(key);
 			if (rec != null) {
 				shortDescription.setText(rec.shortdescr == null ? "" : rec.shortdescr);
 				description.setText(rec.description == null ? "" : rec.description);
 				handleInfo(rec.crtdat, rec.crtusr, rec.chgdat, rec.chgusr, rec.dltdat, rec.dltusr, rec.crtver);
 				UISupport.handleSearchWords(shell, description, searchWords);
 				UISupport.handleSearchWords(shell, shortDescription, searchWords);
+				chgnbr = rec.chgnbr;
 			}
 			btnRemove.setEnabled(true);
 			btnRemove.setVisible(true);
@@ -401,11 +398,10 @@ public class Operation extends Dialog {
 			btnRemove.setEnabled(false);
 			btnRemove.setVisible(false);
 		}
-		
+
 	}
 
-	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr,
-			Instant deleteDate, String deleteUser, Integer createdInVersion) {
+	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr, Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
 		LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
 		crtDat.setText(Cst.CREATED + created.toString() + Cst.BY + createUser + Cst.IN_VERSION + createdInVersion);

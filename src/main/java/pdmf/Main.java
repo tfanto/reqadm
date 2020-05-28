@@ -118,7 +118,7 @@ public class Main {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				pdmf.ui.ProductViewer dialog = new pdmf.ui.ProductViewer(shell, SWT.DIALOG_TRIM | SWT.MODELESS);
-				dialog.setText(Cst.WRK_WITH_PRODUCTS);
+				dialog.setText(Cst.PRODUCT_VIEWER);
 				dialog.setCurrentUser(currentUser);
 				dialog.open();
 			}

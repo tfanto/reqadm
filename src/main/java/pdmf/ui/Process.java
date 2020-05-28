@@ -102,7 +102,7 @@ public class Process extends Dialog {
 		// shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell = new Shell(getParent(), getStyle());
 		shell.setSize(518, 560);
-		shell.setText(getText() + " " + mode + " "  + currentUser.getCurrentTenant().description);
+		shell.setText(getText() + " " + mode + " " + currentUser.getCurrentTenant().description);
 		shell.setLayout(null);
 
 		lblProcess = new Label(shell, SWT.NONE);
@@ -174,15 +174,13 @@ public class Process extends Dialog {
 					return;
 				}
 
-				ProcessKey key = new ProcessKey(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName,
-						wrkProcessStep);
+				ProcessKey key = new ProcessKey(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName, wrkProcessStep);
 				if (processService.isDeleteMarked(key)) {
 					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
 					return;
 				}
 
-				ProcessRec rec = processService.get(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName,
-						wrkProcessStep);
+				ProcessRec rec = processService.get(key);
 
 				if (mode.equals(NEW_REG_MODE)) {
 					if (rec != null) {
@@ -258,8 +256,7 @@ public class Process extends Dialog {
 					return;
 				}
 
-				ProcessKey key = new ProcessKey(tenantId, version, productName, topicName, processName,
-						wrProcesskSequence);
+				ProcessKey key = new ProcessKey(tenantId, version, productName, topicName, processName, wrProcesskSequence);
 				if (processService.isDeleteMarked(key)) {
 					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
 					return;
@@ -268,8 +265,7 @@ public class Process extends Dialog {
 				btnRemove.setEnabled(true);
 				lblInfo.setText("");
 				try {
-					processService.remove(tenantId, version, productName, topicName, processName, wrProcesskSequence,
-							currentUser.userId);
+					processService.remove(key, currentUser.userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {
@@ -314,13 +310,15 @@ public class Process extends Dialog {
 			lblInfo.setText("");
 			crtDat.setText("");
 			chgDat.setText("");
-			ProcessRec rec = processService.get(tenantId, version, productStr, topicStr, processStr, processStepInt);
+			ProcessKey key = new ProcessKey(tenantId, version, productStr, topicStr, processStr, processStepInt);
+			ProcessRec rec = processService.get(key);
 			if (rec != null) {
 				shortDescription.setText(rec.shortdescr == null ? "" : rec.shortdescr);
 				description.setText(rec.description == null ? "" : rec.description);
 				handleInfo(rec.crtdat, rec.crtusr, rec.chgdat, rec.chgusr, rec.dltdat, rec.dltusr, rec.crtver);
 				UISupport.handleSearchWords(shell, description, searchWords);
 				UISupport.handleSearchWords(shell, shortDescription, searchWords);
+				chgnbr = rec.chgnbr;
 			}
 			btnRemove.setEnabled(true);
 			btnRemove.setVisible(true);
@@ -344,8 +342,7 @@ public class Process extends Dialog {
 		}
 	}
 
-	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr,
-			Instant deleteDate, String deleteUser, Integer createdInVersion) {
+	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr, Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
 		LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
 		crtDat.setText(Cst.CREATED + created.toString() + Cst.BY + createUser + Cst.IN_VERSION + createdInVersion);
