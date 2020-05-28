@@ -206,7 +206,7 @@ public class ProductViewer extends Dialog {
 			}
 
 			private void handleTopic(TopicKey key) {
-				TopicRec pRec = topicService.get(key.tenantid, key.version, key.productName, key.topicName);
+				TopicRec pRec = topicService.get(key);
 				if (pRec == null) {
 					clear();
 				} else {

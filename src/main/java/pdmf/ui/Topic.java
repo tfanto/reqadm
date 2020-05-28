@@ -145,7 +145,7 @@ public class Topic extends Dialog {
 					return;
 				}
 
-				TopicRec rec = processService.get(tenantId, version, wrkProductName, wrkTopicName);
+				TopicRec rec = processService.get(key);
 
 				if (mode.equals(NEW_REG_MODE)) {
 					if (rec != null) {
@@ -209,7 +209,7 @@ public class Topic extends Dialog {
 				btnRemove.setEnabled(true);
 				lblInfo.setText("");
 				try {
-					processService.remove(tenantId, version, productName, topicName, currentUser.userId);
+					processService.remove(key, currentUser.userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {
@@ -251,7 +251,8 @@ public class Topic extends Dialog {
 			lblInfo.setText("");
 			crtDat.setText("");
 			chgDat.setText("");
-			TopicRec rec = processService.get(tenantId, version, productStr, topicStr);
+			TopicKey key = new TopicKey(tenantId, version, productStr, topicStr);
+			TopicRec rec = processService.get(key);
 			if (rec != null) {
 				shortDescription.setText(rec.shortdescr == null ? "" : rec.shortdescr);
 				description.setText(rec.description == null ? "" : rec.description);
