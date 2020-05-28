@@ -217,7 +217,7 @@ public class ProductViewer extends Dialog {
 			}
 
 			private void handleProduct(ProductKey key) {
-				ProductRec pRec = productService.get(key.tenantid, key.version, key.productName);
+				ProductRec pRec = productService.get(key);
 				if (pRec == null) {
 					clear();
 				} else {
@@ -351,7 +351,8 @@ public class ProductViewer extends Dialog {
 		clear();
 		productTree.removeAll();
 
-		java.util.List<ProductRec> versions = productService.list(tenantId, productName, version);
+		ProductKey key = new ProductKey(tenantId, version, productName);
+		java.util.List<ProductRec> versions = productService.list(key);
 		int idxVersion = 0;
 		for (ProductRec versionRec : versions) {
 			TreeItem versionTreeItem = new TreeItem(productTree, SWT.NONE, idxVersion);

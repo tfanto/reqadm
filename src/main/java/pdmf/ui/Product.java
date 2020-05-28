@@ -92,7 +92,7 @@ public class Product extends Dialog {
 //		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell = new Shell(getParent(), getStyle());
 		shell.setSize(360, 560);
-		shell.setText(getText() + " " + mode + " "  + currentUser.getCurrentTenant().description);
+		shell.setText(getText() + " " + mode + " " + currentUser.getCurrentTenant().description);
 		shell.setLayout(null);
 
 		lblProduct = new Label(shell, SWT.NONE);
@@ -149,7 +149,7 @@ public class Product extends Dialog {
 				String wrkDescription = description.getText() == null ? "" : description.getText();
 				String wrkShortDescription = shortDescription.getText() == null ? "" : shortDescription.getText();
 
-				ProductRec rec = productService.get(tenantId, ver, wrkProductName);
+				ProductRec rec = productService.get(key);
 
 				if (rec == null) {
 					// rec = new ProductRec(key, null, null, null);
@@ -223,7 +223,7 @@ public class Product extends Dialog {
 				btnRemove.setEnabled(true);
 				lblInfo.setText("");
 				try {
-					productService.remove(tenantId, ver, wrkProductName, currentUser.userId);
+					productService.remove(key, currentUser.userId);
 					result = 1;
 					shell.dispose();
 				} catch (Exception ee) {
@@ -270,7 +270,8 @@ public class Product extends Dialog {
 		lblInfo.setText("");
 		crtDat.setText("");
 		chgDat.setText("");
-		ProductRec rec = productService.get(tenantId, v, p);
+		ProductKey key = new ProductKey(tenantId, v, p);
+		ProductRec rec = productService.get(key);
 		if (rec != null) {
 			shortDescription.setText(rec.shortdescr == null ? "" : rec.shortdescr);
 			description.setText(rec.description == null ? "" : rec.description);
@@ -284,8 +285,7 @@ public class Product extends Dialog {
 
 	}
 
-	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr,
-			Instant deleteDate, String deleteUser, Integer createdInVersion) {
+	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr, Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
 		LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
 		crtDat.setText(Cst.CREATED + created.toString() + Cst.BY + createUser + Cst.IN_VERSION + createdInVersion);
