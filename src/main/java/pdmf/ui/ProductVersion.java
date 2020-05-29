@@ -75,28 +75,28 @@ public class ProductVersion extends Dialog {
 	private void createContents() {
 		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 
-		shell.setSize(496, 348);
+		shell.setSize(496, 402);
 		shell.setText(getText());
 		shell.setLayout(null);
 
 		Label lblProduct = new Label(shell, SWT.NONE);
-		lblProduct.setBounds(10, 10, 115, 15);
+		lblProduct.setBounds(10, 10, 115, 25);
 		lblProduct.setText(Cst.PRODUCT);
 		shell.setText(getText() + " " + currentUser.getCurrentTenant().description);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
-		lblDescription.setBounds(125, 10, 143, 15);
+		lblDescription.setBounds(125, 10, 143, 25);
 		lblDescription.setText(Cst.DESCRIPTION);
 
 		product = new Text(shell, SWT.BORDER);
-		product.setBounds(10, 33, 115, 25);
+		product.setBounds(10, 48, 115, 25);
 
 		description = new StyledText(shell, SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-		description.setBounds(125, 33, 181, 227);
+		description.setBounds(125, 48, 181, 227);
 		description.setTextLimit(995);
 
 		btnCreateNewVersion = new Button(shell, SWT.NONE);
-		btnCreateNewVersion.setBounds(348, 30, 120, 25);
+		btnCreateNewVersion.setBounds(354, 46, 120, 25);
 		btnCreateNewVersion.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -170,7 +170,7 @@ public class ProductVersion extends Dialog {
 		btnCreateNewVersion.setText("Ny version");
 
 		lblInfo = new Label(shell, SWT.NONE);
-		lblInfo.setBounds(10, 272, 458, 15);
+		lblInfo.setBounds(10, 287, 458, 25);
 		lblInfo.setText("info");
 
 		productTree = new Tree(shell, SWT.SINGLE | SWT.BORDER);
@@ -209,10 +209,10 @@ public class ProductVersion extends Dialog {
 				}
 			}
 		});
-		productTree.setBounds(10, 60, 115, 200);
+		productTree.setBounds(10, 73, 115, 202);
 
 		newVersion = new Text(shell, SWT.BORDER);
-		newVersion.setBounds(312, 31, 36, 23);
+		newVersion.setBounds(312, 46, 36, 23);
 
 		Button btnNyProduct = new Button(shell, SWT.NONE);
 		btnNyProduct.addSelectionListener(new SelectionAdapter() {
@@ -254,11 +254,11 @@ public class ProductVersion extends Dialog {
 
 			}
 		});
-		btnNyProduct.setBounds(348, 65, 120, 25);
+		btnNyProduct.setBounds(354, 81, 120, 25);
 		btnNyProduct.setText("Ny Produkt");
 
 		Label lblVer = new Label(shell, SWT.NONE);
-		lblVer.setBounds(312, 10, 36, 15);
+		lblVer.setBounds(312, 10, 36, 25);
 		lblVer.setText("Ver");
 
 		refreshProductTree();

@@ -21,7 +21,6 @@ import pdmf.ui.ProductVersion;
 import pdmf.ui.Search;
 import pdmf.ui.Tenant;
 import pdmf.ui.TenantSelect;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 /**
  * https://github.com/maven-eclipse/maven-eclipse.github.io
@@ -203,7 +202,6 @@ public class Main {
 		mntmClient.setText(Cst.WRK_WITH_TENANT);
 
 		lblSelectedTenant = new Label(shell, SWT.CENTER);
-		lblSelectedTenant.setFont(SWTResourceManager.getFont("Segoe UI", 20, SWT.BOLD | SWT.ITALIC));
 		FormData fd_lblSelectedTenant = new FormData();
 		fd_lblSelectedTenant.bottom = new FormAttachment(0, 89);
 		fd_lblSelectedTenant.top = new FormAttachment(0, 36);

@@ -57,6 +57,7 @@ public class Info extends Dialog {
 		shell.setText(getText());
 
 		Label lblNewLabel = new Label(shell, SWT.NONE);
+		lblNewLabel.setAlignment(SWT.CENTER);
 		lblNewLabel.setBounds(22, 21, 295, 15);
 		lblNewLabel.setText(Cst.PGM_NAME);
 

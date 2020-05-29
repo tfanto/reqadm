@@ -117,13 +117,13 @@ public class ProductViewer extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(1200, 689);
+		shell.setSize(1069, 723);
 		shell.setText(getText() + " " + currentUser.getCurrentTenant().description);
 
 		shell.setLayout(null);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
-		lblDescription.setBounds(796, 226, 151, 15);
+		lblDescription.setBounds(796, 239, 151, 25);
 		lblDescription.setText(Cst.DESCRIPTION);
 
 		Tree productTree = new Tree(shell, SWT.FULL_SELECTION);
@@ -250,29 +250,29 @@ public class ProductViewer extends Dialog {
 
 		description = new StyledText(shell, SWT.V_SCROLL | SWT.WRAP);
 		description.setEditable(false);
-		description.setBounds(796, 247, 239, 335);
+		description.setBounds(796, 266, 239, 316);
 		description.setTextLimit(995);
 
 		lblInfo = new Label(shell, SWT.SHADOW_IN);
-		lblInfo.setBounds(10, 636, 1055, 24);
+		lblInfo.setBounds(10, 639, 1055, 24);
 		lblInfo.setText("info");
 
 		lblCrtDat = new Label(shell, SWT.NONE);
-		lblCrtDat.setBounds(10, 588, 420, 24);
+		lblCrtDat.setBounds(10, 591, 420, 24);
 		lblCrtDat.setText("x");
 
 		lblChgDat = new Label(shell, SWT.NONE);
-		lblChgDat.setBounds(10, 612, 420, 24);
+		lblChgDat.setBounds(10, 615, 420, 24);
 		lblChgDat.setText("x");
 
 		shortDescription = new StyledText(shell, SWT.V_SCROLL | SWT.WRAP);
 		shortDescription.setEditable(false);
 		shortDescription.setTextLimit(100);
-		shortDescription.setBounds(796, 97, 239, 123);
+		shortDescription.setBounds(796, 110, 239, 123);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
 		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
-		lblShortDescription.setBounds(796, 76, 151, 15);
+		lblShortDescription.setBounds(796, 80, 151, 25);
 
 		selectProduct = new Combo(shell, SWT.NONE);
 		selectProduct.addSelectionListener(new SelectionAdapter() {
@@ -316,12 +316,12 @@ public class ProductViewer extends Dialog {
 		selectVersion.setBounds(906, 44, 129, 17);
 
 		Label lblLblproduct = new Label(shell, SWT.NONE);
-		lblLblproduct.setBounds(806, 10, 81, 15);
+		lblLblproduct.setBounds(806, 10, 81, 25);
 		lblLblproduct.setText("V\u00E4lj produkt");
 
 		Label lblLblVersion = new Label(shell, SWT.NONE);
 		lblLblVersion.setText("V\u00E4lj version");
-		lblLblVersion.setBounds(806, 45, 81, 15);
+		lblLblVersion.setBounds(806, 45, 81, 25);
 		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 		refreshProductCombo(tenantId);
 

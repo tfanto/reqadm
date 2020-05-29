@@ -97,26 +97,26 @@ public class Topic extends Dialog {
 //		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell = new Shell(getParent(), getStyle());
 
-		shell.setSize(518, 560);
+		shell.setSize(512, 600);
 		shell.setText(getText() + " " + mode + " "  + currentUser.getCurrentTenant().description);
 		shell.setLayout(null);
 
 		lblTopic = new Label(shell, SWT.NONE);
 		lblTopic.setText(Cst.TOPIC);
-		lblTopic.setBounds(167, 10, 82, 15);
+		lblTopic.setBounds(167, 10, 82, 25);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
-		lblDescription.setBounds(167, 162, 151, 15);
+		lblDescription.setBounds(167, 170, 151, 25);
 		lblDescription.setText(Cst.DESCRIPTION);
 
 		product = new Label(shell, SWT.BORDER);
-		product.setBounds(10, 32, 151, 25);
+		product.setBounds(10, 34, 151, 25);
 
 		topic = new Text(shell, SWT.BORDER);
-		topic.setBounds(167, 31, 239, 25);
+		topic.setBounds(167, 36, 239, 25);
 
 		description = new StyledText(shell, SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-		description.setBounds(167, 183, 239, 227);
+		description.setBounds(167, 193, 239, 227);
 		description.setTextLimit(995);
 
 		btnStore = new Button(shell, SWT.NONE);
@@ -221,23 +221,23 @@ public class Topic extends Dialog {
 
 		lblInfo = new Label(shell, SWT.BORDER | SWT.SHADOW_IN);
 		lblInfo.setText("i");
-		lblInfo.setBounds(10, 484, 482, 25);
+		lblInfo.setBounds(10, 499, 482, 25);
 
 		crtDat = new Label(shell, SWT.NONE);
 		crtDat.setText("crt");
-		crtDat.setBounds(10, 422, 482, 25);
+		crtDat.setBounds(10, 437, 482, 25);
 
 		chgDat = new Label(shell, SWT.NONE);
 		chgDat.setText("chg");
-		chgDat.setBounds(10, 453, 482, 25);
+		chgDat.setBounds(10, 468, 482, 25);
 
 		shortDescription = new StyledText(shell, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		shortDescription.setTextLimit(100);
-		shortDescription.setBounds(167, 83, 239, 73);
+		shortDescription.setBounds(167, 91, 239, 73);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
 		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
-		lblShortDescription.setBounds(167, 60, 151, 15);
+		lblShortDescription.setBounds(167, 65, 151, 25);
 
 		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 

@@ -72,23 +72,23 @@ public class Tenant extends Dialog {
 		shell.setLayout(null);
 
 		Label lblTenant = new Label(shell, SWT.NONE);
-		lblTenant.setBounds(10, 10, 115, 15);
+		lblTenant.setBounds(10, 10, 115, 25);
 		lblTenant.setText("Tenant");
 
 		Label lblDescription = new Label(shell, SWT.NONE);
-		lblDescription.setBounds(125, 10, 143, 15);
+		lblDescription.setBounds(125, 10, 143, 25);
 		lblDescription.setText(Cst.DESCRIPTION);
 
 		tenant = new Text(shell, SWT.BORDER);
-		tenant.setBounds(10, 33, 115, 25);
+		tenant.setBounds(10, 42, 115, 25);
 		tenant.setTextLimit(10);
 
 		description = new StyledText(shell, SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-		description.setBounds(125, 33, 181, 227);
+		description.setBounds(125, 42, 181, 227);
 		description.setTextLimit(25);
 
 		lblInfo = new Label(shell, SWT.NONE);
-		lblInfo.setBounds(10, 272, 384, 15);
+		lblInfo.setBounds(10, 281, 384, 25);
 		lblInfo.setText("info");
 
 		tenantList = new List(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -116,7 +116,7 @@ public class Tenant extends Dialog {
 				}
 			}
 		});
-		tenantList.setBounds(10, 58, 115, 202);
+		tenantList.setBounds(10, 67, 115, 202);
 
 		Button btnStore = new Button(shell, SWT.NONE);
 		btnStore.addSelectionListener(new SelectionAdapter() {

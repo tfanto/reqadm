@@ -106,20 +106,20 @@ public class Operation extends Dialog {
 //		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell = new Shell(getParent(), getStyle());
 
-		shell.setSize(518, 560);
+		shell.setSize(512, 600);
 		shell.setText(getText() + " " + mode + " " + currentUser.getCurrentTenant().description);
 		shell.setLayout(null);
 
 		lblOperation = new Label(shell, SWT.NONE);
 		lblOperation.setText(Cst.OPERATION);
-		lblOperation.setBounds(167, 10, 82, 15);
+		lblOperation.setBounds(167, 5, 82, 25);
 
 		lblOstep = new Label(shell, SWT.NONE);
 		lblOstep.setText(Cst.OPERATION_SEQ);
-		lblOstep.setBounds(349, 10, 25, 15);
+		lblOstep.setBounds(349, 5, 25, 25);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
-		lblDescription.setBounds(167, 162, 151, 15);
+		lblDescription.setBounds(167, 171, 151, 25);
 		lblDescription.setText(Cst.DESCRIPTION);
 
 		product = new Label(shell, SWT.BORDER);
@@ -141,7 +141,7 @@ public class Operation extends Dialog {
 		operationStep.setBounds(349, 32, 57, 25);
 
 		description = new StyledText(shell, SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-		description.setBounds(167, 183, 239, 227);
+		description.setBounds(167, 198, 239, 227);
 		description.setTextLimit(995);
 
 		btnStore = new Button(shell, SWT.NONE);
@@ -329,23 +329,23 @@ public class Operation extends Dialog {
 
 		lblInfo = new Label(shell, SWT.BORDER | SWT.SHADOW_IN);
 		lblInfo.setText("i");
-		lblInfo.setBounds(10, 484, 482, 25);
+		lblInfo.setBounds(10, 498, 482, 25);
 
 		crtDat = new Label(shell, SWT.NONE);
 		crtDat.setText("crt");
-		crtDat.setBounds(10, 422, 482, 25);
+		crtDat.setBounds(10, 436, 482, 25);
 
 		chgDat = new Label(shell, SWT.NONE);
 		chgDat.setText("chg");
-		chgDat.setBounds(10, 453, 482, 25);
+		chgDat.setBounds(10, 467, 482, 25);
 
 		shortDescription = new StyledText(shell, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		shortDescription.setTextLimit(100);
-		shortDescription.setBounds(167, 83, 239, 73);
+		shortDescription.setBounds(167, 92, 239, 73);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
 		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
-		lblShortDescription.setBounds(167, 60, 151, 15);
+		lblShortDescription.setBounds(167, 64, 151, 25);
 
 		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
