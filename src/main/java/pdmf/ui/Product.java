@@ -91,7 +91,7 @@ public class Product extends Dialog {
 	private void createContents() {
 //		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(360, 560);
+		shell.setSize(572, 622);
 		shell.setText(getText() + " " + mode + " " + currentUser.getCurrentTenant().description);
 		shell.setLayout(null);
 
@@ -100,18 +100,18 @@ public class Product extends Dialog {
 		lblProduct.setBounds(10, 10, 82, 25);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
-		lblDescription.setBounds(10, 181, 151, 25);
+		lblDescription.setBounds(10, 183, 151, 25);
 		lblDescription.setText(Cst.DESCRIPTION);
 
 		product = new Text(shell, SWT.BORDER);
 		product.setBounds(10, 42, 197, 25);
 
 		description = new StyledText(shell, SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-		description.setBounds(10, 204, 239, 227);
+		description.setBounds(10, 214, 525, 246);
 		description.setTextLimit(995);
 
 		btnStore = new Button(shell, SWT.NONE);
-		btnStore.setBounds(255, 42, 80, 25);
+		btnStore.setBounds(455, 42, 80, 25);
 		btnStore.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -182,7 +182,7 @@ public class Product extends Dialog {
 		btnStore.setText(Cst.STORE);
 
 		btnRemove = new Button(shell, SWT.NONE);
-		btnRemove.setBounds(255, 73, 80, 25);
+		btnRemove.setBounds(455, 73, 80, 25);
 		btnRemove.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -235,29 +235,29 @@ public class Product extends Dialog {
 
 		lblInfo = new Label(shell, SWT.BORDER | SWT.SHADOW_IN);
 		lblInfo.setText("i");
-		lblInfo.setBounds(10, 484, 325, 25);
+		lblInfo.setBounds(10, 528, 525, 25);
 
 		crtDat = new Label(shell, SWT.NONE);
 		crtDat.setText("crt");
-		crtDat.setBounds(10, 422, 325, 25);
+		crtDat.setBounds(10, 466, 525, 25);
 
 		chgDat = new Label(shell, SWT.NONE);
 		chgDat.setText("chg");
-		chgDat.setBounds(10, 453, 325, 25);
+		chgDat.setBounds(10, 497, 525, 25);
 
 		shortDescription = new StyledText(shell, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		shortDescription.setTextLimit(100);
-		shortDescription.setBounds(10, 102, 239, 73);
+		shortDescription.setBounds(10, 104, 525, 73);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
 		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(10, 73, 151, 25);
 
 		version = new Text(shell, SWT.BORDER);
-		version.setBounds(213, 38, 36, 25);
+		version.setBounds(213, 42, 36, 25);
 
 		Label lblNewLabel = new Label(shell, SWT.NONE);
-		lblNewLabel.setBounds(213, 16, 55, 25);
+		lblNewLabel.setBounds(213, 10, 82, 25);
 		lblNewLabel.setText(Cst.VERSION);
 
 		product.setEditable(false);

@@ -101,7 +101,7 @@ public class Process extends Dialog {
 	private void createContents() {
 		// shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(512, 600);
+		shell.setSize(584, 600);
 		shell.setText(getText() + " " + mode + " " + currentUser.getCurrentTenant().description);
 		shell.setLayout(null);
 
@@ -111,14 +111,14 @@ public class Process extends Dialog {
 
 		lblPstep = new Label(shell, SWT.NONE);
 		lblPstep.setText(Cst.PROCESS_SEQ);
-		lblPstep.setBounds(349, 5, 25, 25);
+		lblPstep.setBounds(349, 5, 57, 25);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
-		lblDescription.setBounds(167, 170, 151, 25);
+		lblDescription.setBounds(10, 200, 151, 25);
 		lblDescription.setText(Cst.DESCRIPTION);
 
 		product = new Label(shell, SWT.BORDER);
-		product.setBounds(10, 32, 151, 25);
+		product.setBounds(10, 31, 151, 25);
 
 		topic = new Label(shell, SWT.BORDER);
 		topic.setBounds(10, 62, 151, 25);
@@ -127,14 +127,14 @@ public class Process extends Dialog {
 		process.setBounds(167, 31, 175, 25);
 
 		processStep = new Text(shell, SWT.BORDER);
-		processStep.setBounds(349, 32, 57, 25);
+		processStep.setBounds(349, 31, 57, 25);
 
 		description = new StyledText(shell, SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-		description.setBounds(167, 198, 239, 227);
+		description.setBounds(10, 228, 544, 187);
 		description.setTextLimit(995);
 
 		btnStore = new Button(shell, SWT.NONE);
-		btnStore.setBounds(412, 32, 80, 25);
+		btnStore.setBounds(474, 32, 80, 25);
 		btnStore.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -216,7 +216,7 @@ public class Process extends Dialog {
 		btnStore.setText(Cst.STORE);
 
 		btnRemove = new Button(shell, SWT.NONE);
-		btnRemove.setBounds(412, 62, 80, 25);
+		btnRemove.setBounds(474, 62, 80, 25);
 		btnRemove.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -276,24 +276,21 @@ public class Process extends Dialog {
 		btnRemove.setText(Cst.REMOVE);
 
 		lblInfo = new Label(shell, SWT.BORDER | SWT.SHADOW_IN);
-		lblInfo.setText("i");
 		lblInfo.setBounds(10, 496, 482, 25);
 
 		crtDat = new Label(shell, SWT.NONE);
-		crtDat.setText("crt");
 		crtDat.setBounds(10, 434, 482, 25);
 
 		chgDat = new Label(shell, SWT.NONE);
-		chgDat.setText("chg");
 		chgDat.setBounds(10, 465, 482, 25);
 
 		shortDescription = new StyledText(shell, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		shortDescription.setTextLimit(100);
-		shortDescription.setBounds(167, 91, 239, 73);
+		shortDescription.setBounds(10, 121, 544, 73);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
 		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
-		lblShortDescription.setBounds(167, 63, 151, 25);
+		lblShortDescription.setBounds(10, 93, 151, 25);
 
 		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 

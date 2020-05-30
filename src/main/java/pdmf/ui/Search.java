@@ -207,7 +207,7 @@ public class Search extends Dialog {
 
 		Label lblSearchResult = new Label(shell, SWT.NONE);
 		lblSearchResult.setText(Cst.SEARCH_RESULT);
-		lblSearchResult.setBounds(313, 10, 83, 25);
+		lblSearchResult.setBounds(313, 10, 123, 25);
 
 		btnLaneProduct = new Button(shell, SWT.CHECK);
 		btnLaneProduct.setBounds(10, 123, 123, 25);

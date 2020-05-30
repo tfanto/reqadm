@@ -117,7 +117,7 @@ public class ProductViewer extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(1069, 723);
+		shell.setSize(1050, 726);
 		shell.setText(getText() + " " + currentUser.getCurrentTenant().description);
 
 		shell.setLayout(null);
@@ -254,16 +254,13 @@ public class ProductViewer extends Dialog {
 		description.setTextLimit(995);
 
 		lblInfo = new Label(shell, SWT.SHADOW_IN);
-		lblInfo.setBounds(10, 639, 1055, 24);
-		lblInfo.setText("info");
+		lblInfo.setBounds(10, 639, 1034, 24);
 
 		lblCrtDat = new Label(shell, SWT.NONE);
-		lblCrtDat.setBounds(10, 591, 420, 24);
-		lblCrtDat.setText("x");
+		lblCrtDat.setBounds(10, 591, 780, 24);
 
 		lblChgDat = new Label(shell, SWT.NONE);
-		lblChgDat.setBounds(10, 615, 420, 24);
-		lblChgDat.setText("x");
+		lblChgDat.setBounds(10, 615, 780, 24);
 
 		shortDescription = new StyledText(shell, SWT.V_SCROLL | SWT.WRAP);
 		shortDescription.setEditable(false);
@@ -287,7 +284,7 @@ public class ProductViewer extends Dialog {
 				refreshVersionCombo(tenantId, productName);
 			}
 		});
-		selectProduct.setBounds(906, 7, 129, 17);
+		selectProduct.setBounds(910, 10, 129, 17);
 
 		selectVersion = new Combo(shell, SWT.NONE);
 		selectVersion.addSelectionListener(new SelectionAdapter() {
@@ -313,15 +310,15 @@ public class ProductViewer extends Dialog {
 				refreshProductTree(productTree, productName, version, tenantId);
 			}
 		});
-		selectVersion.setBounds(906, 44, 129, 17);
+		selectVersion.setBounds(910, 47, 129, 17);
 
 		Label lblLblproduct = new Label(shell, SWT.NONE);
-		lblLblproduct.setBounds(806, 10, 81, 25);
+		lblLblproduct.setBounds(796, 10, 109, 25);
 		lblLblproduct.setText("V\u00E4lj produkt");
 
 		Label lblLblVersion = new Label(shell, SWT.NONE);
 		lblLblVersion.setText("V\u00E4lj version");
-		lblLblVersion.setBounds(806, 45, 81, 25);
+		lblLblVersion.setBounds(796, 45, 109, 25);
 		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 		refreshProductCombo(tenantId);
 
