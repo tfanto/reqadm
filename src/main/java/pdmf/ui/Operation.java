@@ -106,20 +106,20 @@ public class Operation extends Dialog {
 //		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell = new Shell(getParent(), getStyle());
 
-		shell.setSize(518, 560);
+		shell.setSize(544, 710);
 		shell.setText(getText() + " " + mode + " " + currentUser.getCurrentTenant().description);
 		shell.setLayout(null);
 
 		lblOperation = new Label(shell, SWT.NONE);
 		lblOperation.setText(Cst.OPERATION);
-		lblOperation.setBounds(167, 10, 82, 15);
+		lblOperation.setBounds(167, 5, 82, 25);
 
 		lblOstep = new Label(shell, SWT.NONE);
 		lblOstep.setText(Cst.OPERATION_SEQ);
-		lblOstep.setBounds(349, 10, 25, 15);
+		lblOstep.setBounds(349, 5, 57, 25);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
-		lblDescription.setBounds(167, 162, 151, 15);
+		lblDescription.setBounds(10, 233, 151, 25);
 		lblDescription.setText(Cst.DESCRIPTION);
 
 		product = new Label(shell, SWT.BORDER);
@@ -132,7 +132,7 @@ public class Operation extends Dialog {
 		process.setBounds(10, 92, 151, 25);
 
 		processStep = new Label(shell, SWT.BORDER);
-		processStep.setBounds(10, 122, 57, 25);
+		processStep.setBounds(167, 92, 57, 25);
 
 		operation = new Text(shell, SWT.BORDER);
 		operation.setBounds(167, 32, 177, 25);
@@ -141,11 +141,11 @@ public class Operation extends Dialog {
 		operationStep.setBounds(349, 32, 57, 25);
 
 		description = new StyledText(shell, SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-		description.setBounds(167, 183, 239, 227);
+		description.setBounds(10, 264, 502, 271);
 		description.setTextLimit(995);
 
 		btnStore = new Button(shell, SWT.NONE);
-		btnStore.setBounds(412, 32, 80, 25);
+		btnStore.setBounds(432, 32, 80, 25);
 		btnStore.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -247,7 +247,7 @@ public class Operation extends Dialog {
 		btnStore.setText(Cst.STORE);
 
 		btnRemove = new Button(shell, SWT.NONE);
-		btnRemove.setBounds(412, 62, 80, 25);
+		btnRemove.setBounds(432, 62, 80, 25);
 		btnRemove.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -328,24 +328,21 @@ public class Operation extends Dialog {
 		btnRemove.setText(Cst.REMOVE);
 
 		lblInfo = new Label(shell, SWT.BORDER | SWT.SHADOW_IN);
-		lblInfo.setText("i");
-		lblInfo.setBounds(10, 484, 482, 25);
+		lblInfo.setBounds(10, 620, 482, 25);
 
 		crtDat = new Label(shell, SWT.NONE);
-		crtDat.setText("crt");
-		crtDat.setBounds(10, 422, 482, 25);
+		crtDat.setBounds(10, 558, 482, 25);
 
 		chgDat = new Label(shell, SWT.NONE);
-		chgDat.setText("chg");
-		chgDat.setBounds(10, 453, 482, 25);
+		chgDat.setBounds(10, 589, 482, 25);
 
 		shortDescription = new StyledText(shell, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		shortDescription.setTextLimit(100);
-		shortDescription.setBounds(167, 83, 239, 73);
+		shortDescription.setBounds(10, 154, 502, 73);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
 		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
-		lblShortDescription.setBounds(167, 60, 151, 15);
+		lblShortDescription.setBounds(10, 123, 151, 25);
 
 		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 

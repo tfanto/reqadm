@@ -62,29 +62,29 @@ public class TenantSelect extends Dialog {
 	private void createContents() {
 		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 
-		shell.setSize(496, 348);
+		shell.setSize(496, 380);
 		shell.setText(getText());
 		shell.setLayout(null);
 
 		Label lblTenant = new Label(shell, SWT.NONE);
-		lblTenant.setBounds(10, 10, 115, 15);
+		lblTenant.setBounds(10, 10, 115, 25);
 		lblTenant.setText("Tenant");
 
 		Label lblDescription = new Label(shell, SWT.NONE);
-		lblDescription.setBounds(125, 10, 143, 15);
+		lblDescription.setBounds(125, 10, 143, 25);
 		lblDescription.setText(Cst.DESCRIPTION);
 
 		tenant = new Text(shell, SWT.BORDER);
-		tenant.setBounds(10, 33, 115, 25);
+		tenant.setBounds(10, 45, 115, 25);
 		tenant.setEditable(false);
 
 		description = new StyledText(shell, SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-		description.setBounds(125, 33, 181, 227);
+		description.setBounds(125, 45, 181, 227);
 		description.setEditable(false);
 		description.setTextLimit(995);
 
 		lblInfo = new Label(shell, SWT.NONE);
-		lblInfo.setBounds(10, 272, 458, 15);
+		lblInfo.setBounds(0, 294, 458, 25);
 		lblInfo.setText("info");
 
 		tenantList = new List(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -112,7 +112,7 @@ public class TenantSelect extends Dialog {
 				}
 			}
 		});
-		tenantList.setBounds(10, 58, 115, 202);
+		tenantList.setBounds(10, 70, 115, 202);
 
 		Button btnSelect = new Button(shell, SWT.NONE);
 		btnSelect.addSelectionListener(new SelectionAdapter() {

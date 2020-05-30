@@ -67,27 +67,27 @@ public class Search extends Dialog {
 
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(1038, 658);
+		shell.setSize(1038, 670);
 		shell.setText(getText());
 		shell.setText(getText() +" "  + currentUser.getCurrentTenant().description);
 		
 		shell.setLayout(null);
 
 		Label sokOrd = new Label(shell, SWT.NONE);
-		sokOrd.setBounds(10, 10, 83, 15);
+		sokOrd.setBounds(10, 10, 83, 25);
 		sokOrd.setText(Cst.SEARCH_1_3);
 
 		ord01 = new Text(shell, SWT.BORDER);
-		ord01.setBounds(10, 31, 300, 25);
+		ord01.setBounds(10, 40, 300, 25);
 
 		ord02 = new Text(shell, SWT.BORDER);
-		ord02.setBounds(10, 57, 300, 25);
+		ord02.setBounds(10, 66, 300, 25);
 
 		ord03 = new Text(shell, SWT.BORDER);
-		ord03.setBounds(10, 83, 300, 25);
+		ord03.setBounds(10, 92, 300, 25);
 
 		lblInfo = new Label(shell, SWT.BORDER);
-		lblInfo.setBounds(10, 591, 998, 24);
+		lblInfo.setBounds(10, 597, 998, 24);
 		lblInfo.setText("");
 
 		Button btnRensa = new Button(shell, SWT.NONE);
@@ -97,7 +97,7 @@ public class Search extends Dialog {
 				clear();
 			}
 		});
-		btnRensa.setBounds(10, 268, 297, 38);
+		btnRensa.setBounds(10, 282, 297, 38);
 		btnRensa.setText(Cst.CLEAR);
 
 		Button btnLeta = new Button(shell, SWT.NONE);
@@ -134,7 +134,7 @@ public class Search extends Dialog {
 			}
 		});
 		btnLeta.setText(Cst.SEARCH);
-		btnLeta.setBounds(10, 222, 297, 38);
+		btnLeta.setBounds(10, 236, 297, 38);
 
 		searchResult = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
 		searchResult.addSelectionListener(new SelectionAdapter() {
@@ -193,7 +193,7 @@ public class Search extends Dialog {
 
 			}
 		});
-		searchResult.setBounds(313, 31, 695, 552);
+		searchResult.setBounds(313, 39, 695, 552);
 		searchResult.setHeaderVisible(true);
 		searchResult.setLinesVisible(true);
 
@@ -207,23 +207,23 @@ public class Search extends Dialog {
 
 		Label lblSearchResult = new Label(shell, SWT.NONE);
 		lblSearchResult.setText(Cst.SEARCH_RESULT);
-		lblSearchResult.setBounds(313, 10, 83, 15);
+		lblSearchResult.setBounds(313, 10, 123, 25);
 
 		btnLaneProduct = new Button(shell, SWT.CHECK);
-		btnLaneProduct.setBounds(10, 130, 123, 16);
+		btnLaneProduct.setBounds(10, 123, 123, 25);
 		btnLaneProduct.setText(Cst.SEARCH_IN_PRODUCT);
 
 		btnLaneTopic = new Button(shell, SWT.CHECK);
 		btnLaneTopic.setText(Cst.SEARCH_IN_TOPIC);
-		btnLaneTopic.setBounds(10, 150, 145, 16);
+		btnLaneTopic.setBounds(10, 147, 145, 25);
 
 		btnLaneProcess = new Button(shell, SWT.CHECK);
 		btnLaneProcess.setText(Cst.SEARCH_IN_PROCESS);
-		btnLaneProcess.setBounds(10, 170, 145, 16);
+		btnLaneProcess.setBounds(10, 173, 145, 25);
 
 		btnLaneOperation = new Button(shell, SWT.CHECK);
 		btnLaneOperation.setText(Cst.SEARCH_IN_OPERATION);
-		btnLaneOperation.setBounds(10, 190, 145, 16);
+		btnLaneOperation.setBounds(10, 196, 145, 25);
 
 		btnLaneProduct.setSelection(false);
 		btnLaneTopic.setSelection(false);
