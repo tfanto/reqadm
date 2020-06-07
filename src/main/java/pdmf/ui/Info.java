@@ -53,7 +53,7 @@ public class Info extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(401, 302);
+		shell.setSize(411, 390);
 		shell.setText(getText());
 
 		Label lblNewLabel = new Label(shell, SWT.NONE);
@@ -61,14 +61,14 @@ public class Info extends Dialog {
 		lblNewLabel.setBounds(58, 22, 295, 64);
 		lblNewLabel.setText(Cst.PGM_NAME);
 
-		InputStream is = this.getClass().getClassLoader().getResourceAsStream("fanto.jpg");
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("palais_fanto.jpg");
 		ImageData imageData = new ImageData(is);
 		final Image image = new Image(getParent().getDisplay(), imageData);
 		Canvas canvas = new Canvas(shell, SWT.BORDER);
 		canvas.setSize(0, 0);
 
 		Button bildKnapp = new Button(shell, SWT.NONE);
-		bildKnapp.setBounds(137, 104, 123, 137);
+		bildKnapp.setBounds(58, 46, 305, 305);
 		bildKnapp.setImage(image);
 
 	}
