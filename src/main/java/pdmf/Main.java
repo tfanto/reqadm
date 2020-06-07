@@ -1,5 +1,8 @@
 package pdmf;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -15,6 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 import pdmf.model.Cst;
 import pdmf.model.TenantRec;
 import pdmf.model.User;
+import pdmf.service.SystemService;
 import pdmf.sys.Db;
 import pdmf.ui.Info;
 import pdmf.ui.ProductVersion;
@@ -30,6 +34,9 @@ import pdmf.ui.TenantSelect;
  */
 
 public class Main {
+
+	SystemService systemService = new SystemService();
+	private static Map<String, String> languageConstants = new HashMap<>();
 
 	protected Shell shell;
 	Display display;
@@ -211,6 +218,9 @@ public class Main {
 		lblSelectedTenant.setText("");
 
 		setMenuEnabled(false);
+
+		languageConstants.putAll(systemService.getConstantsForCountryCode(null));
+
 	}
 
 	private void setMenuEnabled(Boolean enabled) {
@@ -220,6 +230,16 @@ public class Main {
 		mntmQuery.setEnabled(enabled);
 		mntmWelcome.setEnabled(enabled);
 
+	}
+
+	public static String cst(String key) {
+		if (languageConstants == null) {
+			return "languageConstant is null";
+		}
+		if (!languageConstants.containsKey(key)) {
+			return "key:" + key + " not in langage database";
+		}
+		return languageConstants.get(key);
 	}
 
 	public static User getUser() {

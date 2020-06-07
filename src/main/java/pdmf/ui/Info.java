@@ -12,7 +12,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import pdmf.Main;
 import pdmf.model.Cst;
+import pdmf.model.Cst2;
 
 public class Info extends Dialog {
 
@@ -27,7 +29,8 @@ public class Info extends Dialog {
 	 */
 	public Info(Shell parent, int style) {
 		super(parent, style);
-		setText("[" + Cst.INFO + "]");
+		String INFO = Main.cst(Cst2.INFO);
+		setText("[" + INFO + "]");
 	}
 
 	/**
@@ -53,13 +56,16 @@ public class Info extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(411, 390);
+		shell.setSize(411, 528);
 		shell.setText(getText());
 
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setAlignment(SWT.CENTER);
-		lblNewLabel.setBounds(58, 22, 295, 64);
-		lblNewLabel.setText(Cst.PGM_NAME);
+		lblNewLabel.setBounds(58, 20, 295, 20);
+
+		String PGM_NAME = Main.cst(Cst2.PGM_NAME);
+
+		lblNewLabel.setText(PGM_NAME);
 
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream("palais_fanto.jpg");
 		ImageData imageData = new ImageData(is);
@@ -68,7 +74,7 @@ public class Info extends Dialog {
 		canvas.setSize(0, 0);
 
 		Button bildKnapp = new Button(shell, SWT.NONE);
-		bildKnapp.setBounds(58, 46, 305, 305);
+		bildKnapp.setBounds(48, 60, 305, 415);
 		bildKnapp.setImage(image);
 
 	}
