@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import pdmf.Main;
-import pdmf.model.Cst;
 import pdmf.model.Cst2;
 
 public class Info extends Dialog {
