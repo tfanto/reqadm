@@ -137,8 +137,8 @@ public class Main {
 				dialog.open();
 			}
 		});
-		String WRK_WITH_PRODUCTS = Main.cst(Cst2.WRK_WITH_PRODUCTS);
-		mntmProductViewer.setText(WRK_WITH_PRODUCTS);
+		String PRODUCT_VIEWER = Main.cst(Cst2.PRODUCT_VIEWER);
+		mntmProductViewer.setText(PRODUCT_VIEWER);
 
 		mntmNewProductVersion = new MenuItem(menu_2, SWT.NONE);
 		String WRK_WITH_NEWPRODUCT = Main.cst(Cst2.WRK_WITH_NEWPRODUCT);

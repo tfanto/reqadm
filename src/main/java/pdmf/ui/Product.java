@@ -18,7 +18,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import pdmf.model.Cst;
+import pdmf.Main;
+import pdmf.model.Cst2;
 import pdmf.model.ProductKey;
 import pdmf.model.ProductRec;
 import pdmf.model.User;
@@ -64,7 +65,8 @@ public class Product extends Dialog {
 	 */
 	public Product(Shell parent, int style) {
 		super(parent, style);
-		setText("[" + Cst.PRODUCT + "]");
+		String PRODUCT = Main.cst(Cst2.PRODUCT);
+		setText("[" + PRODUCT + "]");
 	}
 
 	/**
@@ -89,19 +91,20 @@ public class Product extends Dialog {
 	 * Create contents of the dialog.
 	 */
 	private void createContents() {
-//		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell = new Shell(getParent(), getStyle());
 		shell.setSize(572, 622);
 		shell.setText(getText() + " " + mode + " " + currentUser.getCurrentTenant().description);
 		shell.setLayout(null);
 
 		lblProduct = new Label(shell, SWT.NONE);
-		lblProduct.setText(Cst.PRODUCT);
+		String PRODUCT = Main.cst(Cst2.PRODUCT);
+		lblProduct.setText(PRODUCT);
 		lblProduct.setBounds(10, 10, 82, 25);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
 		lblDescription.setBounds(10, 183, 151, 25);
-		lblDescription.setText(Cst.DESCRIPTION);
+		String DESCRIPTION = Main.cst(Cst2.DESCRIPTION);
+		lblDescription.setText(DESCRIPTION);
 
 		product = new Text(shell, SWT.BORDER);
 		product.setBounds(10, 42, 197, 25);
@@ -120,29 +123,34 @@ public class Product extends Dialog {
 
 				String wrkProductName = (String) product.getText();
 				if (wrkProductName == null || wrkProductName.trim().length() < 1) {
-					lblInfo.setText(Cst.NO_PRODUCT_SELECTED);
+					String NO_PRODUCT_SELECTED = Main.cst(Cst2.NO_PRODUCT_SELECTED);
+					lblInfo.setText(NO_PRODUCT_SELECTED);
 					return;
 				}
 				String wrkVersion = (String) version.getText();
 				if (wrkVersion == null || wrkVersion.trim().length() < 1) {
-					lblInfo.setText(Cst.NO_VERSION_SELECTED);
+					String NO_VERSION_SELECTED = Main.cst(Cst2.NO_VERSION_SELECTED);
+					lblInfo.setText(NO_VERSION_SELECTED);
 					return;
 				}
 				Integer ver = null;
 				try {
 					ver = Integer.parseInt(wrkVersion);
 				} catch (NumberFormatException nfe) {
-					lblInfo.setText(Cst.VERSION_NOT_NUMERIC);
+					String VERSION_NOT_NUMERIC = Main.cst(Cst2.VERSION_NOT_NUMERIC);
+					lblInfo.setText(VERSION_NOT_NUMERIC);
 					return;
 				}
 
 				ProductKey key = new ProductKey(tenantId, ver, wrkProductName);
 				if (ProductService.isLocked(tenantId, ver, wrkProductName)) {
-					lblInfo.setText(Cst.VERSION_LOCKED);
+					String VERSION_LOCKED = Main.cst(Cst2.VERSION_LOCKED);
+					lblInfo.setText(VERSION_LOCKED);
 					return;
 				}
 				if (productService.isDeleteMarked(key)) {
-					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
+					String ALREADY_DELETE_NO_ACTION = Main.cst(Cst2.ALREADY_DELETE_NO_ACTION);
+					lblInfo.setText(ALREADY_DELETE_NO_ACTION);
 					return;
 				}
 
@@ -174,12 +182,14 @@ public class Product extends Dialog {
 					result = 1;
 					shell.dispose();
 				} catch (RecordChangedByAnotherUser rc) {
-					lblInfo.setText(Cst.RECORD_CHANGED_BY_ANOTHER_USER);
+					String RECORD_CHANGED_BY_ANOTHER_USER = Main.cst(Cst2.RECORD_CHANGED_BY_ANOTHER_USER);
+					lblInfo.setText(RECORD_CHANGED_BY_ANOTHER_USER);
 				}
 			}
 
 		});
-		btnStore.setText(Cst.STORE);
+		String STORE = Main.cst(Cst2.STORE);
+		btnStore.setText(STORE);
 
 		btnRemove = new Button(shell, SWT.NONE);
 		btnRemove.setBounds(455, 73, 80, 25);
@@ -192,31 +202,36 @@ public class Product extends Dialog {
 
 				String wrkProductName = (String) product.getText();
 				if (wrkProductName == null || wrkProductName.trim().length() < 1) {
-					lblInfo.setText(Cst.NO_PRODUCT_SELECTED);
+					String NO_PRODUCT_SELECTED = Main.cst(Cst2.NO_PRODUCT_SELECTED);
+					lblInfo.setText(NO_PRODUCT_SELECTED);
 					return;
 				}
 
 				String wrkVersion = (String) version.getText();
 				if (wrkVersion == null || wrkVersion.trim().length() < 1) {
-					lblInfo.setText(Cst.NO_VERSION_SELECTED);
+					String NO_VERSION_SELECTED = Main.cst(Cst2.NO_VERSION_SELECTED);
+					lblInfo.setText(NO_VERSION_SELECTED);
 					return;
 				}
 				Integer ver = null;
 				try {
 					ver = Integer.parseInt(wrkVersion);
 				} catch (NumberFormatException nfe) {
-					lblInfo.setText(Cst.VERSION_NOT_NUMERIC);
+					String VERSION_NOT_NUMERIC = Main.cst(Cst2.VERSION_NOT_NUMERIC);
+					lblInfo.setText(VERSION_NOT_NUMERIC);
 					return;
 				}
 
 				ProductKey key = new ProductKey(tenantId, ver, wrkProductName);
 				if (productService.isDeleteMarked(key)) {
-					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
+					String ALREADY_DELETE_NO_ACTION = Main.cst(Cst2.ALREADY_DELETE_NO_ACTION);
+					lblInfo.setText(ALREADY_DELETE_NO_ACTION);
 					return;
 				}
 
 				if (ProductService.isLocked(tenantId, ver, wrkProductName)) {
-					lblInfo.setText(Cst.VERSION_LOCKED);
+					String VERSION_LOCKED = Main.cst(Cst2.VERSION_LOCKED);
+					lblInfo.setText(VERSION_LOCKED);
 					return;
 				}
 
@@ -231,7 +246,8 @@ public class Product extends Dialog {
 				}
 			}
 		});
-		btnRemove.setText(Cst.REMOVE);
+		String REMOVE = Main.cst(Cst2.REMOVE);
+		btnRemove.setText(REMOVE);
 
 		lblInfo = new Label(shell, SWT.BORDER | SWT.SHADOW_IN);
 		lblInfo.setText("i");
@@ -250,7 +266,8 @@ public class Product extends Dialog {
 		shortDescription.setBounds(10, 104, 525, 73);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
-		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
+		String DESCRIPTION_SHORT = Main.cst(Cst2.DESCRIPTION_SHORT);
+		lblShortDescription.setText(DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(10, 73, 151, 25);
 
 		version = new Text(shell, SWT.BORDER);
@@ -258,7 +275,8 @@ public class Product extends Dialog {
 
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setBounds(213, 10, 82, 25);
-		lblNewLabel.setText(Cst.VERSION);
+		String VERSION = Main.cst(Cst2.VERSION);
+		lblNewLabel.setText(VERSION);
 
 		product.setEditable(false);
 		version.setEditable(false);
@@ -287,17 +305,23 @@ public class Product extends Dialog {
 
 	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr, Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
+		String CREATED = Main.cst(Cst2.CREATED);
+		String CHANGED = Main.cst(Cst2.CHANGED);
+		String REMOVED = Main.cst(Cst2.REMOVED);
+		String BY = Main.cst(Cst2.BY);
+		String IN_VERSION = Main.cst(Cst2.IN_VERSION);
+
 		LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
-		crtDat.setText(Cst.CREATED + created.toString() + Cst.BY + createUser + Cst.IN_VERSION + createdInVersion);
+		crtDat.setText(CREATED + created.toString() + BY + createUser + IN_VERSION + createdInVersion);
 
 		chgDat.setText("");
 		if (changeDate != null && chgusr != null) {
 			LocalDate changed = LocalDateTime.ofInstant(changeDate, ZoneOffset.UTC).toLocalDate();
-			chgDat.setText(Cst.CHANGED + changed.toString() + Cst.BY + chgusr);
+			chgDat.setText(CHANGED + changed.toString() + BY + chgusr);
 		}
 		if (deleteDate != null && deleteUser != null) {
 			LocalDate deleted = LocalDateTime.ofInstant(deleteDate, ZoneOffset.UTC).toLocalDate();
-			chgDat.setText(Cst.REMOVED + deleted.toString() + Cst.BY + deleteUser);
+			chgDat.setText(REMOVED + deleted.toString() + BY + deleteUser);
 		}
 
 	}
