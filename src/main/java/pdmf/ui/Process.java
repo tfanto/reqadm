@@ -18,7 +18,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import pdmf.model.Cst;
+import pdmf.Main;
+import pdmf.model.Cst2;
 import pdmf.model.ProcessKey;
 import pdmf.model.ProcessRec;
 import pdmf.model.TopicKey;
@@ -74,7 +75,8 @@ public class Process extends Dialog {
 	 */
 	public Process(Shell parent, int style) {
 		super(parent, style);
-		setText("[" + Cst.PROCESS + "]");
+		String PROCESS = Main.cst(Cst2.PROCESS);
+		setText("[" + PROCESS + "]");
 	}
 
 	/**
@@ -106,16 +108,19 @@ public class Process extends Dialog {
 		shell.setLayout(null);
 
 		lblProcess = new Label(shell, SWT.NONE);
-		lblProcess.setText(Cst.PROCESS);
+		String PROCESS = Main.cst(Cst2.PROCESS);
+		lblProcess.setText(PROCESS);
 		lblProcess.setBounds(167, 5, 82, 25);
 
 		lblPstep = new Label(shell, SWT.NONE);
-		lblPstep.setText(Cst.PROCESS_SEQ);
+		String PROCESS_SEQ = Main.cst(Cst2.PROCESS_SEQ);
+		lblPstep.setText(PROCESS_SEQ);
 		lblPstep.setBounds(349, 5, 57, 25);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
 		lblDescription.setBounds(10, 200, 151, 25);
-		lblDescription.setText(Cst.DESCRIPTION);
+		String DESCRIPTION = Main.cst(Cst2.DESCRIPTION);
+		lblDescription.setText(DESCRIPTION);
 
 		product = new Label(shell, SWT.BORDER);
 		product.setBounds(10, 31, 151, 25);
@@ -145,38 +150,44 @@ public class Process extends Dialog {
 
 				String wrkTopicName = topic.getText();
 				if (wrkTopicName == null || wrkTopicName.trim().length() < 1) {
-					lblInfo.setText(Cst.NO_TOPIC_SELECTED);
+					String NO_TOPIC_SELECTED = Main.cst(Cst2.NO_TOPIC_SELECTED);
+					lblInfo.setText(NO_TOPIC_SELECTED);
 					return;
 				}
 
 				String wrkProcessName = process.getText();
 				if (wrkProcessName == null || wrkProcessName.trim().length() < 1) {
-					lblInfo.setText(Cst.NO_PROCESS_NAME);
+					String NO_PROCESS_NAME = Main.cst(Cst2.NO_PROCESS_NAME);
+					lblInfo.setText(NO_PROCESS_NAME);
 					return;
 				}
 
 				String wrkProcessStepNameStr = processStep.getText();
 				if (wrkProcessStepNameStr == null || wrkProcessStepNameStr.trim().length() < 1) {
-					lblInfo.setText(Cst.NO_PROCESS_SEQ);
+					String NO_PROCESS_SEQ = Main.cst(Cst2.NO_PROCESS_SEQ);
+					lblInfo.setText(NO_PROCESS_SEQ);
 					return;
 				}
 				Integer wrkProcessStep = 0;
 				try {
 					wrkProcessStep = Integer.parseInt(wrkProcessStepNameStr);
 				} catch (NumberFormatException nfe) {
-					lblInfo.setText(Cst.NO_PROCESS_SEQ_AS_INTEGER);
+					String NO_PROCESS_SEQ_AS_INTEGER = Main.cst(Cst2.NO_PROCESS_SEQ_AS_INTEGER);
+					lblInfo.setText(NO_PROCESS_SEQ_AS_INTEGER);
 					return;
 
 				}
 
 				if (ProductService.isLocked(tenantId, version, wrkProductName)) {
-					lblInfo.setText(Cst.VERSION_LOCKED);
+					String VERSION_LOCKED = Main.cst(Cst2.VERSION_LOCKED);
+					lblInfo.setText(VERSION_LOCKED);
 					return;
 				}
 
 				ProcessKey key = new ProcessKey(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName, wrkProcessStep);
 				if (processService.isDeleteMarked(key)) {
-					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
+					String ALREADY_DELETE_NO_ACTION = Main.cst(Cst2.ALREADY_DELETE_NO_ACTION);
+					lblInfo.setText(ALREADY_DELETE_NO_ACTION);
 					return;
 				}
 
@@ -184,7 +195,8 @@ public class Process extends Dialog {
 
 				if (mode.equals(NEW_REG_MODE)) {
 					if (rec != null) {
-						lblInfo.setText(Cst.ALREADY_EXISTS);
+						String ALREADY_EXISTS = Main.cst(Cst2.ALREADY_EXISTS);
+						lblInfo.setText(ALREADY_EXISTS);
 						return;
 					}
 				}
@@ -208,12 +220,15 @@ public class Process extends Dialog {
 					result = 1;
 					shell.dispose();
 				} catch (RecordChangedByAnotherUser rc) {
-					lblInfo.setText(Cst.RECORD_CHANGED_BY_ANOTHER_USER);
+					String RECORD_CHANGED_BY_ANOTHER_USER = Main.cst(Cst2.RECORD_CHANGED_BY_ANOTHER_USER);
+					lblInfo.setText(RECORD_CHANGED_BY_ANOTHER_USER);
 				}
 			}
 
 		});
-		btnStore.setText(Cst.STORE);
+
+		String STORE = Main.cst(Cst2.STORE);
+		btnStore.setText(STORE);
 
 		btnRemove = new Button(shell, SWT.NONE);
 		btnRemove.setBounds(474, 62, 80, 25);
@@ -227,38 +242,44 @@ public class Process extends Dialog {
 				String productName = (String) product.getData();
 				String topicName = topic.getText();
 				if (topicName.trim().length() < 1) {
-					lblInfo.setText(Cst.NO_TOPIC_SELECTED);
+					String NO_TOPIC_SELECTED = Main.cst(Cst2.NO_TOPIC_SELECTED);
+					lblInfo.setText(NO_TOPIC_SELECTED);
 					return;
 				}
 
 				String processName = process.getText();
 				if (topicName.trim().length() < 1) {
-					lblInfo.setText(Cst.NO_PROCESS_NAME);
+					String NO_PROCESS_NAME = Main.cst(Cst2.NO_PROCESS_NAME);
+					lblInfo.setText(NO_PROCESS_NAME);
 					return;
 				}
 
 				String processSequenceStr = processStep.getText();
 				if (topicName.trim().length() < 1) {
-					lblInfo.setText(Cst.NO_PROCESS_SEQ);
+					String NO_PROCESS_SEQ = Main.cst(Cst2.NO_PROCESS_SEQ);
+					lblInfo.setText(NO_PROCESS_SEQ);
 					return;
 				}
 				Integer wrProcesskSequence = -1;
 				try {
 					wrProcesskSequence = Integer.parseInt(processSequenceStr);
 				} catch (NumberFormatException nfe) {
-					lblInfo.setText(Cst.NO_PROCESS_SEQ_AS_INTEGER);
+					String NO_PROCESS_SEQ_AS_INTEGER = Main.cst(Cst2.NO_PROCESS_SEQ_AS_INTEGER);
+					lblInfo.setText(NO_PROCESS_SEQ_AS_INTEGER);
 					return;
 
 				}
 
 				if (ProductService.isLocked(tenantId, version, productName)) {
-					lblInfo.setText(Cst.VERSION_LOCKED);
+					String VERSION_LOCKED = Main.cst(Cst2.VERSION_LOCKED);
+					lblInfo.setText(VERSION_LOCKED);
 					return;
 				}
 
 				ProcessKey key = new ProcessKey(tenantId, version, productName, topicName, processName, wrProcesskSequence);
 				if (processService.isDeleteMarked(key)) {
-					lblInfo.setText(Cst.ALREADY_DELETE_NO_ACTION);
+					String ALREADY_DELETE_NO_ACTION = Main.cst(Cst2.ALREADY_DELETE_NO_ACTION);
+					lblInfo.setText(ALREADY_DELETE_NO_ACTION);
 					return;
 				}
 
@@ -273,7 +294,8 @@ public class Process extends Dialog {
 				}
 			}
 		});
-		btnRemove.setText(Cst.REMOVE);
+		String REMOVE = Main.cst(Cst2.REMOVE);
+		btnRemove.setText(REMOVE);
 
 		lblInfo = new Label(shell, SWT.BORDER | SWT.SHADOW_IN);
 		lblInfo.setBounds(10, 496, 482, 25);
@@ -289,7 +311,9 @@ public class Process extends Dialog {
 		shortDescription.setBounds(10, 121, 544, 73);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
-		lblShortDescription.setText(Cst.DESCRIPTION_SHORT);
+
+		String DESCRIPTION_SHORT = Main.cst(Cst2.DESCRIPTION_SHORT);
+		lblShortDescription.setText(DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(10, 93, 151, 25);
 
 		String tenantId = currentUser.getCurrentTenant().key.tenantid;
@@ -297,7 +321,7 @@ public class Process extends Dialog {
 		if (mode != null && mode.equals(UPDATE_MODE)) {
 
 			product.setData(productStr);
-			product.setText(productStr + " ver." + version);
+			product.setText(productStr + " : " + version);
 			topic.setText(topicStr);
 			process.setText(processStr);
 			processStep.setText(processStepInt.toString());
@@ -341,17 +365,23 @@ public class Process extends Dialog {
 
 	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr, Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
+		String CREATED = Main.cst(Cst2.CREATED);
+		String CHANGED = Main.cst(Cst2.CHANGED);
+		String REMOVED = Main.cst(Cst2.REMOVED);
+		String BY = Main.cst(Cst2.BY);
+		String IN_VERSION = Main.cst(Cst2.IN_VERSION);
+
 		LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
-		crtDat.setText(Cst.CREATED + created.toString() + Cst.BY + createUser + Cst.IN_VERSION + createdInVersion);
+		crtDat.setText(CREATED + created.toString() + BY + createUser + IN_VERSION + createdInVersion);
 
 		chgDat.setText("");
 		if (changeDate != null && chgusr != null) {
 			LocalDate changed = LocalDateTime.ofInstant(changeDate, ZoneOffset.UTC).toLocalDate();
-			chgDat.setText(Cst.CHANGED + changed.toString() + Cst.BY + chgusr);
+			chgDat.setText(CHANGED + changed.toString() + BY + chgusr);
 		}
 		if (deleteDate != null && deleteUser != null) {
 			LocalDate deleted = LocalDateTime.ofInstant(deleteDate, ZoneOffset.UTC).toLocalDate();
-			chgDat.setText(Cst.REMOVED + deleted.toString() + Cst.BY + deleteUser);
+			chgDat.setText(REMOVED + deleted.toString() + BY + deleteUser);
 		}
 
 	}
