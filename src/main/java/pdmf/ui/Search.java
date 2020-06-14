@@ -19,7 +19,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-import pdmf.model.Cst;
+import pdmf.Main;
+import pdmf.model.Cst2;
 import pdmf.model.OperationKey;
 import pdmf.model.ProcessKey;
 import pdmf.model.ProductKey;
@@ -49,7 +50,8 @@ public class Search extends Dialog {
 
 	public Search(Shell parent, int style) {
 		super(parent, style);
-		setText("[" + Cst.SEARCH + "]");
+		String SEARCH = Main.cst(Cst2.SEARCH);
+		setText("[" + SEARCH + "]");
 	}
 
 	public Object open() {
@@ -69,13 +71,14 @@ public class Search extends Dialog {
 		shell = new Shell(getParent(), getStyle());
 		shell.setSize(1038, 670);
 		shell.setText(getText());
-		shell.setText(getText() +" "  + currentUser.getCurrentTenant().description);
-		
+		shell.setText(getText() + " " + currentUser.getCurrentTenant().description);
+
 		shell.setLayout(null);
 
 		Label sokOrd = new Label(shell, SWT.NONE);
 		sokOrd.setBounds(10, 10, 83, 25);
-		sokOrd.setText(Cst.SEARCH_1_3);
+		String SEARCH_1_3 = Main.cst(Cst2.SEARCH_1_3);
+		sokOrd.setText(SEARCH_1_3);
 
 		ord01 = new Text(shell, SWT.BORDER);
 		ord01.setBounds(10, 40, 300, 25);
@@ -98,7 +101,8 @@ public class Search extends Dialog {
 			}
 		});
 		btnRensa.setBounds(10, 282, 297, 38);
-		btnRensa.setText(Cst.CLEAR);
+		String CLEAR = Main.cst(Cst2.CLEAR);
+		btnRensa.setText(CLEAR);
 
 		Button btnLeta = new Button(shell, SWT.NONE);
 		btnLeta.addSelectionListener(new SelectionAdapter() {
@@ -106,7 +110,8 @@ public class Search extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				List<String> criteriaList = getCriteriaList();
 				if (criteriaList.size() < 1) {
-					lblInfo.setText(Cst.NO_SEARCH_CRITERIA);
+					String NO_SEARCH_CRITERIA = Main.cst(Cst2.NO_SEARCH_CRITERIA);
+					lblInfo.setText(NO_SEARCH_CRITERIA);
 					return;
 				}
 
@@ -117,8 +122,7 @@ public class Search extends Dialog {
 				Boolean searchInProcess = btnLaneProcess.getSelection();
 				Boolean searchInOperation = btnLaneOperation.getSelection();
 
-				List<Map<Object, List<String>>> resultSet = searchService.search(criteriaList, searchInProduct,
-						searchInTopic, searchInProcess, searchInOperation, tenantId);
+				List<Map<Object, List<String>>> resultSet = searchService.search(criteriaList, searchInProduct, searchInTopic, searchInProcess, searchInOperation, tenantId);
 				searchResult.removeAll();
 				lblInfo.setText("");
 				for (Map<Object, List<String>> record : resultSet) {
@@ -130,10 +134,12 @@ public class Search extends Dialog {
 						tableItem.setText(new String[] { data.get(0), data.get(1) });
 					}
 				}
-				lblInfo.setText("Rader: " + resultSet.size());
+				String LINES = Main.cst(Cst2.LINES);
+				lblInfo.setText(LINES + "   " + resultSet.size());
 			}
 		});
-		btnLeta.setText(Cst.SEARCH);
+		String SEARCH = Main.cst(Cst2.SEARCH);
+		btnLeta.setText(SEARCH);
 		btnLeta.setBounds(10, 236, 297, 38);
 
 		searchResult = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
@@ -158,8 +164,7 @@ public class Search extends Dialog {
 
 						if (object instanceof ProductKey) {
 							ProductKey key = (ProductKey) object;
-							pdmf.ui.Product dialog = new pdmf.ui.Product(shell,
-									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+							pdmf.ui.Product dialog = new pdmf.ui.Product(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 							dialog.setKey(key);
 							dialog.setCurrentUser(currentUser);
 							dialog.setSearchWords(searchWords);
@@ -173,16 +178,14 @@ public class Search extends Dialog {
 							dialog.open();
 						} else if (object instanceof ProcessKey) {
 							ProcessKey key = (ProcessKey) object;
-							pdmf.ui.Process dialog = new pdmf.ui.Process(shell,
-									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+							pdmf.ui.Process dialog = new pdmf.ui.Process(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 							dialog.setKey(key, key.version);
 							dialog.setCurrentUser(currentUser);
 							dialog.setSearchWords(searchWords);
 							dialog.open();
 						} else if (object instanceof OperationKey) {
 							OperationKey key = (OperationKey) object;
-							pdmf.ui.Operation dialog = new pdmf.ui.Operation(shell,
-									SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+							pdmf.ui.Operation dialog = new pdmf.ui.Operation(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 							dialog.setKey(key, key.version);
 							dialog.setCurrentUser(currentUser);
 							dialog.setSearchWords(searchWords);
@@ -199,30 +202,37 @@ public class Search extends Dialog {
 
 		columnDescription = new TableColumn(searchResult, SWT.NONE);
 		columnDescription.setWidth(372);
-		columnDescription.setText(Cst.DESCRIPTION);
+		String DESCRIPTION = Main.cst(Cst2.DESCRIPTION);
+		columnDescription.setText(DESCRIPTION);
 
 		columnShortDescr = new TableColumn(searchResult, SWT.NONE);
 		columnShortDescr.setWidth(366);
-		columnShortDescr.setText(Cst.DESCRIPTION_SHORT);
+		String DESCRIPTION_SHORT = Main.cst(Cst2.DESCRIPTION_SHORT);
+		columnShortDescr.setText(DESCRIPTION_SHORT);
 
 		Label lblSearchResult = new Label(shell, SWT.NONE);
-		lblSearchResult.setText(Cst.SEARCH_RESULT);
+		String SEARCH_RESULT = Main.cst(Cst2.SEARCH_RESULT);
+		lblSearchResult.setText(SEARCH_RESULT);
 		lblSearchResult.setBounds(313, 10, 123, 25);
 
 		btnLaneProduct = new Button(shell, SWT.CHECK);
 		btnLaneProduct.setBounds(10, 123, 123, 25);
-		btnLaneProduct.setText(Cst.SEARCH_IN_PRODUCT);
+		String SEARCH_IN_PRODUCT = Main.cst(Cst2.SEARCH_IN_PRODUCT);
+		btnLaneProduct.setText(SEARCH_IN_PRODUCT);
 
 		btnLaneTopic = new Button(shell, SWT.CHECK);
-		btnLaneTopic.setText(Cst.SEARCH_IN_TOPIC);
+		String SEARCH_IN_TOPIC = Main.cst(Cst2.SEARCH_IN_TOPIC);
+		btnLaneTopic.setText(SEARCH_IN_TOPIC);
 		btnLaneTopic.setBounds(10, 147, 145, 25);
 
 		btnLaneProcess = new Button(shell, SWT.CHECK);
-		btnLaneProcess.setText(Cst.SEARCH_IN_PROCESS);
+		String SEARCH_IN_PROCESS = Main.cst(Cst2.SEARCH_IN_PROCESS);
+		btnLaneProcess.setText(SEARCH_IN_PROCESS);
 		btnLaneProcess.setBounds(10, 173, 145, 25);
 
 		btnLaneOperation = new Button(shell, SWT.CHECK);
-		btnLaneOperation.setText(Cst.SEARCH_IN_OPERATION);
+		String SEARCH_IN_OPERATION = Main.cst(Cst2.SEARCH_IN_OPERATION);
+		btnLaneOperation.setText(SEARCH_IN_OPERATION);
 		btnLaneOperation.setBounds(10, 196, 145, 25);
 
 		btnLaneProduct.setSelection(false);
