@@ -252,7 +252,7 @@ public class Main {
 			return "languageConstant is null";
 		}
 		if (!languageConstants.containsKey(key)) {
-			return "key: " + key + " not in language database";
+			return key;
 		}
 		return languageConstants.get(key);
 	}
