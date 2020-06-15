@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import pdmf.Main;
-import pdmf.model.Cst2;
+import pdmf.model.CstI18N;
 import pdmf.model.OperationKey;
 import pdmf.model.ProcessKey;
 import pdmf.model.ProductKey;
@@ -50,7 +50,7 @@ public class Search extends Dialog {
 
 	public Search(Shell parent, int style) {
 		super(parent, style);
-		String SEARCH = Main.cst(Cst2.SEARCH);
+		String SEARCH = Main.cst(CstI18N.SEARCH);
 		setText("[" + SEARCH + "]");
 	}
 
@@ -77,7 +77,7 @@ public class Search extends Dialog {
 
 		Label sokOrd = new Label(shell, SWT.NONE);
 		sokOrd.setBounds(10, 10, 83, 25);
-		String SEARCH_1_3 = Main.cst(Cst2.SEARCH_1_3);
+		String SEARCH_1_3 = Main.cst(CstI18N.SEARCH_1_3);
 		sokOrd.setText(SEARCH_1_3);
 
 		ord01 = new Text(shell, SWT.BORDER);
@@ -101,7 +101,7 @@ public class Search extends Dialog {
 			}
 		});
 		btnRensa.setBounds(10, 282, 297, 38);
-		String CLEAR = Main.cst(Cst2.CLEAR);
+		String CLEAR = Main.cst(CstI18N.CLEAR);
 		btnRensa.setText(CLEAR);
 
 		Button btnLeta = new Button(shell, SWT.NONE);
@@ -110,7 +110,7 @@ public class Search extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				List<String> criteriaList = getCriteriaList();
 				if (criteriaList.size() < 1) {
-					String NO_SEARCH_CRITERIA = Main.cst(Cst2.NO_SEARCH_CRITERIA);
+					String NO_SEARCH_CRITERIA = Main.cst(CstI18N.NO_SEARCH_CRITERIA);
 					lblInfo.setText(NO_SEARCH_CRITERIA);
 					return;
 				}
@@ -134,11 +134,11 @@ public class Search extends Dialog {
 						tableItem.setText(new String[] { data.get(0), data.get(1) });
 					}
 				}
-				String LINES = Main.cst(Cst2.LINES);
+				String LINES = Main.cst(CstI18N.LINES);
 				lblInfo.setText(LINES + "   " + resultSet.size());
 			}
 		});
-		String SEARCH = Main.cst(Cst2.SEARCH);
+		String SEARCH = Main.cst(CstI18N.SEARCH);
 		btnLeta.setText(SEARCH);
 		btnLeta.setBounds(10, 236, 297, 38);
 
@@ -202,36 +202,36 @@ public class Search extends Dialog {
 
 		columnDescription = new TableColumn(searchResult, SWT.NONE);
 		columnDescription.setWidth(372);
-		String DESCRIPTION = Main.cst(Cst2.DESCRIPTION);
+		String DESCRIPTION = Main.cst(CstI18N.DESCRIPTION);
 		columnDescription.setText(DESCRIPTION);
 
 		columnShortDescr = new TableColumn(searchResult, SWT.NONE);
 		columnShortDescr.setWidth(366);
-		String DESCRIPTION_SHORT = Main.cst(Cst2.DESCRIPTION_SHORT);
+		String DESCRIPTION_SHORT = Main.cst(CstI18N.DESCRIPTION_SHORT);
 		columnShortDescr.setText(DESCRIPTION_SHORT);
 
 		Label lblSearchResult = new Label(shell, SWT.NONE);
-		String SEARCH_RESULT = Main.cst(Cst2.SEARCH_RESULT);
+		String SEARCH_RESULT = Main.cst(CstI18N.SEARCH_RESULT);
 		lblSearchResult.setText(SEARCH_RESULT);
 		lblSearchResult.setBounds(313, 10, 123, 25);
 
 		btnLaneProduct = new Button(shell, SWT.CHECK);
 		btnLaneProduct.setBounds(10, 123, 123, 25);
-		String SEARCH_IN_PRODUCT = Main.cst(Cst2.SEARCH_IN_PRODUCT);
+		String SEARCH_IN_PRODUCT = Main.cst(CstI18N.SEARCH_IN_PRODUCT);
 		btnLaneProduct.setText(SEARCH_IN_PRODUCT);
 
 		btnLaneTopic = new Button(shell, SWT.CHECK);
-		String SEARCH_IN_TOPIC = Main.cst(Cst2.SEARCH_IN_TOPIC);
+		String SEARCH_IN_TOPIC = Main.cst(CstI18N.SEARCH_IN_TOPIC);
 		btnLaneTopic.setText(SEARCH_IN_TOPIC);
 		btnLaneTopic.setBounds(10, 147, 145, 25);
 
 		btnLaneProcess = new Button(shell, SWT.CHECK);
-		String SEARCH_IN_PROCESS = Main.cst(Cst2.SEARCH_IN_PROCESS);
+		String SEARCH_IN_PROCESS = Main.cst(CstI18N.SEARCH_IN_PROCESS);
 		btnLaneProcess.setText(SEARCH_IN_PROCESS);
 		btnLaneProcess.setBounds(10, 173, 145, 25);
 
 		btnLaneOperation = new Button(shell, SWT.CHECK);
-		String SEARCH_IN_OPERATION = Main.cst(Cst2.SEARCH_IN_OPERATION);
+		String SEARCH_IN_OPERATION = Main.cst(CstI18N.SEARCH_IN_OPERATION);
 		btnLaneOperation.setText(SEARCH_IN_OPERATION);
 		btnLaneOperation.setBounds(10, 196, 145, 25);
 

@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
 import pdmf.Main;
-import pdmf.model.Cst2;
+import pdmf.model.CstI18N;
 import pdmf.model.OperationKey;
 import pdmf.model.OperationRec;
 import pdmf.model.ProcessKey;
@@ -86,7 +86,7 @@ public class ProductViewer extends Dialog {
 	 */
 	public ProductViewer(Shell parent, int style) {
 		super(parent, style);
-		String PRODUCT_VIEWER = Main.cst(Cst2.PRODUCT_VIEWER);
+		String PRODUCT_VIEWER = Main.cst(CstI18N.PRODUCT_VIEWER);
 		setText("[" + PRODUCT_VIEWER + "]");
 	}
 
@@ -126,7 +126,7 @@ public class ProductViewer extends Dialog {
 
 		Label lblDescription = new Label(shell, SWT.NONE);
 		lblDescription.setBounds(796, 239, 151, 25);
-		String DESCRIPTION = Main.cst(Cst2.DESCRIPTION);
+		String DESCRIPTION = Main.cst(CstI18N.DESCRIPTION);
 		lblDescription.setText(DESCRIPTION);
 
 		Tree productTree = new Tree(shell, SWT.FULL_SELECTION);
@@ -171,11 +171,11 @@ public class ProductViewer extends Dialog {
 
 			private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr, Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
-				String CREATED = Main.cst(Cst2.CREATED);
-				String CHANGED = Main.cst(Cst2.CHANGED);
-				String REMOVED = Main.cst(Cst2.REMOVED);
-				String BY = Main.cst(Cst2.BY);
-				String IN_VERSION = Main.cst(Cst2.IN_VERSION);
+				String CREATED = Main.cst(CstI18N.CREATED);
+				String CHANGED = Main.cst(CstI18N.CHANGED);
+				String REMOVED = Main.cst(CstI18N.REMOVED);
+				String BY = Main.cst(CstI18N.BY);
+				String IN_VERSION = Main.cst(CstI18N.IN_VERSION);
 
 				LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
 				lblCrtDat.setText(CREATED + created.toString() + BY + createUser + IN_VERSION + createdInVersion);
@@ -240,22 +240,22 @@ public class ProductViewer extends Dialog {
 
 		TreeColumn trclmnProdukt = new TreeColumn(productTree, SWT.NONE);
 		trclmnProdukt.setWidth(195);
-		String PRODUCT_VERSION_STATUS = Main.cst(Cst2.PRODUCT_VERSION_STATUS);
+		String PRODUCT_VERSION_STATUS = Main.cst(CstI18N.PRODUCT_VERSION_STATUS);
 		trclmnProdukt.setText(PRODUCT_VERSION_STATUS);
 
 		TreeColumn trclmnmnesomrde = new TreeColumn(productTree, SWT.NONE);
 		trclmnmnesomrde.setWidth(195);
-		String TOPIC = Main.cst(Cst2.TOPIC);
+		String TOPIC = Main.cst(CstI18N.TOPIC);
 		trclmnmnesomrde.setText(TOPIC);
 
 		TreeColumn trclmnProcess = new TreeColumn(productTree, SWT.NONE);
 		trclmnProcess.setWidth(195);
-		String PROCESS = Main.cst(Cst2.PROCESS);
+		String PROCESS = Main.cst(CstI18N.PROCESS);
 		trclmnProcess.setText(PROCESS);
 
 		TreeColumn trclmnOperation = new TreeColumn(productTree, SWT.NONE);
 		trclmnOperation.setWidth(195);
-		String OPERATION = Main.cst(Cst2.OPERATION);
+		String OPERATION = Main.cst(CstI18N.OPERATION);
 		trclmnOperation.setText(OPERATION);
 
 		menu = new Menu(productTree);
@@ -281,7 +281,7 @@ public class ProductViewer extends Dialog {
 		shortDescription.setBounds(796, 110, 239, 123);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
-		String DESCRIPTION_SHORT = Main.cst(Cst2.DESCRIPTION_SHORT);
+		String DESCRIPTION_SHORT = Main.cst(CstI18N.DESCRIPTION_SHORT);
 		lblShortDescription.setText(DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(796, 80, 151, 25);
 
@@ -328,11 +328,11 @@ public class ProductViewer extends Dialog {
 
 		Label lblLblproduct = new Label(shell, SWT.NONE);
 		lblLblproduct.setBounds(796, 10, 109, 25);
-		String SELECT_PRODUCT = Main.cst(Cst2.SELECT_PRODUCT);
+		String SELECT_PRODUCT = Main.cst(CstI18N.SELECT_PRODUCT);
 		lblLblproduct.setText(SELECT_PRODUCT);
 
 		Label lblLblVersion = new Label(shell, SWT.NONE);
-		String SELECT_VERSION = Main.cst(Cst2.SELECT_VERSION);
+		String SELECT_VERSION = Main.cst(CstI18N.SELECT_VERSION);
 		lblLblVersion.setText(SELECT_VERSION);
 		lblLblVersion.setBounds(796, 45, 109, 25);
 		String tenantId = currentUser.getCurrentTenant().key.tenantid;
@@ -489,7 +489,7 @@ public class ProductViewer extends Dialog {
 								item.dispose();
 							}
 							MenuItem mntmProdukt = new MenuItem(menu, SWT.NONE);
-							String WORK_WITH_PRODUCT = Main.cst(Cst2.WORK_WITH_PRODUCT);
+							String WORK_WITH_PRODUCT = Main.cst(CstI18N.WORK_WITH_PRODUCT);
 							mntmProdukt.setText(WORK_WITH_PRODUCT);
 							mntmProdukt.addSelectionListener(new SelectionAdapter() {
 								@Override
@@ -504,7 +504,7 @@ public class ProductViewer extends Dialog {
 							});
 
 							MenuItem mntmExportProdukt = new MenuItem(menu, SWT.NONE);
-							String EXPORT_AS_XML = Main.cst(Cst2.EXPORT_AS_XML);
+							String EXPORT_AS_XML = Main.cst(CstI18N.EXPORT_AS_XML);
 							mntmExportProdukt.setText(EXPORT_AS_XML);
 							mntmExportProdukt.addSelectionListener(new SelectionAdapter() {
 								@Override
@@ -545,7 +545,7 @@ public class ProductViewer extends Dialog {
 							});
 
 							MenuItem mntmCreateTopic = new MenuItem(menu, SWT.NONE);
-							String NEW_TOPIC_FOR_PRODUCT = Main.cst(Cst2.NEW_TOPIC_FOR_PRODUCT);
+							String NEW_TOPIC_FOR_PRODUCT = Main.cst(CstI18N.NEW_TOPIC_FOR_PRODUCT);
 							mntmCreateTopic.setText(NEW_TOPIC_FOR_PRODUCT);
 							mntmCreateTopic.addSelectionListener(new SelectionAdapter() {
 								@Override
@@ -565,7 +565,7 @@ public class ProductViewer extends Dialog {
 							}
 
 							MenuItem mntmTopic = new MenuItem(menu, SWT.NONE);
-							String WORK_WITH_TOPIC = Main.cst(Cst2.WORK_WITH_TOPIC);
+							String WORK_WITH_TOPIC = Main.cst(CstI18N.WORK_WITH_TOPIC);
 							mntmTopic.setText(WORK_WITH_TOPIC);
 							mntmTopic.addSelectionListener(new SelectionAdapter() {
 								@Override
@@ -580,7 +580,7 @@ public class ProductViewer extends Dialog {
 							});
 
 							MenuItem mntmCreateProcess = new MenuItem(menu, SWT.NONE);
-							String NEW_PROCESS_FOR_TOPIC = Main.cst(Cst2.NEW_PROCESS_FOR_TOPIC);
+							String NEW_PROCESS_FOR_TOPIC = Main.cst(CstI18N.NEW_PROCESS_FOR_TOPIC);
 							mntmCreateProcess.setText(NEW_PROCESS_FOR_TOPIC);
 							mntmCreateProcess.addSelectionListener(new SelectionAdapter() {
 								@Override
@@ -600,7 +600,7 @@ public class ProductViewer extends Dialog {
 							}
 
 							MenuItem mntmProcess = new MenuItem(menu, SWT.NONE);
-							String WORK_WITH_PROCESS = Main.cst(Cst2.WORK_WITH_PROCESS);
+							String WORK_WITH_PROCESS = Main.cst(CstI18N.WORK_WITH_PROCESS);
 							mntmProcess.setText(WORK_WITH_PROCESS);
 							mntmProcess.addSelectionListener(new SelectionAdapter() {
 								@Override
@@ -615,7 +615,7 @@ public class ProductViewer extends Dialog {
 							});
 
 							MenuItem mntmCreateOperation = new MenuItem(menu, SWT.NONE);
-							String NEW_OPERATION_FOR_PROCESS = Main.cst(Cst2.NEW_OPERATION_FOR_PROCESS);
+							String NEW_OPERATION_FOR_PROCESS = Main.cst(CstI18N.NEW_OPERATION_FOR_PROCESS);
 							mntmCreateOperation.setText(NEW_OPERATION_FOR_PROCESS);
 							mntmCreateOperation.addSelectionListener(new SelectionAdapter() {
 								@Override
@@ -635,7 +635,7 @@ public class ProductViewer extends Dialog {
 							}
 
 							MenuItem mntmOperation = new MenuItem(menu, SWT.NONE);
-							String WORK_WITH_OPERATION = Main.cst(Cst2.WORK_WITH_OPERATION);
+							String WORK_WITH_OPERATION = Main.cst(CstI18N.WORK_WITH_OPERATION);
 							mntmOperation.setText(WORK_WITH_OPERATION);
 							mntmOperation.addSelectionListener(new SelectionAdapter() {
 								@Override

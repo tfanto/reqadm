@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import pdmf.Main;
-import pdmf.model.Cst2;
+import pdmf.model.CstI18N;
 import pdmf.model.ProductKey;
 import pdmf.model.ProductRec;
 import pdmf.model.User;
@@ -49,7 +49,7 @@ public class ProductVersion extends Dialog {
 	 */
 	public ProductVersion(Shell parent, int style) {
 		super(parent, style);
-		String PRODUCT = Main.cst(Cst2.PRODUCT);
+		String PRODUCT = Main.cst(CstI18N.PRODUCT);
 		setText(PRODUCT);
 	}
 
@@ -83,13 +83,13 @@ public class ProductVersion extends Dialog {
 
 		Label lblProduct = new Label(shell, SWT.NONE);
 		lblProduct.setBounds(10, 10, 115, 25);
-		String PRODUCT = Main.cst(Cst2.PRODUCT);
+		String PRODUCT = Main.cst(CstI18N.PRODUCT);
 		lblProduct.setText(PRODUCT);
 		shell.setText(getText() + " " + currentUser.getCurrentTenant().description);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
 		lblDescription.setBounds(125, 10, 143, 25);
-		String DESCRIPTION = Main.cst(Cst2.DESCRIPTION);
+		String DESCRIPTION = Main.cst(CstI18N.DESCRIPTION);
 		lblDescription.setText(DESCRIPTION);
 
 		product = new Text(shell, SWT.BORDER);
@@ -108,13 +108,13 @@ public class ProductVersion extends Dialog {
 				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				String wrkProductName = product.getText();
 				if (wrkProductName == null || wrkProductName.trim().length() < 1) {
-					String NO_PRODUCT_SELECTED = Main.cst(Cst2.NO_PRODUCT_SELECTED);
+					String NO_PRODUCT_SELECTED = Main.cst(CstI18N.NO_PRODUCT_SELECTED);
 					lblInfo.setText(NO_PRODUCT_SELECTED);
 					return;
 				}
 				ProductRec versionRec = getSelectedVersion();
 				if (versionRec == null) {
-					String VERSION_MUST_BE_SELECTED = Main.cst(Cst2.VERSION_MUST_BE_SELECTED);
+					String VERSION_MUST_BE_SELECTED = Main.cst(CstI18N.VERSION_MUST_BE_SELECTED);
 					lblInfo.setText(VERSION_MUST_BE_SELECTED);
 				} else {
 					lblInfo.setText("");
@@ -122,7 +122,7 @@ public class ProductVersion extends Dialog {
 
 				String toVersionStr = newVersion.getText();
 				if (toVersionStr == null || toVersionStr.trim().length() < 1) {
-					String TARGET_VERSION_MUST_HAVE_A_VALUE = Main.cst(Cst2.TARGET_VERSION_MUST_HAVE_A_VALUE);
+					String TARGET_VERSION_MUST_HAVE_A_VALUE = Main.cst(CstI18N.TARGET_VERSION_MUST_HAVE_A_VALUE);
 					lblInfo.setText(TARGET_VERSION_MUST_HAVE_A_VALUE);
 					newVersion.setFocus();
 					return;
@@ -133,14 +133,14 @@ public class ProductVersion extends Dialog {
 				try {
 					toVersion = Integer.parseInt(toVersionStr);
 				} catch (NumberFormatException nfe) {
-					String TARGET_VERSION_MUST_BE_AN_INTEGER = Main.cst(Cst2.TARGET_VERSION_MUST_BE_AN_INTEGER);
+					String TARGET_VERSION_MUST_BE_AN_INTEGER = Main.cst(CstI18N.TARGET_VERSION_MUST_BE_AN_INTEGER);
 					lblInfo.setText(TARGET_VERSION_MUST_BE_AN_INTEGER);
 					newVersion.setFocus();
 					return;
 				}
 
 				if (versionRec == null) {
-					String SELECT_A_VERSION = Main.cst(Cst2.SELECT_A_VERSION);
+					String SELECT_A_VERSION = Main.cst(CstI18N.SELECT_A_VERSION);
 					lblInfo.setText(SELECT_A_VERSION + wrkProductName);
 					newVersion.setFocus();
 					return;
@@ -149,7 +149,7 @@ public class ProductVersion extends Dialog {
 				// old product new version
 				Integer fromVersion = versionRec.key.version;
 				if (fromVersion >= toVersion) {
-					String TARGET_VERSION_MUST_BE_BIGGER = Main.cst(Cst2.TARGET_VERSION_MUST_BE_BIGGER);
+					String TARGET_VERSION_MUST_BE_BIGGER = Main.cst(CstI18N.TARGET_VERSION_MUST_BE_BIGGER);
 					lblInfo.setText(TARGET_VERSION_MUST_BE_BIGGER);
 					productTree.setFocus();
 					return;
@@ -159,7 +159,7 @@ public class ProductVersion extends Dialog {
 				ProductRec rec = productService.get(key);
 				if (rec == null) {
 					product.setData(null);
-					String DOES_NOT_EXIST = Main.cst(Cst2.DOES_NOT_EXIST);
+					String DOES_NOT_EXIST = Main.cst(CstI18N.DOES_NOT_EXIST);
 					lblInfo.setText(wrkProductName + " " + fromVersion + " " + DOES_NOT_EXIST);
 					return;
 				} else {
@@ -167,7 +167,7 @@ public class ProductVersion extends Dialog {
 					ProductRec recToVersion = productService.get(key);
 					if (recToVersion != null) {
 						product.setData(null);
-						String ALREADY_EXISTS = Main.cst(Cst2.ALREADY_EXISTS);
+						String ALREADY_EXISTS = Main.cst(CstI18N.ALREADY_EXISTS);
 						lblInfo.setText(wrkProductName + " " + toVersion + " " + ALREADY_EXISTS);
 						return;
 					}
@@ -179,7 +179,7 @@ public class ProductVersion extends Dialog {
 				lblInfo.setText("");
 			}
 		});
-		String NEW_VERSION = Main.cst(Cst2.NEW_VERSION);
+		String NEW_VERSION = Main.cst(CstI18N.NEW_VERSION);
 		btnCreateNewVersion.setText(NEW_VERSION);
 
 		lblInfo = new Label(shell, SWT.NONE);
@@ -205,7 +205,7 @@ public class ProductVersion extends Dialog {
 					product.setText(prod);
 					description.setText("");
 					lblInfo.setText("");
-					String VERSION = Main.cst(Cst2.VERSION);
+					String VERSION = Main.cst(CstI18N.VERSION);
 					shell.setText(VERSION);
 					return;
 				}
@@ -236,14 +236,14 @@ public class ProductVersion extends Dialog {
 				String tenantId = currentUser.getCurrentTenant().key.tenantid;
 				String wrkProductName = product.getText();
 				if (wrkProductName == null || wrkProductName.trim().length() < 1) {
-					String PRODUCTNAME_MUST_HAVE_A_VALUE = Main.cst(Cst2.PRODUCTNAME_MUST_HAVE_A_VALUE);
+					String PRODUCTNAME_MUST_HAVE_A_VALUE = Main.cst(CstI18N.PRODUCTNAME_MUST_HAVE_A_VALUE);
 					lblInfo.setText(PRODUCTNAME_MUST_HAVE_A_VALUE);
 					return;
 				}
 
 				Integer firstVersion = productService.getFirstVersionForProduct(tenantId, wrkProductName);
 				if (firstVersion != null) {
-					String ALREADY_EXISTS = Main.cst(Cst2.ALREADY_EXISTS);
+					String ALREADY_EXISTS = Main.cst(CstI18N.ALREADY_EXISTS);
 					lblInfo.setText(wrkProductName + " " + ALREADY_EXISTS);
 					return;
 				}
@@ -254,7 +254,7 @@ public class ProductVersion extends Dialog {
 				ProductRec rec = productService.get(key);
 				if (rec != null) {
 					product.setData(null);
-					String ALREADY_EXISTS = Main.cst(Cst2.ALREADY_EXISTS);
+					String ALREADY_EXISTS = Main.cst(CstI18N.ALREADY_EXISTS);
 					lblInfo.setText(wrkProductName + " " + ALREADY_EXISTS);
 					return;
 				} else {
@@ -272,7 +272,7 @@ public class ProductVersion extends Dialog {
 			}
 		});
 		btnNyProduct.setBounds(354, 81, 120, 25);
-		String NEW_PRODUCT = Main.cst(Cst2.NEW_PRODUCT);
+		String NEW_PRODUCT = Main.cst(CstI18N.NEW_PRODUCT);
 		btnNyProduct.setText(NEW_PRODUCT);
 
 		Label lblVer = new Label(shell, SWT.NONE);

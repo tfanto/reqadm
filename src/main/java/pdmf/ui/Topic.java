@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import pdmf.Main;
-import pdmf.model.Cst2;
+import pdmf.model.CstI18N;
 import pdmf.model.ProductKey;
 import pdmf.model.TopicKey;
 import pdmf.model.TopicRec;
@@ -70,7 +70,7 @@ public class Topic extends Dialog {
 	 */
 	public Topic(Shell parent, int style) {
 		super(parent, style);
-		String TOPIC = Main.cst(Cst2.TOPIC);
+		String TOPIC = Main.cst(CstI18N.TOPIC);
 		setText("[" + TOPIC + "]");
 	}
 
@@ -104,13 +104,13 @@ public class Topic extends Dialog {
 		shell.setLayout(null);
 
 		lblTopic = new Label(shell, SWT.NONE);
-		String TOPIC = Main.cst(Cst2.TOPIC);
+		String TOPIC = Main.cst(CstI18N.TOPIC);
 		lblTopic.setText(TOPIC);
 		lblTopic.setBounds(167, 5, 137, 25);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
 		lblDescription.setBounds(10, 170, 151, 25);
-		String DESCRIPTION = Main.cst(Cst2.DESCRIPTION);
+		String DESCRIPTION = Main.cst(CstI18N.DESCRIPTION);
 		lblDescription.setText(DESCRIPTION);
 
 		product = new Label(shell, SWT.BORDER);
@@ -134,20 +134,20 @@ public class Topic extends Dialog {
 
 				String wrkTopicName = topic.getText();
 				if (wrkTopicName == null || wrkTopicName.trim().length() < 1) {
-					String NO_TOPIC_SELECTED = Main.cst(Cst2.NO_TOPIC_SELECTED);
+					String NO_TOPIC_SELECTED = Main.cst(CstI18N.NO_TOPIC_SELECTED);
 					lblInfo.setText(NO_TOPIC_SELECTED);
 					return;
 				}
 
 				TopicKey key = new TopicKey(tenantId, version, wrkProductName, wrkTopicName);
 				if (processService.isDeleteMarked(key)) {
-					String ALREADY_DELETE_NO_ACTION = Main.cst(Cst2.ALREADY_DELETE_NO_ACTION);
+					String ALREADY_DELETE_NO_ACTION = Main.cst(CstI18N.ALREADY_DELETE_NO_ACTION);
 					lblInfo.setText(ALREADY_DELETE_NO_ACTION);
 					return;
 				}
 
 				if (ProductService.isLocked(tenantId, version, wrkProductName)) {
-					String VERSION_LOCKED = Main.cst(Cst2.VERSION_LOCKED);
+					String VERSION_LOCKED = Main.cst(CstI18N.VERSION_LOCKED);
 					lblInfo.setText(VERSION_LOCKED);
 					return;
 				}
@@ -156,7 +156,7 @@ public class Topic extends Dialog {
 
 				if (mode.equals(NEW_REG_MODE)) {
 					if (rec != null) {
-						String ALREADY_EXISTS = Main.cst(Cst2.ALREADY_EXISTS);
+						String ALREADY_EXISTS = Main.cst(CstI18N.ALREADY_EXISTS);
 						lblInfo.setText(ALREADY_EXISTS);
 						return;
 					}
@@ -181,13 +181,13 @@ public class Topic extends Dialog {
 					result = 1;
 					shell.dispose();
 				} catch (RecordChangedByAnotherUser rc) {
-					String RECORD_CHANGED_BY_ANOTHER_USER = Main.cst(Cst2.RECORD_CHANGED_BY_ANOTHER_USER);
+					String RECORD_CHANGED_BY_ANOTHER_USER = Main.cst(CstI18N.RECORD_CHANGED_BY_ANOTHER_USER);
 					lblInfo.setText(RECORD_CHANGED_BY_ANOTHER_USER);
 				}
 			}
 
 		});
-		String STORE = Main.cst(Cst2.STORE);
+		String STORE = Main.cst(CstI18N.STORE);
 		btnStore.setText(STORE);
 
 		btnRemove = new Button(shell, SWT.NONE);
@@ -201,20 +201,20 @@ public class Topic extends Dialog {
 				String productName = (String) product.getData();
 				String topicName = topic.getText();
 				if (topicName.trim().length() < 1) {
-					String NO_TOPIC_SELECTED = Main.cst(Cst2.NO_TOPIC_SELECTED);
+					String NO_TOPIC_SELECTED = Main.cst(CstI18N.NO_TOPIC_SELECTED);
 					lblInfo.setText(NO_TOPIC_SELECTED);
 					return;
 				}
 
 				TopicKey key = new TopicKey(tenantId, version, productName, topicName);
 				if (processService.isDeleteMarked(key)) {
-					String ALREADY_DELETE_NO_ACTION = Main.cst(Cst2.ALREADY_DELETE_NO_ACTION);
+					String ALREADY_DELETE_NO_ACTION = Main.cst(CstI18N.ALREADY_DELETE_NO_ACTION);
 					lblInfo.setText(ALREADY_DELETE_NO_ACTION);
 					return;
 				}
 
 				if (ProductService.isLocked(tenantId, version, productName)) {
-					String VERSION_LOCKED = Main.cst(Cst2.VERSION_LOCKED);
+					String VERSION_LOCKED = Main.cst(CstI18N.VERSION_LOCKED);
 					lblInfo.setText(VERSION_LOCKED);
 					return;
 				}
@@ -230,7 +230,7 @@ public class Topic extends Dialog {
 				}
 			}
 		});
-		String REMOVE = Main.cst(Cst2.REMOVE);
+		String REMOVE = Main.cst(CstI18N.REMOVE);
 		btnRemove.setText(REMOVE);
 
 		lblInfo = new Label(shell, SWT.BORDER | SWT.SHADOW_IN);
@@ -247,7 +247,7 @@ public class Topic extends Dialog {
 		shortDescription.setBounds(10, 91, 528, 73);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
-		String DESCRIPTION_SHORT = Main.cst(Cst2.DESCRIPTION_SHORT);
+		String DESCRIPTION_SHORT = Main.cst(CstI18N.DESCRIPTION_SHORT);
 		lblShortDescription.setText(DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(10, 65, 151, 25);
 
@@ -296,11 +296,11 @@ public class Topic extends Dialog {
 
 	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr, Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
-		String CREATED = Main.cst(Cst2.CREATED);
-		String CHANGED = Main.cst(Cst2.CHANGED);
-		String REMOVED = Main.cst(Cst2.REMOVED);
-		String BY = Main.cst(Cst2.BY);
-		String IN_VERSION = Main.cst(Cst2.IN_VERSION);
+		String CREATED = Main.cst(CstI18N.CREATED);
+		String CHANGED = Main.cst(CstI18N.CHANGED);
+		String REMOVED = Main.cst(CstI18N.REMOVED);
+		String BY = Main.cst(CstI18N.BY);
+		String IN_VERSION = Main.cst(CstI18N.IN_VERSION);
 
 		LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
 		crtDat.setText(CREATED + created.toString() + BY + createUser + IN_VERSION + createdInVersion);

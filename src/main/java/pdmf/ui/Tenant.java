@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import pdmf.Main;
-import pdmf.model.Cst2;
+import pdmf.model.CstI18N;
 import pdmf.model.TenantKey;
 import pdmf.model.TenantRec;
 import pdmf.model.User;
@@ -41,7 +41,7 @@ public class Tenant extends Dialog {
 	 */
 	public Tenant(Shell parent, int style) {
 		super(parent, style);
-		String TENANT = Main.cst(Cst2.TENANT);
+		String TENANT = Main.cst(CstI18N.TENANT);
 		setText("[" + TENANT + "]");
 	}
 
@@ -75,12 +75,12 @@ public class Tenant extends Dialog {
 
 		Label lblTenant = new Label(shell, SWT.NONE);
 		lblTenant.setBounds(10, 10, 115, 25);
-		String TENANT = Main.cst(Cst2.TENANT);
+		String TENANT = Main.cst(CstI18N.TENANT);
 		lblTenant.setText(TENANT);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
 		lblDescription.setBounds(125, 10, 143, 25);
-		String DESCRIPTION = Main.cst(Cst2.DESCRIPTION);
+		String DESCRIPTION = Main.cst(CstI18N.DESCRIPTION);
 		lblDescription.setText(DESCRIPTION);
 
 		tenant = new Text(shell, SWT.BORDER);
@@ -93,7 +93,7 @@ public class Tenant extends Dialog {
 
 		lblInfo = new Label(shell, SWT.NONE);
 		lblInfo.setBounds(10, 281, 384, 25);
-		String INFO = Main.cst(Cst2.INFO);
+		String INFO = Main.cst(CstI18N.INFO);
 		lblInfo.setText(INFO);
 
 		tenantList = new List(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -109,7 +109,7 @@ public class Tenant extends Dialog {
 				tenant.setText("");
 				description.setText("");
 				lblInfo.setText("");
-				String TENANT = Main.cst(Cst2.TENANT);
+				String TENANT = Main.cst(CstI18N.TENANT);
 				shell.setText(TENANT);
 
 				TenantRec rec = tenantService.get(tenantId);
@@ -131,13 +131,13 @@ public class Tenant extends Dialog {
 
 				String tenantId = tenant.getText();
 				if (tenantId == null || tenantId.trim().length() < 1) {
-					String TENANTID_MUST_HAVE_A_VALUE = Main.cst(Cst2.TENANTID_MUST_HAVE_A_VALUE);
+					String TENANTID_MUST_HAVE_A_VALUE = Main.cst(CstI18N.TENANTID_MUST_HAVE_A_VALUE);
 					lblInfo.setText(TENANTID_MUST_HAVE_A_VALUE);
 					return;
 				}
 				String descr = description.getText();
 				if (descr == null || descr.trim().length() < 1) {
-					String TENANT_DESCRIPTION_HAVE_A_VALUE = Main.cst(Cst2.TENANT_DESCRIPTION_HAVE_A_VALUE);
+					String TENANT_DESCRIPTION_HAVE_A_VALUE = Main.cst(CstI18N.TENANT_DESCRIPTION_HAVE_A_VALUE);
 					lblInfo.setText(TENANT_DESCRIPTION_HAVE_A_VALUE);
 					return;
 				}
@@ -149,12 +149,12 @@ public class Tenant extends Dialog {
 				refreshTenantList();
 				clearForm();
 				lblInfo.setText("");
-				String TENANT = Main.cst(Cst2.TENANT);
+				String TENANT = Main.cst(CstI18N.TENANT);
 				shell.setText("[" + TENANT + "]");
 			}
 		});
 		btnStore.setBounds(322, 31, 76, 25);
-		String STORE = Main.cst(Cst2.STORE);
+		String STORE = Main.cst(CstI18N.STORE);
 		btnStore.setText(STORE);
 
 		btnRemove = new Button(shell, SWT.NONE);
@@ -164,7 +164,7 @@ public class Tenant extends Dialog {
 
 				String tenantId = tenant.getText();
 				if (tenantId == null || tenantId.trim().length() < 1) {
-					String TENANTID_MUST_HAVE_A_VALUE = Main.cst(Cst2.TENANTID_MUST_HAVE_A_VALUE);
+					String TENANTID_MUST_HAVE_A_VALUE = Main.cst(CstI18N.TENANTID_MUST_HAVE_A_VALUE);
 					lblInfo.setText(TENANTID_MUST_HAVE_A_VALUE);
 					return;
 				}
@@ -175,7 +175,7 @@ public class Tenant extends Dialog {
 				shell.setText("[Tenant]");
 			}
 		});
-		String REMOVE = Main.cst(Cst2.REMOVE);
+		String REMOVE = Main.cst(CstI18N.REMOVE);
 		btnRemove.setText(REMOVE);
 		btnRemove.setBounds(322, 68, 76, 25);
 

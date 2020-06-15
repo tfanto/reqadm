@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import pdmf.Main;
-import pdmf.model.Cst2;
+import pdmf.model.CstI18N;
 
 public class Info extends Dialog {
 
@@ -28,7 +28,7 @@ public class Info extends Dialog {
 	 */
 	public Info(Shell parent, int style) {
 		super(parent, style);
-		String INFO = Main.cst(Cst2.INFO);
+		String INFO = Main.cst(CstI18N.INFO);
 		setText("[" + INFO + "]");
 	}
 
@@ -62,7 +62,7 @@ public class Info extends Dialog {
 		lblNewLabel.setAlignment(SWT.CENTER);
 		lblNewLabel.setBounds(58, 20, 295, 20);
 
-		String PGM_NAME = Main.cst(Cst2.PGM_NAME);
+		String PGM_NAME = Main.cst(CstI18N.PGM_NAME);
 
 		lblNewLabel.setText(PGM_NAME);
 

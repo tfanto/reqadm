@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
-import pdmf.model.Cst2;
+import pdmf.model.CstI18N;
 import pdmf.model.TenantRec;
 import pdmf.model.User;
 import pdmf.service.SystemService;
@@ -104,7 +104,7 @@ public class Main {
 
 		shell = new Shell();
 		shell.setSize(700, 232);
-		String PGM_NAME = Main.cst(Cst2.PGM_NAME);
+		String PGM_NAME = Main.cst(CstI18N.PGM_NAME);
 		shell.setText(PGM_NAME);
 
 		shell.setLayout(new FormLayout());
@@ -113,14 +113,14 @@ public class Main {
 		shell.setMenuBar(mainMenu);
 
 		submenuAtgarder = new MenuItem(mainMenu, SWT.CASCADE);
-		String ATGARDER = Main.cst(Cst2.ATGARDER);
+		String ATGARDER = Main.cst(CstI18N.ATGARDER);
 		submenuAtgarder.setText(ATGARDER);
 
 		menuAtgarder = new Menu(submenuAtgarder);
 		submenuAtgarder.setMenu(menuAtgarder);
 
 		mntmMaintainArtifacts = new MenuItem(menuAtgarder, SWT.CASCADE);
-		String MAINTAINANCE = Main.cst(Cst2.MAINTAINANCE);
+		String MAINTAINANCE = Main.cst(CstI18N.MAINTAINANCE);
 		mntmMaintainArtifacts.setText(MAINTAINANCE);
 
 		menu_2 = new Menu(mntmMaintainArtifacts);
@@ -131,17 +131,17 @@ public class Main {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				pdmf.ui.ProductViewer dialog = new pdmf.ui.ProductViewer(shell, SWT.DIALOG_TRIM | SWT.MODELESS);
-				String PRODUCT_VIEWER = Main.cst(Cst2.PRODUCT_VIEWER);
+				String PRODUCT_VIEWER = Main.cst(CstI18N.PRODUCT_VIEWER);
 				dialog.setText(PRODUCT_VIEWER);
 				dialog.setCurrentUser(currentUser);
 				dialog.open();
 			}
 		});
-		String PRODUCT_VIEWER = Main.cst(Cst2.PRODUCT_VIEWER);
+		String PRODUCT_VIEWER = Main.cst(CstI18N.PRODUCT_VIEWER);
 		mntmProductViewer.setText(PRODUCT_VIEWER);
 
 		mntmNewProductVersion = new MenuItem(menu_2, SWT.NONE);
-		String WRK_WITH_NEWPRODUCT = Main.cst(Cst2.WRK_WITH_NEWPRODUCT);
+		String WRK_WITH_NEWPRODUCT = Main.cst(CstI18N.WRK_WITH_NEWPRODUCT);
 		mntmNewProductVersion.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -153,7 +153,7 @@ public class Main {
 		});
 		mntmNewProductVersion.setText(WRK_WITH_NEWPRODUCT);
 
-		String SEARCH = Main.cst(Cst2.SEARCH);
+		String SEARCH = Main.cst(CstI18N.SEARCH);
 		mntmQuery = new MenuItem(menuAtgarder, SWT.NONE);
 		mntmQuery.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -167,8 +167,8 @@ public class Main {
 		mntmQuery.setText(SEARCH);
 
 		mntmWelcome = new MenuItem(menuAtgarder, SWT.NONE);
-		String WELCOME = Main.cst(Cst2.WELCOME);
-		String INFO = Main.cst(Cst2.INFO);
+		String WELCOME = Main.cst(CstI18N.WELCOME);
+		String INFO = Main.cst(CstI18N.INFO);
 		mntmWelcome.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -180,13 +180,13 @@ public class Main {
 		mntmWelcome.setText(INFO);
 
 		MenuItem mntmKlient = new MenuItem(mainMenu, SWT.CASCADE);
-		String TENANT = Main.cst(Cst2.TENANT);
+		String TENANT = Main.cst(CstI18N.TENANT);
 		mntmKlient.setText(TENANT);
 
 		Menu menu = new Menu(mntmKlient);
 		mntmKlient.setMenu(menu);
 
-		String TENANT_SELECT = Main.cst(Cst2.TENANT_SELECT);
+		String TENANT_SELECT = Main.cst(CstI18N.TENANT_SELECT);
 		mntmSelectTenant = new MenuItem(menu, SWT.NONE);
 		mntmSelectTenant.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -211,7 +211,7 @@ public class Main {
 		});
 		mntmSelectTenant.setText(TENANT_SELECT);
 
-		String WRK_WITH_TENANT = Main.cst(Cst2.WRK_WITH_TENANT);
+		String WRK_WITH_TENANT = Main.cst(CstI18N.WRK_WITH_TENANT);
 		mntmClient = new MenuItem(menu, SWT.NONE);
 		mntmClient.addSelectionListener(new SelectionAdapter() {
 			@Override
