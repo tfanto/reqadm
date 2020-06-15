@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import pdmf.Main;
-import pdmf.model.Cst2;
+import pdmf.model.CstI18N;
 import pdmf.model.OperationKey;
 import pdmf.model.OperationRec;
 import pdmf.model.ProcessKey;
@@ -79,7 +79,7 @@ public class Operation extends Dialog {
 	 */
 	public Operation(Shell parent, int style) {
 		super(parent, style);
-		String OPERATION = Main.cst(Cst2.OPERATION);
+		String OPERATION = Main.cst(CstI18N.OPERATION);
 		setText("[" + OPERATION + "]");
 	}
 
@@ -113,18 +113,18 @@ public class Operation extends Dialog {
 		shell.setLayout(null);
 
 		lblOperation = new Label(shell, SWT.NONE);
-		String OPERATION = Main.cst(Cst2.OPERATION);
+		String OPERATION = Main.cst(CstI18N.OPERATION);
 		lblOperation.setText(OPERATION);
 		lblOperation.setBounds(167, 5, 82, 25);
 
 		lblOstep = new Label(shell, SWT.NONE);
-		String OPERATION_SEQ = Main.cst(Cst2.OPERATION_SEQ);
+		String OPERATION_SEQ = Main.cst(CstI18N.OPERATION_SEQ);
 		lblOstep.setText(OPERATION_SEQ);
 		lblOstep.setBounds(349, 5, 57, 25);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
 		lblDescription.setBounds(10, 233, 151, 25);
-		String DESCRIPTION = Main.cst(Cst2.DESCRIPTION);
+		String DESCRIPTION = Main.cst(CstI18N.DESCRIPTION);
 		lblDescription.setText(DESCRIPTION);
 
 		product = new Label(shell, SWT.BORDER);
@@ -161,21 +161,21 @@ public class Operation extends Dialog {
 
 				String wrkTopicName = topic.getText();
 				if (wrkTopicName == null || wrkTopicName.trim().length() < 1) {
-					String NO_TOPIC_SELECTED = Main.cst(Cst2.NO_TOPIC_SELECTED);
+					String NO_TOPIC_SELECTED = Main.cst(CstI18N.NO_TOPIC_SELECTED);
 					lblInfo.setText(NO_TOPIC_SELECTED);
 					return;
 				}
 
 				String wrkProcessName = process.getText();
 				if (wrkProcessName == null || wrkProcessName.trim().length() < 1) {
-					String NO_PROCESS_NAME = Main.cst(Cst2.NO_PROCESS_NAME);
+					String NO_PROCESS_NAME = Main.cst(CstI18N.NO_PROCESS_NAME);
 					lblInfo.setText(NO_PROCESS_NAME);
 					return;
 				}
 
 				String wrkProcessStepNameStr = processStep.getText();
 				if (wrkProcessStepNameStr == null || wrkProcessStepNameStr.trim().length() < 1) {
-					String NO_PROCESS_SEQ = Main.cst(Cst2.NO_PROCESS_SEQ);
+					String NO_PROCESS_SEQ = Main.cst(CstI18N.NO_PROCESS_SEQ);
 					lblInfo.setText(NO_PROCESS_SEQ);
 					return;
 				}
@@ -183,7 +183,7 @@ public class Operation extends Dialog {
 				try {
 					wrkProcessStep = Integer.parseInt(wrkProcessStepNameStr);
 				} catch (NumberFormatException nfe) {
-					String NO_PROCESS_SEQ_AS_INTEGER = Main.cst(Cst2.NO_PROCESS_SEQ_AS_INTEGER);
+					String NO_PROCESS_SEQ_AS_INTEGER = Main.cst(CstI18N.NO_PROCESS_SEQ_AS_INTEGER);
 					lblInfo.setText(NO_PROCESS_SEQ_AS_INTEGER);
 					return;
 
@@ -191,14 +191,14 @@ public class Operation extends Dialog {
 
 				String operationName = operation.getText();
 				if (operationName.trim().length() < 1) {
-					String NO_OPERATION_NAME = Main.cst(Cst2.NO_OPERATION_NAME);
+					String NO_OPERATION_NAME = Main.cst(CstI18N.NO_OPERATION_NAME);
 					lblInfo.setText(NO_OPERATION_NAME);
 					return;
 				}
 
 				String operationSequenceStr = operationStep.getText();
 				if (operationSequenceStr.trim().length() < 1) {
-					String NO_OPERATION_SEQ = Main.cst(Cst2.NO_OPERATION_SEQ);
+					String NO_OPERATION_SEQ = Main.cst(CstI18N.NO_OPERATION_SEQ);
 					lblInfo.setText(NO_OPERATION_SEQ);
 					return;
 				}
@@ -206,21 +206,21 @@ public class Operation extends Dialog {
 				try {
 					operationSequence = Integer.parseInt(operationSequenceStr);
 				} catch (NumberFormatException nfe) {
-					String NO_OPERATION_SEQ_AS_INTEGER = Main.cst(Cst2.NO_OPERATION_SEQ_AS_INTEGER);
+					String NO_OPERATION_SEQ_AS_INTEGER = Main.cst(CstI18N.NO_OPERATION_SEQ_AS_INTEGER);
 					lblInfo.setText(NO_OPERATION_SEQ_AS_INTEGER);
 					return;
 
 				}
 
 				if (ProductService.isLocked(tenantId, version, wrkProductName)) {
-					String VERSION_LOCKED = Main.cst(Cst2.VERSION_LOCKED);
+					String VERSION_LOCKED = Main.cst(CstI18N.VERSION_LOCKED);
 					lblInfo.setText(VERSION_LOCKED);
 					return;
 				}
 
 				OperationKey key = new OperationKey(tenantId, version, wrkProductName, wrkTopicName, wrkProcessName, wrkProcessStep, operationName, operationSequence);
 				if (operationService.isDeleteMarked(key)) {
-					String ALREADY_DELETE_NO_ACTION = Main.cst(Cst2.ALREADY_DELETE_NO_ACTION);
+					String ALREADY_DELETE_NO_ACTION = Main.cst(CstI18N.ALREADY_DELETE_NO_ACTION);
 					lblInfo.setText(ALREADY_DELETE_NO_ACTION);
 					return;
 				}
@@ -229,7 +229,7 @@ public class Operation extends Dialog {
 
 				if (mode.equals(NEW_REG_MODE)) {
 					if (rec != null) {
-						String ALREADY_EXISTS = Main.cst(Cst2.ALREADY_EXISTS);
+						String ALREADY_EXISTS = Main.cst(CstI18N.ALREADY_EXISTS);
 						lblInfo.setText(ALREADY_EXISTS);
 						return;
 					}
@@ -254,13 +254,13 @@ public class Operation extends Dialog {
 					result = 1;
 					shell.dispose();
 				} catch (RecordChangedByAnotherUser rc) {
-					String RECORD_CHANGED_BY_ANOTHER_USER = Main.cst(Cst2.RECORD_CHANGED_BY_ANOTHER_USER);
+					String RECORD_CHANGED_BY_ANOTHER_USER = Main.cst(CstI18N.RECORD_CHANGED_BY_ANOTHER_USER);
 					lblInfo.setText(RECORD_CHANGED_BY_ANOTHER_USER);
 				}
 			}
 
 		});
-		String STORE = Main.cst(Cst2.STORE);
+		String STORE = Main.cst(CstI18N.STORE);
 		btnStore.setText(STORE);
 
 		btnRemove = new Button(shell, SWT.NONE);
@@ -275,21 +275,21 @@ public class Operation extends Dialog {
 				String productName = (String) product.getData();
 				String topicName = topic.getText();
 				if (topicName.trim().length() < 1) {
-					String NO_TOPIC_SELECTED = Main.cst(Cst2.NO_TOPIC_SELECTED);
+					String NO_TOPIC_SELECTED = Main.cst(CstI18N.NO_TOPIC_SELECTED);
 					lblInfo.setText(NO_TOPIC_SELECTED);
 					return;
 				}
 
 				String processName = process.getText();
 				if (topicName.trim().length() < 1) {
-					String NO_PROCESS_NAME = Main.cst(Cst2.NO_PROCESS_NAME);
+					String NO_PROCESS_NAME = Main.cst(CstI18N.NO_PROCESS_NAME);
 					lblInfo.setText(NO_PROCESS_NAME);
 					return;
 				}
 
 				String processSequenceStr = processStep.getText();
 				if (topicName.trim().length() < 1) {
-					String NO_PROCESS_SEQ = Main.cst(Cst2.NO_PROCESS_SEQ);
+					String NO_PROCESS_SEQ = Main.cst(CstI18N.NO_PROCESS_SEQ);
 					lblInfo.setText(NO_PROCESS_SEQ);
 					return;
 				}
@@ -297,7 +297,7 @@ public class Operation extends Dialog {
 				try {
 					wrProcesskSequence = Integer.parseInt(processSequenceStr);
 				} catch (NumberFormatException nfe) {
-					String NO_PROCESS_SEQ_AS_INTEGER = Main.cst(Cst2.NO_PROCESS_SEQ_AS_INTEGER);
+					String NO_PROCESS_SEQ_AS_INTEGER = Main.cst(CstI18N.NO_PROCESS_SEQ_AS_INTEGER);
 					lblInfo.setText(NO_PROCESS_SEQ_AS_INTEGER);
 					return;
 
@@ -305,14 +305,14 @@ public class Operation extends Dialog {
 
 				String operationName = operation.getText();
 				if (operationName.trim().length() < 1) {
-					String NO_OPERATION_NAME = Main.cst(Cst2.NO_OPERATION_NAME);
+					String NO_OPERATION_NAME = Main.cst(CstI18N.NO_OPERATION_NAME);
 					lblInfo.setText(NO_OPERATION_NAME);
 					return;
 				}
 
 				String operationSequenceStr = operationStep.getText();
 				if (operationSequenceStr.trim().length() < 1) {
-					String NO_OPERATION_SEQ = Main.cst(Cst2.NO_OPERATION_SEQ);
+					String NO_OPERATION_SEQ = Main.cst(CstI18N.NO_OPERATION_SEQ);
 					lblInfo.setText(NO_OPERATION_SEQ);
 					return;
 				}
@@ -320,21 +320,21 @@ public class Operation extends Dialog {
 				try {
 					operationSequence = Integer.parseInt(operationSequenceStr);
 				} catch (NumberFormatException nfe) {
-					String NO_OPERATION_SEQ_AS_INTEGER = Main.cst(Cst2.NO_OPERATION_SEQ_AS_INTEGER);
+					String NO_OPERATION_SEQ_AS_INTEGER = Main.cst(CstI18N.NO_OPERATION_SEQ_AS_INTEGER);
 					lblInfo.setText(NO_OPERATION_SEQ_AS_INTEGER);
 					return;
 
 				}
 
 				if (ProductService.isLocked(tenantId, version, productName)) {
-					String VERSION_LOCKED = Main.cst(Cst2.VERSION_LOCKED);
+					String VERSION_LOCKED = Main.cst(CstI18N.VERSION_LOCKED);
 					lblInfo.setText(VERSION_LOCKED);
 					return;
 				}
 
 				OperationKey key = new OperationKey(tenantId, version, productName, topicName, processName, wrProcesskSequence, operationName, operationSequence);
 				if (operationService.isDeleteMarked(key)) {
-					String ALREADY_DELETE_NO_ACTION = Main.cst(Cst2.ALREADY_DELETE_NO_ACTION);
+					String ALREADY_DELETE_NO_ACTION = Main.cst(CstI18N.ALREADY_DELETE_NO_ACTION);
 					lblInfo.setText(ALREADY_DELETE_NO_ACTION);
 					return;
 				}
@@ -351,7 +351,7 @@ public class Operation extends Dialog {
 			}
 
 		});
-		String REMOVE = Main.cst(Cst2.REMOVE);
+		String REMOVE = Main.cst(CstI18N.REMOVE);
 		btnRemove.setText(REMOVE);
 
 		lblInfo = new Label(shell, SWT.BORDER | SWT.SHADOW_IN);
@@ -368,7 +368,7 @@ public class Operation extends Dialog {
 		shortDescription.setBounds(10, 154, 502, 73);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
-		String DESCRIPTION_SHORT = Main.cst(Cst2.DESCRIPTION_SHORT);
+		String DESCRIPTION_SHORT = Main.cst(CstI18N.DESCRIPTION_SHORT);
 		lblShortDescription.setText(DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(10, 123, 151, 25);
 
@@ -428,11 +428,11 @@ public class Operation extends Dialog {
 
 	private void handleInfo(Instant createDate, String createUser, Instant changeDate, String chgusr, Instant deleteDate, String deleteUser, Integer createdInVersion) {
 
-		String CREATED = Main.cst(Cst2.CREATED);
-		String CHANGED = Main.cst(Cst2.CHANGED);
-		String REMOVED = Main.cst(Cst2.REMOVED);
-		String BY = Main.cst(Cst2.BY);
-		String IN_VERSION = Main.cst(Cst2.IN_VERSION);
+		String CREATED = Main.cst(CstI18N.CREATED);
+		String CHANGED = Main.cst(CstI18N.CHANGED);
+		String REMOVED = Main.cst(CstI18N.REMOVED);
+		String BY = Main.cst(CstI18N.BY);
+		String IN_VERSION = Main.cst(CstI18N.IN_VERSION);
 
 		LocalDate created = LocalDateTime.ofInstant(createDate, ZoneOffset.UTC).toLocalDate();
 		crtDat.setText(CREATED + created.toString() + BY + createUser + IN_VERSION + createdInVersion);

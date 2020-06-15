@@ -12,7 +12,8 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import pdmf.model.Cst;
+import pdmf.Main;
+import pdmf.model.CstI18N;
 import pdmf.model.TenantKey;
 import pdmf.model.TenantRec;
 import pdmf.model.User;
@@ -40,7 +41,8 @@ public class Tenant extends Dialog {
 	 */
 	public Tenant(Shell parent, int style) {
 		super(parent, style);
-		setText("[Tenant]");
+		String TENANT = Main.cst(CstI18N.TENANT);
+		setText("[" + TENANT + "]");
 	}
 
 	/**
@@ -73,11 +75,13 @@ public class Tenant extends Dialog {
 
 		Label lblTenant = new Label(shell, SWT.NONE);
 		lblTenant.setBounds(10, 10, 115, 25);
-		lblTenant.setText("Tenant");
+		String TENANT = Main.cst(CstI18N.TENANT);
+		lblTenant.setText(TENANT);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
 		lblDescription.setBounds(125, 10, 143, 25);
-		lblDescription.setText(Cst.DESCRIPTION);
+		String DESCRIPTION = Main.cst(CstI18N.DESCRIPTION);
+		lblDescription.setText(DESCRIPTION);
 
 		tenant = new Text(shell, SWT.BORDER);
 		tenant.setBounds(10, 42, 115, 25);
@@ -89,7 +93,8 @@ public class Tenant extends Dialog {
 
 		lblInfo = new Label(shell, SWT.NONE);
 		lblInfo.setBounds(10, 281, 384, 25);
-		lblInfo.setText("info");
+		String INFO = Main.cst(CstI18N.INFO);
+		lblInfo.setText(INFO);
 
 		tenantList = new List(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		tenantList.addSelectionListener(new SelectionAdapter() {
@@ -104,13 +109,14 @@ public class Tenant extends Dialog {
 				tenant.setText("");
 				description.setText("");
 				lblInfo.setText("");
-				shell.setText("Tenant");
+				String TENANT = Main.cst(CstI18N.TENANT);
+				shell.setText(TENANT);
 
 				TenantRec rec = tenantService.get(tenantId);
 				if (rec != null) {
 					tenant.setText(rec.key.tenantid);
 					description.setText(rec.description == null ? "" : rec.description);
-					shell.setText("[Tenant] : " + rec.key.tenantid + " " + rec.description);
+					shell.setText("[" + TENANT + "] : " + rec.key.tenantid + " " + rec.description);
 				} else {
 					refreshTenantList();
 				}
@@ -125,12 +131,14 @@ public class Tenant extends Dialog {
 
 				String tenantId = tenant.getText();
 				if (tenantId == null || tenantId.trim().length() < 1) {
-					lblInfo.setText(Cst.TENANTID_MUST_HAVE_A_VALUE);
+					String TENANTID_MUST_HAVE_A_VALUE = Main.cst(CstI18N.TENANTID_MUST_HAVE_A_VALUE);
+					lblInfo.setText(TENANTID_MUST_HAVE_A_VALUE);
 					return;
 				}
 				String descr = description.getText();
 				if (descr == null || descr.trim().length() < 1) {
-					lblInfo.setText(Cst.TENANT_DESCRIPTION_HAVE_A_VALUE);
+					String TENANT_DESCRIPTION_HAVE_A_VALUE = Main.cst(CstI18N.TENANT_DESCRIPTION_HAVE_A_VALUE);
+					lblInfo.setText(TENANT_DESCRIPTION_HAVE_A_VALUE);
 					return;
 				}
 
@@ -141,22 +149,25 @@ public class Tenant extends Dialog {
 				refreshTenantList();
 				clearForm();
 				lblInfo.setText("");
-				shell.setText("[Tenant]");
+				String TENANT = Main.cst(CstI18N.TENANT);
+				shell.setText("[" + TENANT + "]");
 			}
 		});
 		btnStore.setBounds(322, 31, 76, 25);
-		btnStore.setText(Cst.STORE);
-		
+		String STORE = Main.cst(CstI18N.STORE);
+		btnStore.setText(STORE);
+
 		btnRemove = new Button(shell, SWT.NONE);
 		btnRemove.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
+
 				String tenantId = tenant.getText();
 				if (tenantId == null || tenantId.trim().length() < 1) {
-					lblInfo.setText(Cst.TENANTID_MUST_HAVE_A_VALUE);
+					String TENANTID_MUST_HAVE_A_VALUE = Main.cst(CstI18N.TENANTID_MUST_HAVE_A_VALUE);
+					lblInfo.setText(TENANTID_MUST_HAVE_A_VALUE);
 					return;
-				}				
+				}
 				tenantService.remove(tenantId);
 				refreshTenantList();
 				clearForm();
@@ -164,7 +175,8 @@ public class Tenant extends Dialog {
 				shell.setText("[Tenant]");
 			}
 		});
-		btnRemove.setText(Cst.REMOVE);
+		String REMOVE = Main.cst(CstI18N.REMOVE);
+		btnRemove.setText(REMOVE);
 		btnRemove.setBounds(322, 68, 76, 25);
 
 		refreshTenantList();
