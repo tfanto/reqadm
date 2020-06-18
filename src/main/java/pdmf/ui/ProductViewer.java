@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -547,15 +548,24 @@ public class ProductViewer extends Dialog {
 							MenuItem mntmCreateTopic = new MenuItem(menu, SWT.NONE);
 							String NEW_TOPIC_FOR_PRODUCT = Main.cst(CstI18N.NEW_TOPIC_FOR_PRODUCT);
 							mntmCreateTopic.setText(NEW_TOPIC_FOR_PRODUCT);
+							mntmCreateTopic.setEnabled(true);
 							mntmCreateTopic.addSelectionListener(new SelectionAdapter() {
 								@Override
 								public void widgetSelected(SelectionEvent e) {
-									ProductKey rec = (ProductKey) treeItemData;
+									ProductKey key = (ProductKey) treeItemData;
+									Boolean locked = ProductService.isLocked(key.tenantid, key.version, key.productName);
+									Boolean deleteMarked = productService.isDeleteMarked(key);
+									if (deleteMarked || locked) {										
+										MessageBox diag = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+										diag.setMessage("Forbidden" );
+										diag.open();
+										return;
+									}
 									pdmf.ui.Topic dialog = new pdmf.ui.Topic(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-									dialog.setKey(rec, rec.version);
+									dialog.setKey(key, key.version);
 									dialog.setCurrentUser(currentUser);
 									dialog.open();
-									refreshProductTree(tree, rec.productName, rec.version, rec.tenantid);
+									refreshProductTree(tree, key.productName, key.version, key.tenantid);
 								}
 							});
 
@@ -585,7 +595,16 @@ public class ProductViewer extends Dialog {
 							mntmCreateProcess.addSelectionListener(new SelectionAdapter() {
 								@Override
 								public void widgetSelected(SelectionEvent e) {
+
 									TopicKey rec = (TopicKey) treeItemData;
+									Boolean locked = ProductService.isLocked(rec.tenantid, rec.version, rec.productName);
+									Boolean deleteMarked = topicService.isDeleteMarked(rec);
+									if (deleteMarked || locked) {
+										MessageBox diag = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+										diag.setMessage("Forbidden" );
+										diag.open();
+										return;
+									}
 									pdmf.ui.Process dialog = new pdmf.ui.Process(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 									dialog.setKey(rec, rec.version);
 									dialog.setCurrentUser(currentUser);
@@ -621,6 +640,16 @@ public class ProductViewer extends Dialog {
 								@Override
 								public void widgetSelected(SelectionEvent e) {
 									ProcessKey key = (ProcessKey) treeItemData;
+									
+									Boolean locked = ProductService.isLocked(key.tenantid, key.version, key.productName);
+									Boolean deleteMarked = processService.isDeleteMarked(key);
+									if (deleteMarked || locked) {
+										MessageBox diag = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+										diag.setMessage("Forbidden" );
+										diag.open();
+										return;
+									}
+									
 									pdmf.ui.Operation dialog = new pdmf.ui.Operation(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 									dialog.setKey(key, key.version);
 									dialog.setCurrentUser(currentUser);
