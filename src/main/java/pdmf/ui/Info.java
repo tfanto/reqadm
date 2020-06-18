@@ -60,7 +60,7 @@ public class Info extends Dialog {
 
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setAlignment(SWT.CENTER);
-		lblNewLabel.setBounds(58, 20, 295, 20);
+		lblNewLabel.setBounds(21, 20, 374, 20);
 
 		String PGM_NAME = Main.cst(CstI18N.PGM_NAME);
 
