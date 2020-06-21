@@ -119,7 +119,13 @@ public class ProductVersion extends Dialog {
 				} else {
 					lblInfo.setText("");
 				}
-
+				
+				if(ProductService.isLocked(tenantId, versionRec.key.version, versionRec.key.productName)){
+					String THIS_VERSION_IS_LOCKED = Main.cst(CstI18N.THIS_VERSION_IS_LOCKED);
+					lblInfo.setText(THIS_VERSION_IS_LOCKED);	
+					return;
+				}
+				
 				String toVersionStr = newVersion.getText();
 				if (toVersionStr == null || toVersionStr.trim().length() < 1) {
 					String TARGET_VERSION_MUST_HAVE_A_VALUE = Main.cst(CstI18N.TARGET_VERSION_MUST_HAVE_A_VALUE);
