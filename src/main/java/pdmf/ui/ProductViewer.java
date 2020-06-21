@@ -555,9 +555,11 @@ public class ProductViewer extends Dialog {
 									ProductKey key = (ProductKey) treeItemData;
 									Boolean locked = ProductService.isLocked(key.tenantid, key.version, key.productName);
 									Boolean deleteMarked = productService.isDeleteMarked(key);
-									if (deleteMarked || locked) {										
+									if (deleteMarked || locked) {
+										String msg = deleteMarked ? "Deleted" : "Version locked";
 										MessageBox diag = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-										diag.setMessage("Forbidden" );
+										diag.setMessage(msg);
+										diag.setText("Forbidden");
 										diag.open();
 										return;
 									}
@@ -600,8 +602,10 @@ public class ProductViewer extends Dialog {
 									Boolean locked = ProductService.isLocked(rec.tenantid, rec.version, rec.productName);
 									Boolean deleteMarked = topicService.isDeleteMarked(rec);
 									if (deleteMarked || locked) {
+										String msg = deleteMarked ? "Deleted" : "Version locked";
 										MessageBox diag = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-										diag.setMessage("Forbidden" );
+										diag.setMessage(msg);
+										diag.setText("Forbidden");
 										diag.open();
 										return;
 									}
@@ -640,16 +644,18 @@ public class ProductViewer extends Dialog {
 								@Override
 								public void widgetSelected(SelectionEvent e) {
 									ProcessKey key = (ProcessKey) treeItemData;
-									
+
 									Boolean locked = ProductService.isLocked(key.tenantid, key.version, key.productName);
 									Boolean deleteMarked = processService.isDeleteMarked(key);
 									if (deleteMarked || locked) {
+										String msg = deleteMarked ? "Deleted" : "Version locked";
 										MessageBox diag = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-										diag.setMessage("Forbidden" );
+										diag.setMessage(msg);
+										diag.setText("Forbidden");
 										diag.open();
 										return;
 									}
-									
+
 									pdmf.ui.Operation dialog = new pdmf.ui.Operation(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 									dialog.setKey(key, key.version);
 									dialog.setCurrentUser(currentUser);

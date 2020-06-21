@@ -55,12 +55,12 @@ public class Info extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(411, 528);
+		shell.setSize(564, 557);
 		shell.setText(getText());
 
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setAlignment(SWT.CENTER);
-		lblNewLabel.setBounds(21, 20, 374, 20);
+		lblNewLabel.setBounds(29, 20, 500, 37);
 
 		String PGM_NAME = Main.cst(CstI18N.PGM_NAME);
 
@@ -73,7 +73,7 @@ public class Info extends Dialog {
 		canvas.setSize(0, 0);
 
 		Button bildKnapp = new Button(shell, SWT.NONE);
-		bildKnapp.setBounds(48, 60, 305, 415);
+		bildKnapp.setBounds(126, 63, 305, 415);
 		bildKnapp.setImage(image);
 
 	}
