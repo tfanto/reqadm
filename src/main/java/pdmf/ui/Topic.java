@@ -61,6 +61,7 @@ public class Topic extends Dialog {
 	String topicStr;
 
 	private Set<String> searchWords = new HashSet<String>();
+	private Label lblProduct;
 
 	/**
 	 * Create the dialog.
@@ -250,6 +251,11 @@ public class Topic extends Dialog {
 		String DESCRIPTION_SHORT = Main.cst(CstI18N.DESCRIPTION_SHORT);
 		lblShortDescription.setText(DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(10, 65, 151, 25);
+		
+		lblProduct = new Label(shell, SWT.NONE);
+		String PRODUCT = Main.cst(CstI18N.PRODUCT);
+		lblProduct.setText(PRODUCT);
+		lblProduct.setBounds(10, 5, 137, 25);
 
 		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 

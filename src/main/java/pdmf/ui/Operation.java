@@ -70,6 +70,7 @@ public class Operation extends Dialog {
 	Integer operationStepInt;
 
 	private Set<String> searchWords = new HashSet<String>();
+	private Label lblPath;
 
 	/**
 	 * Create the dialog.
@@ -371,6 +372,19 @@ public class Operation extends Dialog {
 		String DESCRIPTION_SHORT = Main.cst(CstI18N.DESCRIPTION_SHORT);
 		lblShortDescription.setText(DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(10, 123, 151, 25);
+		
+		lblPath = new Label(shell, SWT.NONE);
+		String p =Main.cst(CstI18N.PRODUCT);
+		if(p.length() > 4) {
+			p = p.substring(0,4);
+		}
+		String t =Main.cst(CstI18N.TOPIC);
+		if(t.length() > 4) {
+			t = t.substring(0,4);
+		}
+		String pr =Main.cst(CstI18N.PROCESS);
+		lblPath.setText(p + "/" + t+ "/" + pr);
+		lblPath.setBounds(10, 5, 151, 25);
 
 		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
