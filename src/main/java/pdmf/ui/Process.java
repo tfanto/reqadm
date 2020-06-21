@@ -66,6 +66,7 @@ public class Process extends Dialog {
 	Integer processStepInt;
 
 	private Set<String> searchWords = new HashSet<String>();
+	private Label lblPath;
 
 	/**
 	 * Create the dialog.
@@ -315,6 +316,12 @@ public class Process extends Dialog {
 		String DESCRIPTION_SHORT = Main.cst(CstI18N.DESCRIPTION_SHORT);
 		lblShortDescription.setText(DESCRIPTION_SHORT);
 		lblShortDescription.setBounds(10, 93, 151, 25);
+		
+		lblPath = new Label(shell, SWT.NONE);
+		String p =Main.cst(CstI18N.PRODUCT);
+		String t =Main.cst(CstI18N.TOPIC);
+		lblPath.setText(p + "/" + t);
+		lblPath.setBounds(10, 5, 151, 25);
 
 		String tenantId = currentUser.getCurrentTenant().key.tenantid;
 
