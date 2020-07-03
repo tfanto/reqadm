@@ -100,7 +100,7 @@ public class Search extends Dialog {
 				clear();
 			}
 		});
-		btnRensa.setBounds(10, 282, 297, 38);
+		btnRensa.setBounds(10, 272, 297, 30);
 		String CLEAR = Main.cst(CstI18N.CLEAR);
 		btnRensa.setText(CLEAR);
 
@@ -140,7 +140,7 @@ public class Search extends Dialog {
 		});
 		String SEARCH = Main.cst(CstI18N.SEARCH);
 		btnLeta.setText(SEARCH);
-		btnLeta.setBounds(10, 236, 297, 38);
+		btnLeta.setBounds(10, 236, 297, 30);
 
 		searchResult = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
 		searchResult.addSelectionListener(new SelectionAdapter() {

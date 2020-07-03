@@ -69,7 +69,7 @@ public class Tenant extends Dialog {
 	private void createContents() {
 		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 
-		shell.setSize(428, 348);
+		shell.setSize(451, 348);
 		shell.setText(getText());
 		shell.setLayout(null);
 
@@ -153,7 +153,7 @@ public class Tenant extends Dialog {
 				shell.setText("[" + TENANT + "]");
 			}
 		});
-		btnStore.setBounds(322, 31, 76, 25);
+		btnStore.setBounds(322, 31, 94, 30);
 		String STORE = Main.cst(CstI18N.STORE);
 		btnStore.setText(STORE);
 
@@ -177,7 +177,7 @@ public class Tenant extends Dialog {
 		});
 		String REMOVE = Main.cst(CstI18N.REMOVE);
 		btnRemove.setText(REMOVE);
-		btnRemove.setBounds(322, 68, 76, 25);
+		btnRemove.setBounds(322, 68, 94, 30);
 
 		refreshTenantList();
 	}

@@ -145,7 +145,7 @@ public class TenantSelect extends Dialog {
 				}
 			}
 		});
-		btnSelect.setBounds(348, 31, 120, 25);
+		btnSelect.setBounds(348, 31, 120, 30);
 		String OK = Main.cst(CstI18N.OK);
 		btnSelect.setText(OK);
 
