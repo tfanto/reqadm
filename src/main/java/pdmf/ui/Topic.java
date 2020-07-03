@@ -125,7 +125,7 @@ public class Topic extends Dialog {
 		description.setTextLimit(995);
 
 		btnStore = new Button(shell, SWT.NONE);
-		btnStore.setBounds(458, 29, 80, 25);
+		btnStore.setBounds(444, 31, 94, 30);
 		btnStore.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -192,7 +192,7 @@ public class Topic extends Dialog {
 		btnStore.setText(STORE);
 
 		btnRemove = new Button(shell, SWT.NONE);
-		btnRemove.setBounds(458, 60, 80, 25);
+		btnRemove.setBounds(444, 62, 94, 30);
 		btnRemove.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -245,7 +245,7 @@ public class Topic extends Dialog {
 
 		shortDescription = new StyledText(shell, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		shortDescription.setTextLimit(100);
-		shortDescription.setBounds(10, 91, 528, 73);
+		shortDescription.setBounds(10, 98, 528, 66);
 
 		lblShortDescription = new Label(shell, SWT.NONE);
 		String DESCRIPTION_SHORT = Main.cst(CstI18N.DESCRIPTION_SHORT);

@@ -114,7 +114,7 @@ public class Product extends Dialog {
 		description.setTextLimit(995);
 
 		btnStore = new Button(shell, SWT.NONE);
-		btnStore.setBounds(455, 42, 80, 25);
+		btnStore.setBounds(441, 42, 94, 30);
 		btnStore.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -192,7 +192,7 @@ public class Product extends Dialog {
 		btnStore.setText(STORE);
 
 		btnRemove = new Button(shell, SWT.NONE);
-		btnRemove.setBounds(455, 73, 80, 25);
+		btnRemove.setBounds(441, 73, 94, 30);
 		btnRemove.addSelectionListener(new SelectionAdapter() {
 
 			@Override

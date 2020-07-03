@@ -100,7 +100,7 @@ public class ProductVersion extends Dialog {
 		description.setTextLimit(995);
 
 		btnCreateNewVersion = new Button(shell, SWT.NONE);
-		btnCreateNewVersion.setBounds(354, 46, 120, 25);
+		btnCreateNewVersion.setBounds(354, 46, 120, 30);
 		btnCreateNewVersion.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -277,7 +277,7 @@ public class ProductVersion extends Dialog {
 
 			}
 		});
-		btnNyProduct.setBounds(354, 81, 120, 25);
+		btnNyProduct.setBounds(354, 81, 120, 30);
 		String NEW_PRODUCT = Main.cst(CstI18N.NEW_PRODUCT);
 		btnNyProduct.setText(NEW_PRODUCT);
 

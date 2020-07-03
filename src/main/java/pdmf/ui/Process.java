@@ -116,7 +116,7 @@ public class Process extends Dialog {
 		lblPstep = new Label(shell, SWT.NONE);
 		String PROCESS_SEQ = Main.cst(CstI18N.PROCESS_SEQ);
 		lblPstep.setText(PROCESS_SEQ);
-		lblPstep.setBounds(349, 5, 57, 25);
+		lblPstep.setBounds(349, 5, 76, 25);
 
 		Label lblDescription = new Label(shell, SWT.NONE);
 		lblDescription.setBounds(10, 200, 151, 25);
@@ -140,7 +140,7 @@ public class Process extends Dialog {
 		description.setTextLimit(995);
 
 		btnStore = new Button(shell, SWT.NONE);
-		btnStore.setBounds(474, 32, 80, 25);
+		btnStore.setBounds(460, 29, 94, 30);
 		btnStore.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -232,7 +232,7 @@ public class Process extends Dialog {
 		btnStore.setText(STORE);
 
 		btnRemove = new Button(shell, SWT.NONE);
-		btnRemove.setBounds(474, 62, 80, 25);
+		btnRemove.setBounds(460, 63, 94, 30);
 		btnRemove.addSelectionListener(new SelectionAdapter() {
 
 			@Override
